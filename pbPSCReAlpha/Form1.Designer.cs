@@ -67,8 +67,6 @@
             // cbStartAt21
             // 
             this.cbStartAt21.AutoSize = true;
-            this.cbStartAt21.Checked = true;
-            this.cbStartAt21.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbStartAt21.Location = new System.Drawing.Point(12, 38);
             this.cbStartAt21.Name = "cbStartAt21";
             this.cbStartAt21.Size = new System.Drawing.Size(241, 17);
