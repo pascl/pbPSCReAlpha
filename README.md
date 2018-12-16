@@ -13,3 +13,5 @@ During the process, the directories are renamed with (number+1000), then renamed
 
 WARNING !!! To be ok until the end, don't open any files from the usb key before or during the process.
 Eject the usb key before reconnecting it (without opening anything) and launch the software.
+
+WARNING 2 !!!!! Don't forget, you have to relaunch bleemsync after using this.
