@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pbPSCReAlpha", "pbPSCReAlpha\pbPSCReAlpha.csproj", "{2FF1DFAB-E99C-4BB4-A98B-6677807B486C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8DAF32DC-590E-4450-8FC8-CFD05570C3FB}"
+	ProjectSection(SolutionItems) = preProject
+		pbPSCReAlpha\ps1games.xml = pbPSCReAlpha\ps1games.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
