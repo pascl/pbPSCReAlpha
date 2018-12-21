@@ -4,7 +4,7 @@ A little software to sort the directories on an USB key used with bleemsync.
 
 Last version: 0.4
 
-![Preview](https://imgur.com/a/lCf9p6u)
+![Preview](https://imgur.com/pvrsqh9)
 
 ## Tab 1 - Explorer
 
