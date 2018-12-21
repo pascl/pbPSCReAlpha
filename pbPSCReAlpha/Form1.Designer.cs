@@ -28,16 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.fbdGamesFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.tbFolderPath = new System.Windows.Forms.TextBox();
-            this.btCrowseGamesFolder = new System.Windows.Forms.Button();
             this.btGo = new System.Windows.Forms.Button();
             this.cbStartAt21 = new System.Windows.Forms.CheckBox();
             this.tbLog = new System.Windows.Forms.TextBox();
             this.btTest = new System.Windows.Forms.Button();
             this.tabControlAll = new System.Windows.Forms.TabControl();
             this.tabResortAlphabetic = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabGeneIni = new System.Windows.Forms.TabPage();
+            this.btLink = new System.Windows.Forms.Button();
+            this.tbHiddenLink = new System.Windows.Forms.TextBox();
+            this.btGeneSearch = new System.Windows.Forms.Button();
+            this.tbGeneSearchText = new System.Windows.Forms.TextBox();
+            this.lbGeneBigData = new System.Windows.Forms.ListBox();
             this.btGeneCopyTitle = new System.Windows.Forms.Button();
             this.btLoadIni = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -55,50 +60,55 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbGeneTitle = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tabExplorer = new System.Windows.Forms.TabPage();
+            this.gbExploreDetails = new System.Windows.Forms.GroupBox();
+            this.tbErrString = new System.Windows.Forms.TextBox();
+            this.lvFiles = new System.Windows.Forms.ListView();
+            this.ilFlags = new System.Windows.Forms.ImageList(this.components);
+            this.lbExploreAlphaTitle = new System.Windows.Forms.Label();
+            this.lbExploreYear = new System.Windows.Forms.Label();
+            this.lbExplorePlayers = new System.Windows.Forms.Label();
+            this.lbExplorePublisher = new System.Windows.Forms.Label();
+            this.lbExploreDiscs = new System.Windows.Forms.Label();
+            this.lbExploreTitle = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.pbExploreImage = new System.Windows.Forms.PictureBox();
+            this.tbLogExplorer = new System.Windows.Forms.TextBox();
+            this.lbGames = new System.Windows.Forms.ListBox();
+            this.btRefresh = new System.Windows.Forms.Button();
             this.sfdGeneSaveIni = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
-            this.lbGeneBigData = new System.Windows.Forms.ListBox();
-            this.tbGeneSearchText = new System.Windows.Forms.TextBox();
-            this.btGeneSearch = new System.Windows.Forms.Button();
+            this.btCrowseGamesFolder = new System.Windows.Forms.Button();
+            this.tbFolderPath = new System.Windows.Forms.TextBox();
             this.tabControlAll.SuspendLayout();
             this.tabResortAlphabetic.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabGeneIni.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
+            this.tabExplorer.SuspendLayout();
+            this.gbExploreDetails.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
             this.SuspendLayout();
-            // 
-            // tbFolderPath
-            // 
-            this.tbFolderPath.Location = new System.Drawing.Point(6, 6);
-            this.tbFolderPath.Name = "tbFolderPath";
-            this.tbFolderPath.Size = new System.Drawing.Size(160, 20);
-            this.tbFolderPath.TabIndex = 0;
-            this.tbFolderPath.Text = "F:\\Games";
-            // 
-            // btCrowseGamesFolder
-            // 
-            this.btCrowseGamesFolder.Location = new System.Drawing.Point(172, 6);
-            this.btCrowseGamesFolder.Name = "btCrowseGamesFolder";
-            this.btCrowseGamesFolder.Size = new System.Drawing.Size(75, 23);
-            this.btCrowseGamesFolder.TabIndex = 1;
-            this.btCrowseGamesFolder.Text = "Browse...";
-            this.btCrowseGamesFolder.UseVisualStyleBackColor = true;
-            this.btCrowseGamesFolder.Click += new System.EventHandler(this.btCrowseGamesFolder_Click);
             // 
             // btGo
             // 
-            this.btGo.Location = new System.Drawing.Point(172, 58);
+            this.btGo.Location = new System.Drawing.Point(6, 29);
             this.btGo.Name = "btGo";
             this.btGo.Size = new System.Drawing.Size(75, 23);
             this.btGo.TabIndex = 2;
-            this.btGo.Text = "Do it!";
+            this.btGo.Text = "Re-sort";
             this.btGo.UseVisualStyleBackColor = true;
             this.btGo.Click += new System.EventHandler(this.btGo_Click);
             // 
             // cbStartAt21
             // 
             this.cbStartAt21.AutoSize = true;
-            this.cbStartAt21.Location = new System.Drawing.Point(6, 35);
+            this.cbStartAt21.Location = new System.Drawing.Point(8, 6);
             this.cbStartAt21.Name = "cbStartAt21";
             this.cbStartAt21.Size = new System.Drawing.Size(241, 17);
             this.cbStartAt21.TabIndex = 3;
@@ -111,7 +121,7 @@
             this.tbLog.Multiline = true;
             this.tbLog.Name = "tbLog";
             this.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbLog.Size = new System.Drawing.Size(241, 207);
+            this.tbLog.Size = new System.Drawing.Size(241, 435);
             this.tbLog.TabIndex = 4;
             // 
             // btTest
@@ -128,13 +138,14 @@
             // 
             // tabControlAll
             // 
+            this.tabControlAll.Controls.Add(this.tabExplorer);
             this.tabControlAll.Controls.Add(this.tabResortAlphabetic);
-            this.tabControlAll.Controls.Add(this.tabPage2);
+            this.tabControlAll.Controls.Add(this.tabGeneIni);
             this.tabControlAll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlAll.Location = new System.Drawing.Point(0, 0);
             this.tabControlAll.Name = "tabControlAll";
             this.tabControlAll.SelectedIndex = 0;
-            this.tabControlAll.Size = new System.Drawing.Size(263, 328);
+            this.tabControlAll.Size = new System.Drawing.Size(700, 556);
             this.tabControlAll.TabIndex = 6;
             // 
             // tabResortAlphabetic
@@ -143,45 +154,92 @@
             this.tabResortAlphabetic.Controls.Add(this.btTest);
             this.tabResortAlphabetic.Controls.Add(this.btGo);
             this.tabResortAlphabetic.Controls.Add(this.cbStartAt21);
-            this.tabResortAlphabetic.Controls.Add(this.btCrowseGamesFolder);
-            this.tabResortAlphabetic.Controls.Add(this.tbFolderPath);
             this.tabResortAlphabetic.Location = new System.Drawing.Point(4, 22);
             this.tabResortAlphabetic.Name = "tabResortAlphabetic";
             this.tabResortAlphabetic.Padding = new System.Windows.Forms.Padding(3);
-            this.tabResortAlphabetic.Size = new System.Drawing.Size(255, 302);
+            this.tabResortAlphabetic.Size = new System.Drawing.Size(692, 530);
             this.tabResortAlphabetic.TabIndex = 0;
             this.tabResortAlphabetic.Text = "Re-sort Folders";
             this.tabResortAlphabetic.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabGeneIni
             // 
-            this.tabPage2.Controls.Add(this.btGeneSearch);
-            this.tabPage2.Controls.Add(this.tbGeneSearchText);
-            this.tabPage2.Controls.Add(this.lbGeneBigData);
-            this.tabPage2.Controls.Add(this.btGeneCopyTitle);
-            this.tabPage2.Controls.Add(this.btLoadIni);
-            this.tabPage2.Controls.Add(this.label8);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.btGenerateIni);
-            this.tabPage2.Controls.Add(this.nuGeneYear);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.nuGenePlayers);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.tbGenePublisher);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.tbGeneAlphaTitle);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.tbGeneDiscs);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.tbGeneTitle);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(255, 302);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Game.ini Generator";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabGeneIni.Controls.Add(this.btLink);
+            this.tabGeneIni.Controls.Add(this.tbHiddenLink);
+            this.tabGeneIni.Controls.Add(this.btGeneSearch);
+            this.tabGeneIni.Controls.Add(this.tbGeneSearchText);
+            this.tabGeneIni.Controls.Add(this.lbGeneBigData);
+            this.tabGeneIni.Controls.Add(this.btGeneCopyTitle);
+            this.tabGeneIni.Controls.Add(this.btLoadIni);
+            this.tabGeneIni.Controls.Add(this.label8);
+            this.tabGeneIni.Controls.Add(this.label7);
+            this.tabGeneIni.Controls.Add(this.btGenerateIni);
+            this.tabGeneIni.Controls.Add(this.nuGeneYear);
+            this.tabGeneIni.Controls.Add(this.label6);
+            this.tabGeneIni.Controls.Add(this.nuGenePlayers);
+            this.tabGeneIni.Controls.Add(this.label5);
+            this.tabGeneIni.Controls.Add(this.tbGenePublisher);
+            this.tabGeneIni.Controls.Add(this.label4);
+            this.tabGeneIni.Controls.Add(this.tbGeneAlphaTitle);
+            this.tabGeneIni.Controls.Add(this.label3);
+            this.tabGeneIni.Controls.Add(this.tbGeneDiscs);
+            this.tabGeneIni.Controls.Add(this.label2);
+            this.tabGeneIni.Controls.Add(this.tbGeneTitle);
+            this.tabGeneIni.Controls.Add(this.label1);
+            this.tabGeneIni.Location = new System.Drawing.Point(4, 22);
+            this.tabGeneIni.Name = "tabGeneIni";
+            this.tabGeneIni.Padding = new System.Windows.Forms.Padding(3);
+            this.tabGeneIni.Size = new System.Drawing.Size(692, 530);
+            this.tabGeneIni.TabIndex = 1;
+            this.tabGeneIni.Text = "Game.ini Generator";
+            this.tabGeneIni.UseVisualStyleBackColor = true;
+            // 
+            // btLink
+            // 
+            this.btLink.Enabled = false;
+            this.btLink.Location = new System.Drawing.Point(253, 499);
+            this.btLink.Name = "btLink";
+            this.btLink.Size = new System.Drawing.Size(128, 23);
+            this.btLink.TabIndex = 24;
+            this.btLink.Text = "Go to PSXdatacenter";
+            this.btLink.UseVisualStyleBackColor = true;
+            this.btLink.Click += new System.EventHandler(this.btLink_Click);
+            // 
+            // tbHiddenLink
+            // 
+            this.tbHiddenLink.Enabled = false;
+            this.tbHiddenLink.Location = new System.Drawing.Point(56, 349);
+            this.tbHiddenLink.Name = "tbHiddenLink";
+            this.tbHiddenLink.Size = new System.Drawing.Size(97, 20);
+            this.tbHiddenLink.TabIndex = 21;
+            this.tbHiddenLink.Visible = false;
+            // 
+            // btGeneSearch
+            // 
+            this.btGeneSearch.Location = new System.Drawing.Point(172, 375);
+            this.btGeneSearch.Name = "btGeneSearch";
+            this.btGeneSearch.Size = new System.Drawing.Size(75, 20);
+            this.btGeneSearch.TabIndex = 19;
+            this.btGeneSearch.Text = "Search...";
+            this.btGeneSearch.UseVisualStyleBackColor = true;
+            this.btGeneSearch.Click += new System.EventHandler(this.btGeneSearch_Click);
+            // 
+            // tbGeneSearchText
+            // 
+            this.tbGeneSearchText.Location = new System.Drawing.Point(8, 375);
+            this.tbGeneSearchText.Name = "tbGeneSearchText";
+            this.tbGeneSearchText.Size = new System.Drawing.Size(145, 20);
+            this.tbGeneSearchText.TabIndex = 18;
+            // 
+            // lbGeneBigData
+            // 
+            this.lbGeneBigData.FormattingEnabled = true;
+            this.lbGeneBigData.Location = new System.Drawing.Point(8, 401);
+            this.lbGeneBigData.Name = "lbGeneBigData";
+            this.lbGeneBigData.ScrollAlwaysVisible = true;
+            this.lbGeneBigData.Size = new System.Drawing.Size(239, 121);
+            this.lbGeneBigData.TabIndex = 17;
+            this.lbGeneBigData.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigData_SelectedIndexChanged);
             // 
             // btGeneCopyTitle
             // 
@@ -361,6 +419,233 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Title";
             // 
+            // tabExplorer
+            // 
+            this.tabExplorer.Controls.Add(this.btCrowseGamesFolder);
+            this.tabExplorer.Controls.Add(this.tbFolderPath);
+            this.tabExplorer.Controls.Add(this.gbExploreDetails);
+            this.tabExplorer.Controls.Add(this.tbLogExplorer);
+            this.tabExplorer.Controls.Add(this.lbGames);
+            this.tabExplorer.Controls.Add(this.btRefresh);
+            this.tabExplorer.Location = new System.Drawing.Point(4, 22);
+            this.tabExplorer.Name = "tabExplorer";
+            this.tabExplorer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabExplorer.Size = new System.Drawing.Size(692, 530);
+            this.tabExplorer.TabIndex = 2;
+            this.tabExplorer.Text = "Explorer";
+            this.tabExplorer.UseVisualStyleBackColor = true;
+            // 
+            // gbExploreDetails
+            // 
+            this.gbExploreDetails.Controls.Add(this.tbErrString);
+            this.gbExploreDetails.Controls.Add(this.lvFiles);
+            this.gbExploreDetails.Controls.Add(this.lbExploreAlphaTitle);
+            this.gbExploreDetails.Controls.Add(this.lbExploreYear);
+            this.gbExploreDetails.Controls.Add(this.lbExplorePlayers);
+            this.gbExploreDetails.Controls.Add(this.lbExplorePublisher);
+            this.gbExploreDetails.Controls.Add(this.lbExploreDiscs);
+            this.gbExploreDetails.Controls.Add(this.lbExploreTitle);
+            this.gbExploreDetails.Controls.Add(this.label14);
+            this.gbExploreDetails.Controls.Add(this.label13);
+            this.gbExploreDetails.Controls.Add(this.label12);
+            this.gbExploreDetails.Controls.Add(this.label11);
+            this.gbExploreDetails.Controls.Add(this.label10);
+            this.gbExploreDetails.Controls.Add(this.label9);
+            this.gbExploreDetails.Controls.Add(this.pbExploreImage);
+            this.gbExploreDetails.Location = new System.Drawing.Point(172, 35);
+            this.gbExploreDetails.Name = "gbExploreDetails";
+            this.gbExploreDetails.Size = new System.Drawing.Size(512, 382);
+            this.gbExploreDetails.TabIndex = 4;
+            this.gbExploreDetails.TabStop = false;
+            this.gbExploreDetails.Text = "Details";
+            // 
+            // tbErrString
+            // 
+            this.tbErrString.Location = new System.Drawing.Point(6, 278);
+            this.tbErrString.Multiline = true;
+            this.tbErrString.Name = "tbErrString";
+            this.tbErrString.ReadOnly = true;
+            this.tbErrString.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbErrString.Size = new System.Drawing.Size(500, 97);
+            this.tbErrString.TabIndex = 17;
+            // 
+            // lvFiles
+            // 
+            this.lvFiles.FullRowSelect = true;
+            this.lvFiles.GridLines = true;
+            this.lvFiles.LargeImageList = this.ilFlags;
+            this.lvFiles.Location = new System.Drawing.Point(6, 175);
+            this.lvFiles.MultiSelect = false;
+            this.lvFiles.Name = "lvFiles";
+            this.lvFiles.Size = new System.Drawing.Size(500, 97);
+            this.lvFiles.SmallImageList = this.ilFlags;
+            this.lvFiles.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lvFiles.StateImageList = this.ilFlags;
+            this.lvFiles.TabIndex = 16;
+            this.lvFiles.UseCompatibleStateImageBehavior = false;
+            this.lvFiles.View = System.Windows.Forms.View.List;
+            // 
+            // ilFlags
+            // 
+            this.ilFlags.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("ilFlags.ImageStream")));
+            this.ilFlags.TransparentColor = System.Drawing.Color.Transparent;
+            this.ilFlags.Images.SetKeyName(0, "question.png");
+            this.ilFlags.Images.SetKeyName(1, "ok.png");
+            this.ilFlags.Images.SetKeyName(2, "ko.png");
+            this.ilFlags.Images.SetKeyName(3, "warning.png");
+            this.ilFlags.Images.SetKeyName(4, "information.png");
+            // 
+            // lbExploreAlphaTitle
+            // 
+            this.lbExploreAlphaTitle.AutoSize = true;
+            this.lbExploreAlphaTitle.Location = new System.Drawing.Point(225, 129);
+            this.lbExploreAlphaTitle.Name = "lbExploreAlphaTitle";
+            this.lbExploreAlphaTitle.Size = new System.Drawing.Size(10, 13);
+            this.lbExploreAlphaTitle.TabIndex = 15;
+            this.lbExploreAlphaTitle.Text = "-";
+            // 
+            // lbExploreYear
+            // 
+            this.lbExploreYear.AutoSize = true;
+            this.lbExploreYear.Location = new System.Drawing.Point(225, 107);
+            this.lbExploreYear.Name = "lbExploreYear";
+            this.lbExploreYear.Size = new System.Drawing.Size(10, 13);
+            this.lbExploreYear.TabIndex = 14;
+            this.lbExploreYear.Text = "-";
+            // 
+            // lbExplorePlayers
+            // 
+            this.lbExplorePlayers.AutoSize = true;
+            this.lbExplorePlayers.Location = new System.Drawing.Point(225, 85);
+            this.lbExplorePlayers.Name = "lbExplorePlayers";
+            this.lbExplorePlayers.Size = new System.Drawing.Size(10, 13);
+            this.lbExplorePlayers.TabIndex = 13;
+            this.lbExplorePlayers.Text = "-";
+            // 
+            // lbExplorePublisher
+            // 
+            this.lbExplorePublisher.AutoSize = true;
+            this.lbExplorePublisher.Location = new System.Drawing.Point(225, 63);
+            this.lbExplorePublisher.Name = "lbExplorePublisher";
+            this.lbExplorePublisher.Size = new System.Drawing.Size(10, 13);
+            this.lbExplorePublisher.TabIndex = 12;
+            this.lbExplorePublisher.Text = "-";
+            // 
+            // lbExploreDiscs
+            // 
+            this.lbExploreDiscs.AutoSize = true;
+            this.lbExploreDiscs.Location = new System.Drawing.Point(225, 41);
+            this.lbExploreDiscs.Name = "lbExploreDiscs";
+            this.lbExploreDiscs.Size = new System.Drawing.Size(10, 13);
+            this.lbExploreDiscs.TabIndex = 11;
+            this.lbExploreDiscs.Text = "-";
+            // 
+            // lbExploreTitle
+            // 
+            this.lbExploreTitle.AutoSize = true;
+            this.lbExploreTitle.Location = new System.Drawing.Point(225, 19);
+            this.lbExploreTitle.Name = "lbExploreTitle";
+            this.lbExploreTitle.Size = new System.Drawing.Size(10, 13);
+            this.lbExploreTitle.TabIndex = 10;
+            this.lbExploreTitle.Text = "-";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(162, 129);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(57, 13);
+            this.label14.TabIndex = 9;
+            this.label14.Text = "AlphaTitle:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(162, 107);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(32, 13);
+            this.label13.TabIndex = 8;
+            this.label13.Text = "Year:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(162, 85);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 13);
+            this.label12.TabIndex = 7;
+            this.label12.Text = "Players:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(162, 63);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "Publisher:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(162, 41);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(36, 13);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "Discs:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(162, 19);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(30, 13);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "Title:";
+            // 
+            // pbExploreImage
+            // 
+            this.pbExploreImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbExploreImage.Location = new System.Drawing.Point(6, 19);
+            this.pbExploreImage.Name = "pbExploreImage";
+            this.pbExploreImage.Size = new System.Drawing.Size(150, 150);
+            this.pbExploreImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbExploreImage.TabIndex = 3;
+            this.pbExploreImage.TabStop = false;
+            // 
+            // tbLogExplorer
+            // 
+            this.tbLogExplorer.Location = new System.Drawing.Point(172, 423);
+            this.tbLogExplorer.Multiline = true;
+            this.tbLogExplorer.Name = "tbLogExplorer";
+            this.tbLogExplorer.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbLogExplorer.Size = new System.Drawing.Size(512, 97);
+            this.tbLogExplorer.TabIndex = 2;
+            this.tbLogExplorer.Visible = false;
+            // 
+            // lbGames
+            // 
+            this.lbGames.FormattingEnabled = true;
+            this.lbGames.Location = new System.Drawing.Point(8, 35);
+            this.lbGames.Name = "lbGames";
+            this.lbGames.ScrollAlwaysVisible = true;
+            this.lbGames.Size = new System.Drawing.Size(158, 485);
+            this.lbGames.TabIndex = 1;
+            this.lbGames.SelectedIndexChanged += new System.EventHandler(this.lbGames_SelectedIndexChanged);
+            // 
+            // btRefresh
+            // 
+            this.btRefresh.Image = global::pbPSCReAlpha.Properties.Resources.view_refresh_6;
+            this.btRefresh.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btRefresh.Location = new System.Drawing.Point(8, 6);
+            this.btRefresh.Name = "btRefresh";
+            this.btRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btRefresh.TabIndex = 0;
+            this.btRefresh.Text = "Refresh";
+            this.btRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btRefresh.UseVisualStyleBackColor = true;
+            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
+            // 
             // sfdGeneSaveIni
             // 
             this.sfdGeneSaveIni.FileName = "Game.ini";
@@ -375,50 +660,46 @@
             this.ofdGeneLoadIni.ShowHelp = true;
             this.ofdGeneLoadIni.Title = "Load file";
             // 
-            // lbGeneBigData
+            // btCrowseGamesFolder
             // 
-            this.lbGeneBigData.FormattingEnabled = true;
-            this.lbGeneBigData.Location = new System.Drawing.Point(11, 230);
-            this.lbGeneBigData.Name = "lbGeneBigData";
-            this.lbGeneBigData.ScrollAlwaysVisible = true;
-            this.lbGeneBigData.Size = new System.Drawing.Size(236, 69);
-            this.lbGeneBigData.TabIndex = 17;
-            this.lbGeneBigData.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigData_SelectedIndexChanged);
+            this.btCrowseGamesFolder.Location = new System.Drawing.Point(609, 6);
+            this.btCrowseGamesFolder.Name = "btCrowseGamesFolder";
+            this.btCrowseGamesFolder.Size = new System.Drawing.Size(75, 23);
+            this.btCrowseGamesFolder.TabIndex = 6;
+            this.btCrowseGamesFolder.Text = "Browse...";
+            this.btCrowseGamesFolder.UseVisualStyleBackColor = true;
+            this.btCrowseGamesFolder.Click += new System.EventHandler(this.btCrowseGamesFolder_Click);
             // 
-            // tbGeneSearchText
+            // tbFolderPath
             // 
-            this.tbGeneSearchText.Location = new System.Drawing.Point(11, 204);
-            this.tbGeneSearchText.Name = "tbGeneSearchText";
-            this.tbGeneSearchText.Size = new System.Drawing.Size(145, 20);
-            this.tbGeneSearchText.TabIndex = 18;
-            // 
-            // btGeneSearch
-            // 
-            this.btGeneSearch.Location = new System.Drawing.Point(172, 204);
-            this.btGeneSearch.Name = "btGeneSearch";
-            this.btGeneSearch.Size = new System.Drawing.Size(75, 20);
-            this.btGeneSearch.TabIndex = 19;
-            this.btGeneSearch.Text = "Search...";
-            this.btGeneSearch.UseVisualStyleBackColor = true;
-            this.btGeneSearch.Click += new System.EventHandler(this.btGeneSearch_Click);
+            this.tbFolderPath.Location = new System.Drawing.Point(443, 8);
+            this.tbFolderPath.Name = "tbFolderPath";
+            this.tbFolderPath.Size = new System.Drawing.Size(160, 20);
+            this.tbFolderPath.TabIndex = 5;
+            this.tbFolderPath.Text = "F:\\Games";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(263, 328);
+            this.ClientSize = new System.Drawing.Size(700, 556);
             this.Controls.Add(this.tabControlAll);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "pbPSCReAlpha";
+            this.Text = "pbPSCReAlpha 0.4";
             this.tabControlAll.ResumeLayout(false);
             this.tabResortAlphabetic.ResumeLayout(false);
             this.tabResortAlphabetic.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tabGeneIni.ResumeLayout(false);
+            this.tabGeneIni.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).EndInit();
+            this.tabExplorer.ResumeLayout(false);
+            this.tabExplorer.PerformLayout();
+            this.gbExploreDetails.ResumeLayout(false);
+            this.gbExploreDetails.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -426,15 +707,13 @@
         #endregion
 
         private System.Windows.Forms.FolderBrowserDialog fbdGamesFolder;
-        private System.Windows.Forms.TextBox tbFolderPath;
-        private System.Windows.Forms.Button btCrowseGamesFolder;
         private System.Windows.Forms.Button btGo;
         private System.Windows.Forms.CheckBox cbStartAt21;
         private System.Windows.Forms.TextBox tbLog;
         private System.Windows.Forms.Button btTest;
         private System.Windows.Forms.TabControl tabControlAll;
         private System.Windows.Forms.TabPage tabResortAlphabetic;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabGeneIni;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btGenerateIni;
@@ -457,6 +736,31 @@
         private System.Windows.Forms.Button btGeneSearch;
         private System.Windows.Forms.TextBox tbGeneSearchText;
         private System.Windows.Forms.ListBox lbGeneBigData;
+        private System.Windows.Forms.TextBox tbHiddenLink;
+        private System.Windows.Forms.Button btLink;
+        private System.Windows.Forms.TabPage tabExplorer;
+        private System.Windows.Forms.ListBox lbGames;
+        private System.Windows.Forms.Button btRefresh;
+        private System.Windows.Forms.TextBox tbLogExplorer;
+        private System.Windows.Forms.GroupBox gbExploreDetails;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.PictureBox pbExploreImage;
+        private System.Windows.Forms.Label lbExploreAlphaTitle;
+        private System.Windows.Forms.Label lbExploreYear;
+        private System.Windows.Forms.Label lbExplorePlayers;
+        private System.Windows.Forms.Label lbExplorePublisher;
+        private System.Windows.Forms.Label lbExploreDiscs;
+        private System.Windows.Forms.Label lbExploreTitle;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ListView lvFiles;
+        private System.Windows.Forms.ImageList ilFlags;
+        private System.Windows.Forms.TextBox tbErrString;
+        private System.Windows.Forms.Button btCrowseGamesFolder;
+        private System.Windows.Forms.TextBox tbFolderPath;
     }
 }
 
