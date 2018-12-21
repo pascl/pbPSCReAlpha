@@ -2,14 +2,22 @@
 
 A little software to sort the directories on an USB key used with bleemsync.
 
-Last version: 0.2
+Last version: 0.4
 
+![Preview](https://imgur.com/a/lCf9p6u)
 
-## Tab 1 - re-sort folders
+## Tab 1 - Explorer
 
 1. Select your "Games" directory with the textfield or the Browse button.
+2. Click on Refresh.
+3. Click on a game in the left-hand list (found errors are marked with a star).
+4. Information of the game display on the right-hand of the window.
+
+## Tab 2 - re-sort folders
+
+1. In the previous tab, select your "Games" directory.
 2. Check the checkbox if you don't want to change the 20 first (in case you copied the psc content on the usb key and you don't want to edit anything for the 20 first directories).
-3. Click on "Do it".
+3. Click on "Re-sort".
 
 During the process, the directories are renamed with (number+1000), then renamed from 1 (or 21 if checkbox) to your max.
 
@@ -22,7 +30,7 @@ For example:
 Eject the usb key before reconnecting it (without opening anything) and launch the software.
 
 
-## Tab 2 - Game.ini Generator
+## Tab 3 - Game.ini Generator
 
 ### Load a ini
 * Click on Load and choose a file. The fields will print the content of the file.
