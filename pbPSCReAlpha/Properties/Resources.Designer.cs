@@ -63,6 +63,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap edit_sort_az {
+            get {
+                object obj = ResourceManager.GetObject("edit-sort-az", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap view_refresh_6 {
             get {
                 object obj = ResourceManager.GetObject("view-refresh-6", resourceCulture);

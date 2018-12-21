@@ -9,15 +9,16 @@ namespace pbPSCReAlpha
 {
     class ClGameStructure
     {
-        private string _folderIndex;
-        private string _title;
-        private string _alphatitle;
-        private string _discs;
-        private string _publisher;
-        private string _year;
-        private string _players;
-        private Bitmap _pictureFile;
-        private List<string> _filenames;
+        private String _folderIndex;
+        private String _title;
+        private String _alphatitle;
+        private String _discs;
+        private String _publisher;
+        private String _year;
+        private String _players;
+        private Image _pictureFile;
+        private String _pictureFileName;
+        private List<String> _filenames;
         private bool _gameDataMissing;
         private bool _pngMissing;
         private bool _pngMultiple;
@@ -32,11 +33,11 @@ namespace pbPSCReAlpha
         private bool _badCueName;
         private bool _badBinName;
         private bool _cueCountMisMatchDiscsCount;
-        private List<string> _errorString;
-        private List<string> _filesBinOk;
-        private List<string> _filesCueOk;
+        private List<String> _errorString;
+        private List<String> _filesBinOk;
+        private List<String> _filesCueOk;
 
-        public ClGameStructure(string folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount)
+        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount)
         {
             _folderIndex = folderIndex;
             _gameDataMissing = false; // if i have all these variables, i have at least the folder...
@@ -52,7 +53,7 @@ namespace pbPSCReAlpha
             _binMissing = binMissing;
             _badBinName = badBinName;
             _cueCountMisMatchDiscsCount = cueCountMisMatchdiscsCount;
-            _errorString = new List<string>();
+            _errorString = new List<String>();
             if (_nanFolder)
             {
                 this.ErrorString.Add("Folder name has to be numeric.");
@@ -107,13 +108,13 @@ namespace pbPSCReAlpha
             }
         }
         
-        public ClGameStructure(string folderIndex, bool nanFolder, bool gameDataMissing)
+        public ClGameStructure(String folderIndex, bool nanFolder, bool gameDataMissing)
         {
             _folderIndex = folderIndex;
             _nanFolder = nanFolder;
             _gameDataMissing = gameDataMissing;
-            _title = "Undefined";
-            _errorString = new List<string>();
+            _title = "ZZZZ" + folderIndex;
+            _errorString = new List<String>();
             if (_nanFolder)
             {
                 this.ErrorString.Add("Folder name has to be numeric.");
@@ -124,7 +125,7 @@ namespace pbPSCReAlpha
             }
         }
 
-        public void setIniInfos(string title, string discs, string publisher, string year, string players, string alphatitle)
+        public void setIniInfos(String title, String discs, String publisher, String year, String players, String alphatitle)
         {
             _title = title;
             _discs = discs;
@@ -134,33 +135,34 @@ namespace pbPSCReAlpha
             _alphatitle = alphatitle;
         }
 
-        public void setFilesList(List<string> sList)
+        public void setFilesList(List<String> sList)
         {
             _filenames = sList;
         }
 
-        public void setPicture(Bitmap bmFile)
+        public void setPicture(String imgFileName, Image imgFile)
         {
-            _pictureFile = bmFile;
+            _pictureFile = imgFile;
+            _pictureFileName = imgFileName;
         }
 
-        public string Title { get => _title; set => _title = value; }
-        public string FolderIndex { get => _folderIndex; set => _folderIndex = value; }
-        public string IndexAndTitle { get => (GeneralError ? "* " : "") + _folderIndex + " - " + _title; }
-        public string Alphatitle { get => _alphatitle; set => _alphatitle = value; }
-        public string Discs { get => _discs; set => _discs = value; }
-        public string Publisher { get => _publisher; set => _publisher = value; }
-        public string Year { get => _year; set => _year = value; }
-        public string Players { get => _players; set => _players = value; }
-        public Bitmap PictureFile { get => _pictureFile; }
+        public String Title { get => _title; set => _title = value; }
+        public String FolderIndex { get => _folderIndex; set => _folderIndex = value; }
+        public String IndexAndTitle { get => (GeneralError ? "* " : "") + _folderIndex + " - " + _title; }
+        public String Alphatitle { get => _alphatitle; set => _alphatitle = value; }
+        public String Discs { get => _discs; set => _discs = value; }
+        public String Publisher { get => _publisher; set => _publisher = value; }
+        public String Year { get => _year; set => _year = value; }
+        public String Players { get => _players; set => _players = value; }
+        public Image PictureFile { get => _pictureFile; }
         public bool GameDataMissing { get => _gameDataMissing; set => _gameDataMissing = value; }
         public bool IniMissing { get => _iniMissing; set => _iniMissing = value; }
         public bool CfgMissing { get => _cfgMissing; set => _cfgMissing = value; }
-        public List<string> Filenames { get => _filenames; }
+        public List<String> Filenames { get => _filenames; }
         public bool CueMissing { get => _cueMissing; set => _cueMissing = value; }
         public bool BinMissing { get => _binMissing; set => _binMissing = value; }
         public bool BinCueMismatch { get => _binCueMismatch; set => _binCueMismatch = value; }
-        public List<string> ErrorString { get => _errorString; set => _errorString = value; }
+        public List<String> ErrorString { get => _errorString; set => _errorString = value; }
         public bool NanFolder { get => _nanFolder; set => _nanFolder = value; }
         public bool PngMissing { get => _pngMissing; set => _pngMissing = value; }
         public bool PngMultiple { get => _pngMultiple; set => _pngMultiple = value; }
@@ -172,7 +174,8 @@ namespace pbPSCReAlpha
         public bool GeneralError { get => _cueCountMisMatchDiscsCount || _badBinName || _badCueName || _pngMismatch
                 || _iniIncomplete || _pngMultiple || _pngMissing || _nanFolder || _binCueMismatch || _binMissing
                 || _cueMissing || _cfgMissing || IniMissing || GameDataMissing; }
-        public List<string> FilesBinOk { get => _filesBinOk; set => _filesBinOk = value; }
-        public List<string> FilesCueOk { get => _filesCueOk; set => _filesCueOk = value; }
+        public List<String> FilesBinOk { get => _filesBinOk; set => _filesBinOk = value; }
+        public List<String> FilesCueOk { get => _filesCueOk; set => _filesCueOk = value; }
+        public string PictureFileName { get => _pictureFileName; set => _pictureFileName = value; }
     }
 }

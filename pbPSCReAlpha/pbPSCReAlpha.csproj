@@ -82,7 +82,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\edit-sort-az.png" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\view-refresh-6.png" />
   </ItemGroup>

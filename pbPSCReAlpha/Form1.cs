@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -18,13 +11,15 @@ namespace pbPSCReAlpha
     public partial class Form1 : Form
     {
         Dictionary<String, ClPS1Game> dcPs1Games;
-        String sSeparator = "/##/";
-        List<String> lsMyGames;
+        List<String> lsFolders;
+        List<String> lsTitles;
 
         public Form1()
         {
             InitializeComponent();
+            tabControlAll.TabPages.Remove(tabResortAlphabetic);
             dcPs1Games = new Dictionary<string, ClPS1Game>();
+            tbFolderPath.Text = Properties.Settings.Default.sFolderPath;
             try
             {
                 using (XmlTextReader xmlreader = new XmlTextReader(Application.StartupPath + "\\" + "ps1games.xml"))
@@ -74,7 +69,7 @@ namespace pbPSCReAlpha
             }
             catch(Exception ex)
             {
-                tbLog.AppendText(ex.Message + "\n");
+                tbLogExplorer.AppendText(ex.Message + "\n");
             }
         }
 
@@ -187,7 +182,7 @@ namespace pbPSCReAlpha
             }
             catch (Exception ex)
             {
-                tbLog.AppendText(ex.Message + "\n");
+                tbLogExplorer.AppendText(ex.Message + "\n");
             }
         }
 
@@ -252,7 +247,7 @@ namespace pbPSCReAlpha
                     }
                     catch(Exception ex)
                     {
-                        tbLog.AppendText(ex.Message + "\n");
+                        tbLogExplorer.AppendText(ex.Message + "\n");
                     }
                 }
             }
@@ -331,7 +326,7 @@ namespace pbPSCReAlpha
                 }
                 catch(Exception ex)
                 {
-                    tbLog.AppendText(ex.Message + "\n");
+                    tbLogExplorer.AppendText(ex.Message + "\n");
                 }
             }
         }
@@ -394,17 +389,15 @@ namespace pbPSCReAlpha
             }
         }
 
-        private void btRefresh_Click(object sender, EventArgs e)
+        private Dictionary<String, ClGameStructure> generateGameListFolders(String sFolderPath, out List<String> lsFolders, out List<String> lsTitles)
         {
-            //
-            lbGames.Items.Clear();
-            lsMyGames = new List<String>();
             Dictionary<String, ClGameStructure> dcGames = new Dictionary<String, ClGameStructure>();
-            String sFolderPath = tbFolderPath.Text;
+            lsFolders = new List<String>();
+            lsTitles = new List<string>();
             try
             {
-                var dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                foreach(DirectoryInfo di in dirList)
+                DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                foreach (DirectoryInfo di in dirList)
                 {
                     tbLogExplorer.AppendText(di.FullName + "\n");
                     String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
@@ -417,7 +410,7 @@ namespace pbPSCReAlpha
                     sFolderIndex = s2[0];
                     int index = -1;
                     bool bIsNumericFolderName = int.TryParse(sFolderIndex, out index);
-                    
+
                     if (Directory.Exists(di.FullName + "\\GameData"))
                     {
                         String sTitle = "Undefined";
@@ -427,7 +420,8 @@ namespace pbPSCReAlpha
                         String sYear = String.Empty;
                         String sPlayers = String.Empty;
                         String sPicture = String.Empty;
-                        Bitmap bmPicture = new Bitmap(1,1);
+                        String bmPictureString = String.Empty;
+                        Bitmap bmPicture = new Bitmap(1, 1);
                         bool bAlphaTitlePresent = false;
                         bool bGameIniPresent = false;
                         bool bGameIniComplete = false;
@@ -447,7 +441,7 @@ namespace pbPSCReAlpha
                         Dictionary<String, String[]> dcBinParsed = new Dictionary<String, String[]>();
                         List<String> lsBinPresent = new List<string>();
                         List<string> sFiles = new List<string>();
-                        var inDirfileList = new DirectoryInfo(di.FullName + "\\GameData").GetFiles("*.*", SearchOption.AllDirectories);
+                        FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + "\\GameData").GetFiles("*.*", SearchOption.AllDirectories);
                         foreach (FileInfo fi in inDirfileList)
                         {
                             sFiles.Add(fi.Name);
@@ -459,7 +453,8 @@ namespace pbPSCReAlpha
                                     bMultiPictures = true;
                                 }
                                 bPicturePresent = true;
-                                bmPicture = new Bitmap(fi.FullName);
+                                bmPictureString = fi.FullName;
+                                bmPicture = new Bitmap(bmPictureString);
                                 sPicture = fi.Name.Substring(0, fi.Name.IndexOf(fi.Extension));
                             }
                             else
@@ -475,11 +470,11 @@ namespace pbPSCReAlpha
                                     while ((s = sr.ReadLine()) != null)
                                     {
                                         s = s.Trim();
-                                        if(s.ToUpper().StartsWith("FILE"))
+                                        if (s.ToUpper().StartsWith("FILE"))
                                         {
                                             int ipos1 = s.IndexOf("\"");
                                             int ipos2 = s.LastIndexOf("\"");
-                                            if((ipos1 > -1) && (ipos2 > -1) && (ipos1 != ipos2))
+                                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos1 != ipos2))
                                             {
                                                 //
                                                 String sBin = s.Substring(ipos1 + 1, ipos2 - ipos1 - 1);
@@ -566,14 +561,14 @@ namespace pbPSCReAlpha
                                     bPngMatchDisc = true;
                                 }
                             }
-                            if(bCuePresent)
+                            if (bCuePresent)
                             {
-                                if(iNbCue == iNbDiscs)
+                                if (iNbCue == iNbDiscs)
                                 {
                                     bDiscCountMatchCueCount = true;
-                                    foreach(String s in sDiscMulti)
+                                    foreach (String s in sDiscMulti)
                                     {
-                                        if(false == dcBinParsed.ContainsKey(s))
+                                        if (false == dcBinParsed.ContainsKey(s))
                                         {
                                             lsVerboseError.Add("Disc " + s + " doesn't have a matching cue file.");
                                             bBadCueName = true;
@@ -583,7 +578,7 @@ namespace pbPSCReAlpha
                                             lsCueFilesOk.Add(s);
                                         }
                                     }
-                                    foreach(String s in dcBinParsed.Keys)
+                                    foreach (String s in dcBinParsed.Keys)
                                     {
                                         if (-1 == Array.IndexOf(sDiscMulti, s))
                                         {
@@ -596,10 +591,10 @@ namespace pbPSCReAlpha
                                     foreach (KeyValuePair<String, String[]> entry in dcBinParsed)
                                     {
                                         // do something with entry.Value or entry.Key
-                                        foreach(String s in entry.Value)
+                                        foreach (String s in entry.Value)
                                         {
                                             int iS = lsBinPresent.IndexOf(s);
-                                            if(iS > -1)
+                                            if (iS > -1)
                                             {
                                                 lsFound.Add(s);
                                                 lsBinFilesOk.Add(s);
@@ -626,22 +621,21 @@ namespace pbPSCReAlpha
                                 }
                             }
                         }
-                        /*
-                        if (bAlphaTitlePresent)
-                        {
-                            tbLogExplorer.AppendText("Found: " + sFolderIndex + " " + sAlphaTitle + " (" + sTitle + ")" + "\n");
-                        }
-                        else
-                        {
-                            tbLogExplorer.AppendText("Found: " + sFolderIndex + " " + sTitle + "\n");
-                        }
-                        */
                         ClGameStructure cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount);
                         cgs.setIniInfos(sTitle, sDiscs, sPublisher, sYear, sPlayers, sAlphaTitle);
                         cgs.setFilesList(sFiles);
-                        cgs.setPicture(bmPicture);
-                        lsMyGames.Add(sFolderIndex);
-                        foreach(String s in lsVerboseError)
+                        cgs.setPicture(bmPictureString, (Image)(new Bitmap(bmPicture)));
+                        bmPicture.Dispose();
+                        lsFolders.Add(sFolderIndex);
+                        if(bAlphaTitlePresent)
+                        {
+                            lsTitles.Add(sAlphaTitle);
+                        }
+                        else
+                        {
+                            lsTitles.Add(sTitle);
+                        }
+                        foreach (String s in lsVerboseError)
                         {
                             cgs.ErrorString.Add(s + "\n");
                         }
@@ -652,30 +646,55 @@ namespace pbPSCReAlpha
                     else
                     {
                         ClGameStructure cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, true);
-                        lsMyGames.Add(sFolderIndex);
+                        lsFolders.Add(sFolderIndex);
                         dcGames.Add(sFolderIndex, cgs);
                     }
-                }
-                if (lsMyGames.Count > 0)
+                } // foreach
+                if (lsFolders.Count > 0)
                 {
                     using (NaturalComparer comparer = new NaturalComparer())
                     {
-                        lsMyGames.Sort(comparer);
+                        lsFolders.Sort(comparer);
                     }
-                    lbGames.DisplayMember = "IndexAndTitle";
-                    foreach(string s in lsMyGames)
+                }
+                if (lsTitles.Count > 0)
+                {
+                    using (NaturalComparer comparer = new NaturalComparer())
                     {
-                        if(dcGames.ContainsKey(s))
-                        {
-                            lbGames.Items.Add(dcGames[s]);
-                        }
+                        lsTitles.Sort(comparer);
                     }
                 }
             }
             catch(Exception ex)
             {
-
+                tbLogExplorer.AppendText(ex.Message + "\n");
             }
+            return dcGames;
+        }
+
+        private void refreshGameListFolders()
+        {
+            btReSort.Enabled = false;
+            lbGames.Items.Clear();
+            String sFolderPath = tbFolderPath.Text;
+            Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
+            if (lsFolders.Count > 0)
+            {
+                lbGames.DisplayMember = "IndexAndTitle";
+                foreach (string s in lsFolders)
+                {
+                    if (dcGames.ContainsKey(s))
+                    {
+                        lbGames.Items.Add(dcGames[s]);
+                    }
+                }
+                btReSort.Enabled = true;
+            }
+        }
+
+        private void btRefresh_Click(object sender, EventArgs e)
+        {
+            refreshGameListFolders();
         }
 
         private void lbGames_SelectedIndexChanged(object sender, EventArgs e)
@@ -692,8 +711,9 @@ namespace pbPSCReAlpha
                 lbExploreAlphaTitle.Text = cgs.Alphatitle;
                 try
                 {
-                    pbExploreImage.Image = cgs.PictureFile;
-                    pbExploreImage.Update();
+                    /*pbExploreImage.ImageLocation = cgs.PictureFileName;
+                    pbExploreImage.Load();*/
+                    pbExploreImage.Image = cgs.PictureFile; //  Image.FromFile(cgs.PictureFileName);
                 }
                 catch (Exception ex)
                 {
@@ -784,6 +804,68 @@ namespace pbPSCReAlpha
                     }
                 }
             }
+        }
+
+        private void btReSort_Click(object sender, EventArgs e)
+        {
+            int iDecalage = 3000;
+            String sFolderPath = tbFolderPath.Text;
+            // refresh without updating display, reupdate at the end
+            Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
+            if (lsFolders.Count > 0)
+            {
+                bool bCanContinue = true;
+                foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                {
+                    ClGameStructure c1 = pair.Value;
+                    bCanContinue &= (!c1.NanFolder);
+                }
+                if (bCanContinue)
+                {
+                    try
+                    {
+                        foreach (String s in lsFolders)
+                        {
+                            if (dcGames.ContainsKey(s))
+                            {
+                                int index = int.Parse(s);
+                                Directory.Move(sFolderPath + "\\" + index.ToString(), sFolderPath + "\\" + (index + iDecalage).ToString());
+                                //lbGames.Items.Add(dcGames[s]);
+                            }
+                        }
+                        int iNewIndex = 1;
+                        foreach (String s in lsTitles)
+                        {
+                            foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                            {
+                                ClGameStructure c1 = pair.Value;
+                                int iIndexFolder = int.Parse(c1.FolderIndex);
+                                if (((c1.Alphatitle != String.Empty) && (c1.Alphatitle == s)) || ((c1.Alphatitle == String.Empty) && (c1.Title == s)))
+                                {
+                                    Directory.Move(sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderPath + "\\" + (iNewIndex).ToString());
+                                    iNewIndex++;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        tbLogExplorer.AppendText(ex.Message + "\n");
+                    }
+                    refreshGameListFolders();
+                }
+                else
+                {
+                    MessageBox.Show("Correct the wrong folder names before doing this.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
+            Properties.Settings.Default.Save();
         }
     }
 }
