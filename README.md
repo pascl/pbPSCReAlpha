@@ -37,15 +37,18 @@ In case it is still locked somewhere, try to rename the locked folder in a windo
 
 ### Edit Game.ini
 ![Preview](https://i.imgur.com/S9ZlsvP.png)
+
 Search at the bottom can fill Title and Discs fields. You can load/save files.
 
 ### Edit Image
 ![Preview](https://i.imgur.com/QIC1BVA.png)
+
 Load a png, bmp or jpg file and save to png.
 Added pngqwant exe to the package. It is launched during the save operation. Can be launched on all folders by the "Compress..." button.
 
 ### Edit cue file(s)
 ![Preview](https://i.imgur.com/hEp7sSC.png)
+
 Rather a viewer for now (read-only). Available in a future version.
 
 ### Add pcsx.cfg file
