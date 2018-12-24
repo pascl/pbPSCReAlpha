@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+
 
 namespace pbPSCReAlpha
 {
@@ -13,13 +17,16 @@ namespace pbPSCReAlpha
         Dictionary<String, ClPS1Game> dcPs1Games;
         List<String> lsFolders;
         List<String> lsTitles;
+        SimpleLogger slLogger;
+        bool bAccessingDebugTab = false;
 
         public Form1()
         {
             InitializeComponent();
-            tabControlAll.TabPages.Remove(tabResortAlphabetic);
+            this.Text = "pbPSCReAlpha v" + Assembly.GetExecutingAssembly().GetName().Version;
             dcPs1Games = new Dictionary<string, ClPS1Game>();
             tbFolderPath.Text = Properties.Settings.Default.sFolderPath;
+            slLogger = new SimpleLogger(tbLogDebug);
             try
             {
                 using (XmlTextReader xmlreader = new XmlTextReader(Application.StartupPath + "\\" + "ps1games.xml"))
@@ -65,129 +72,29 @@ namespace pbPSCReAlpha
                                 break;
                         }
                     }
+                    slLogger.Debug("Found games in xml for search function: " + dcPs1Games.Count.ToString());
                 }
             }
             catch(Exception ex)
             {
-                tbLogExplorer.AppendText(ex.Message + "\n");
+                slLogger.Fatal(ex.Message);
             }
         }
 
         private void btCrowseGamesFolder_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Browse 'Games' Folder Click");
             if (DialogResult.OK == fbdGamesFolder.ShowDialog())
             {
                 String sFolderPath = fbdGamesFolder.SelectedPath;
                 tbFolderPath.Text = sFolderPath;
             }
-        }
-
-        private void btGo_Click(object sender, EventArgs e)
-        {
-            List<String> lsTitles = new List<string>();
-            Dictionary<String, int> dcTitleIndexes = new Dictionary<string, int>();
-            String sFolderPath = tbFolderPath.Text;
-            bool bStartAt21 = cbStartAt21.Checked;
-            try
-            {
-                var fileList = new DirectoryInfo(sFolderPath).GetFiles("*.ini", SearchOption.AllDirectories);
-                foreach(FileInfo fi in fileList)
-                {
-                    String s1 = fi.DirectoryName.Substring(sFolderPath.Length);
-                    if(s1.StartsWith("\\"))
-                    {
-                        s1 = s1.Substring(1);
-                    }
-                    //tbLog.AppendText(s1 + "\n");
-                    String[] s2 = s1.Split('\\');
-                    s1 = s2[0];
-                    int index = int.Parse(s1);
-                    String sTitle = "Undefined";
-                    String sAlphaTitle = "Undefined";
-                    if (((bStartAt21) && (index >= 21)) || (!bStartAt21))
-                    {
-                        using (StreamReader sr = new StreamReader(fi.FullName))
-                        {
-                            string s = "";
-                            bool alphaTitle = false;
-                            while ((s = sr.ReadLine()) != null)
-                            {
-                                if (s.StartsWith("Title="))
-                                {
-                                    if (!alphaTitle)
-                                    {
-                                        sTitle = s.Substring(6).Trim();
-                                    }
-                                }
-                                if (s.StartsWith("AlphaTitle="))
-                                {
-                                    alphaTitle = true;
-                                    sAlphaTitle = s.Substring(11).Trim();
-                                }
-                            }
-                            if (alphaTitle)
-                            {
-                                tbLog.AppendText("Found: " + s1 + " " + sAlphaTitle + " (" + sTitle + ")" + "\n");
-                                lsTitles.Add(sAlphaTitle);
-                                dcTitleIndexes.Add(sAlphaTitle, index);
-                            }
-                            else
-                            { 
-                                tbLog.AppendText("Found: " + s1 + " " + sTitle + "\n");
-                                lsTitles.Add(sTitle);
-                                dcTitleIndexes.Add(sTitle, index);
-                            }
-                        }
-                        //tbLog.AppendText(fi.DirectoryName + " -- " + fi.Name + "\n");
-                    }
-                }
-                foreach(FileInfo fi in fileList)
-                {
-                    String s1 = fi.DirectoryName.Substring(sFolderPath.Length);
-                    if (s1.StartsWith("\\"))
-                    {
-                        s1 = s1.Substring(1);
-                    }
-                    //tbLog.AppendText(s1 + "\n");
-                    String[] s2 = s1.Split('\\');
-                    s1 = s2[0];
-                    int index = int.Parse(s1);
-                    if (((bStartAt21) && (index >= 21)) || (!bStartAt21))
-                    {
-                        Thread.Sleep(100);
-                        //tbLog.AppendText("o: " + sFolderPath + "\\" + index.ToString() + "\ts: " + sFolderPath + "\\" + (index + 1000).ToString() + "\n");
-                        Directory.Move(sFolderPath + "\\" + index.ToString(), sFolderPath + "\\" + (index + 1000).ToString());
-                    }
-                }
-                if(lsTitles.Count > 0)
-                {
-                    using (NaturalComparer comparer = new NaturalComparer())
-                    {
-                        lsTitles.Sort(comparer);
-                    }
-                    int newindex = 1;
-                    if (bStartAt21)
-                    {
-                        newindex = 21;
-                    }
-                    foreach(String s in lsTitles)
-                    {
-                        Thread.Sleep(100);
-                        int oldindex = dcTitleIndexes[s];
-                        Directory.Move(sFolderPath + "\\" + (oldindex + 1000).ToString(), sFolderPath + "\\" + newindex.ToString());
-                        tbLog.AppendText("New: " + newindex.ToString() + " " + s + "\n");
-                        newindex++;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                tbLogExplorer.AppendText(ex.Message + "\n");
-            }
+            slLogger.Trace("<< Browse 'Games' Folder Click");
         }
 
         private void btTest_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Test Sort Click");
             List<String> lsTest = new List<string>();
             lsTest.Add("Toto");
             lsTest.Add("Fighting Force 2");
@@ -208,185 +115,33 @@ namespace pbPSCReAlpha
             }
             foreach(String s in lsTest)
             {
-                tbLog.AppendText(s + "\n");
+                slLogger.Debug(s);
             }
+            slLogger.Trace("<< Test Sort Click");
         }
 
         private void btGenerateIni_Click(object sender, EventArgs e)
         {
-            String s1 = tbGeneTitle.Text.Trim(); // have to be not empty
-            String s2 = tbGeneDiscs.Text.Trim(); // have to be not empty
-            if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
-            {
-                String s3 = tbGenePublisher.Text.Trim();
-                String s4 = tbGeneAlphaTitle.Text.Trim();
-                int i1 = (int)(nuGenePlayers.Value);
-                int i2 = (int)(nuGeneYear.Value);
-                if (Directory.Exists(tbFolderPath.Text))
-                {
-                    sfdGeneSaveIni.InitialDirectory = tbFolderPath.Text;
-                }
-                if(DialogResult.OK == sfdGeneSaveIni.ShowDialog())
-                {
-                    String sFileName = sfdGeneSaveIni.FileName;
-                    try
-                    {
-                        using (StreamWriter sw = new StreamWriter(sFileName))
-                        {
-                            sw.WriteLine("[Game]");
-                            sw.WriteLine("Discs=" + s2);
-                            sw.WriteLine("Title=" + s1);
-                            sw.WriteLine("Publisher=" + s3);
-                            sw.WriteLine("Players=" + i1.ToString());
-                            sw.WriteLine("Year=" + i2.ToString());
-                            if (!String.IsNullOrEmpty(s4))
-                            {
-                                sw.WriteLine("AlphaTitle=" + s4);
-                            }
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        tbLogExplorer.AppendText(ex.Message + "\n");
-                    }
-                }
-            }
-            else
-                MessageBox.Show("You have to enter at least Title and Discs to continue...");
         }
 
         private void btLoadIni_Click(object sender, EventArgs e)
         {
-            //
-            if(Directory.Exists(tbFolderPath.Text))
-            {
-                ofdGeneLoadIni.InitialDirectory = tbFolderPath.Text;
-            }
-            if (DialogResult.OK == ofdGeneLoadIni.ShowDialog())
-            {
-                String sFileName = ofdGeneLoadIni.FileName;
-                try
-                {
-                    using (StreamReader sr = new StreamReader(sFileName))
-                    {
-                        String s;
-                        tbGeneDiscs.Clear();
-                        tbGeneTitle.Clear();
-                        tbGeneAlphaTitle.Clear();
-                        tbGenePublisher.Clear();
-                        nuGenePlayers.Value = (decimal)1;
-                        nuGeneYear.Value = (decimal)1995;
-                        while ((s = sr.ReadLine()) != null)
-                        {
-                            if (s.StartsWith("Discs="))
-                            {
-                                tbGeneDiscs.Text = s.Substring(6);
-                            }
-                            else
-                            if (s.StartsWith("Title="))
-                            {
-                                tbGeneTitle.Text = s.Substring(6);
-                            }
-                            else
-                            if (s.StartsWith("Publisher="))
-                            {
-                                tbGenePublisher.Text = s.Substring(10);
-                            }
-                            else
-                            if (s.StartsWith("Players="))
-                            {
-                                try
-                                {
-                                    nuGenePlayers.Value = (decimal)(int.Parse(s.Substring(8)));
-                                }
-                                catch (Exception ex)
-                                {
-                                    //
-                                }
-                            }
-                            else
-                            if (s.StartsWith("Year="))
-                            {
-                                try
-                                {
-                                    nuGeneYear.Value = (decimal)(int.Parse(s.Substring(5)));
-                                }
-                                catch (Exception ex)
-                                {
-                                    //
-                                }
-                            }
-                            else
-                            if (s.StartsWith("AlphaTitle="))
-                            {
-                                tbGeneAlphaTitle.Text = s.Substring(11);
-                            }
-                        }
-                    }
-                }
-                catch(Exception ex)
-                {
-                    tbLogExplorer.AppendText(ex.Message + "\n");
-                }
-            }
         }
 
         private void btGeneCopyTitle_Click(object sender, EventArgs e)
         {
-            tbGeneAlphaTitle.Text = tbGeneTitle.Text.Trim();
         }
 
         private void btGeneSearch_Click(object sender, EventArgs e)
         {
-            String s = tbGeneSearchText.Text.Trim().ToUpper();
-            lbGeneBigData.Items.Clear();
-            lbGeneBigData.DisplayMember = "DisplayTitle";
-            tbHiddenLink.Text = "";
-            //btDownInfo.Enabled = false;
-            if (dcPs1Games.Count > 0)
-            {
-                if (s.Length > 2)
-                {
-                    foreach (KeyValuePair<string, ClPS1Game> pair in dcPs1Games)
-                    {
-                        ClPS1Game c1 = pair.Value;
-                        if (c1.Title.ToUpper().Contains(s))
-                        {
-                            lbGeneBigData.Items.Add(c1);
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("You have to enter at least 2 characters (other than space) to search something.");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Error. Gamelist not loaded.");
-            }
         }
 
         private void lbGeneBigData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lbGeneBigData.SelectedIndex > -1)
-            {
-                ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
-                tbGeneTitle.Text = psGame.Title.Trim();
-                tbGeneDiscs.Text = psGame.Serial.Trim();
-                tbHiddenLink.Text = psGame.Link.Trim();
-                btLink.Enabled = true;
-            }
         }
         
         private void btLink_Click(object sender, EventArgs e)
         {
-            //
-            String sLink = tbHiddenLink.Text.Trim();
-            if (!String.IsNullOrEmpty(sLink))
-            {
-                System.Diagnostics.Process.Start("http://psxdatacenter.com/" + sLink);
-            }
         }
 
         private Dictionary<String, ClGameStructure> generateGameListFolders(String sFolderPath, out List<String> lsFolders, out List<String> lsTitles)
@@ -399,13 +154,12 @@ namespace pbPSCReAlpha
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
                 foreach (DirectoryInfo di in dirList)
                 {
-                    tbLogExplorer.AppendText(di.FullName + "\n");
+                    slLogger.Debug("** Directory: " + di.FullName);
                     String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
                     if (sFolderIndex.StartsWith("\\"))
                     {
                         sFolderIndex = sFolderIndex.Substring(1);
                     }
-                    //tbLog.AppendText(sFolderIndex + "\n");
                     String[] s2 = sFolderIndex.Split('\\');
                     sFolderIndex = s2[0];
                     int index = -1;
@@ -413,7 +167,7 @@ namespace pbPSCReAlpha
 
                     if (Directory.Exists(di.FullName + "\\GameData"))
                     {
-                        String sTitle = "Undefined";
+                        String sTitle = String.Empty;
                         String sAlphaTitle = String.Empty;
                         String sDiscs = String.Empty;
                         String sPublisher = String.Empty;
@@ -445,7 +199,7 @@ namespace pbPSCReAlpha
                         foreach (FileInfo fi in inDirfileList)
                         {
                             sFiles.Add(fi.Name);
-                            tbLogExplorer.AppendText(fi.Name + "\n");
+                            slLogger.Debug("**** File: " + fi.Name);
                             if (fi.Extension == ".png")
                             {
                                 if (bPicturePresent)
@@ -622,7 +376,10 @@ namespace pbPSCReAlpha
                             }
                         }
                         ClGameStructure cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount);
-                        cgs.setIniInfos(sTitle, sDiscs, sPublisher, sYear, sPlayers, sAlphaTitle);
+                        if (bGameIniPresent)
+                        {
+                            cgs.setIniInfos(sTitle, sDiscs, sPublisher, sYear, sPlayers, sAlphaTitle);
+                        }
                         cgs.setFilesList(sFiles);
                         cgs.setPicture(bmPictureString, (Image)(new Bitmap(bmPicture)));
                         bmPicture.Dispose();
@@ -667,7 +424,7 @@ namespace pbPSCReAlpha
             }
             catch(Exception ex)
             {
-                tbLogExplorer.AppendText(ex.Message + "\n");
+                slLogger.Fatal(ex.Message);
             }
             return dcGames;
         }
@@ -675,6 +432,14 @@ namespace pbPSCReAlpha
         private void refreshGameListFolders()
         {
             btReSort.Enabled = false;
+            btNewFolder.Enabled = false;
+            int iSelected = -1;
+            ClGameStructure cgs = null;
+            if (lbGames.SelectedIndex > -1)
+            {
+                iSelected = lbGames.SelectedIndex;
+                cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+            }
             lbGames.Items.Clear();
             String sFolderPath = tbFolderPath.Text;
             Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
@@ -686,20 +451,30 @@ namespace pbPSCReAlpha
                     if (dcGames.ContainsKey(s))
                     {
                         lbGames.Items.Add(dcGames[s]);
+                        if(iSelected > -1)
+                        {
+                            if(((cgs.Alphatitle != String.Empty) && (dcGames[s].Alphatitle == cgs.Alphatitle)) || ((cgs.Alphatitle == String.Empty) && (dcGames[s].Title == cgs.Title))) // if (s == cgs.FolderIndex)
+                            {
+                                lbGames.SelectedIndex = lbGames.Items.Count - 1;
+                            }
+                        }
                     }
                 }
                 btReSort.Enabled = true;
+                btNewFolder.Enabled = true;
             }
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Refresh gamelist Click");
             refreshGameListFolders();
+            slLogger.Trace("<< Refresh gamelist Click");
         }
 
         private void lbGames_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //
+            slLogger.Trace(">> Game Selection changed in gamelist");
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
@@ -717,7 +492,7 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    tbLogExplorer.AppendText(ex.Message + "\n");
+                    slLogger.Fatal(ex.Message);
                 }
                 lvFiles.Items.Clear();
                 if ((cgs.Filenames != null) && (cgs.Filenames.Count > 0))
@@ -803,12 +578,141 @@ namespace pbPSCReAlpha
                         tbErrString.AppendText(s + "\n");
                     }
                 }
+                if(true == cgs.GeneralError)
+                {
+                    /*if(cgs.IniIncomplete || cgs.IniMissing)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }*/
+                    /*if(cgs.PngMissing)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }*/
+                    if(cgs.CueMissing)
+                    {
+                        btEditCue.Visible = false;
+                        btEditCue.Enabled = false;
+                    }
+                    else
+                    {
+                        btEditCue.Enabled = true;
+                        btEditCue.Visible = true;
+                    }
+                    if (cgs.CfgMissing)
+                    {
+                        btAddPcsxCfg.Enabled = true;
+                        btAddPcsxCfg.Visible = true;
+                    }
+                    else
+                    {
+                        btAddPcsxCfg.Visible = false;
+                        btAddPcsxCfg.Enabled = false;
+                    }
+                }
+                else
+                {
+                    // visible if no errors
+                    btEditCue.Enabled = true;
+                    btEditCue.Visible = true;
+                }
             }
+            slLogger.Trace("<< Game Selection changed in gamelist");
         }
 
         private void btReSort_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Resort gamelist Click");
             int iDecalage = 3000;
+            String sFolderPath = tbFolderPath.Text;
+            // refresh without updating display, reupdate at the end
+            Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
+            if (lsFolders.Count > 0)
+            {
+                bool bCanContinue = true;
+                foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                {
+                    ClGameStructure c1 = pair.Value;
+                    bCanContinue &= ((!c1.NanFolder) & (!c1.GameDataMissing) & (!c1.IniMissing) & (!c1.IniIncomplete));
+                }
+                if (bCanContinue)
+                {
+                    try
+                    {
+                        foreach (String s in lsFolders)
+                        {
+                            if (dcGames.ContainsKey(s))
+                            {
+                                int index = int.Parse(s);
+                                if ((sFolderPath + "\\" + index.ToString()) != (sFolderPath + "\\" + (index + iDecalage).ToString()))
+                                {
+                                    Directory.Move(sFolderPath + "\\" + index.ToString(), sFolderPath + "\\" + (index + iDecalage).ToString());
+                                }
+                                //lbGames.Items.Add(dcGames[s]);
+                            }
+                        }
+                        int iNewIndex = 1;
+                        int iPrevIndex = iNewIndex;
+                        List<int> liFoldersDone = new List<int>();
+                        foreach (String s in lsTitles)
+                        {
+                            iPrevIndex = iNewIndex;
+                            foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                            {
+                                ClGameStructure c1 = pair.Value;
+                                int iIndexFolder = int.Parse(c1.FolderIndex);
+                                if (((c1.Alphatitle != String.Empty) && (c1.Alphatitle == s)) || ((c1.Alphatitle == String.Empty) && (c1.Title == s)))
+                                {
+                                    if (liFoldersDone.IndexOf(iIndexFolder) == -1) // if same title in different folders
+                                    {
+                                        if ((sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString()) != (sFolderPath + "\\" + (iNewIndex).ToString()))
+                                        {
+                                            Directory.Move(sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderPath + "\\" + (iNewIndex).ToString());
+                                        }
+                                        liFoldersDone.Add(iIndexFolder);
+                                        iNewIndex++;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(iNewIndex == iPrevIndex)
+                            {
+                                // just in case
+                                iNewIndex++;
+                            }
+                        }
+                        refreshGameListFolders();
+                    }
+                    catch(Exception ex)
+                    {
+                        slLogger.Fatal(ex.Message);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Correct the wrong detected folders (not numbered names, GameData or Game.ini missing).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            slLogger.Trace("<< Resort gamelist Click");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
+            Properties.Settings.Default.Save();
+            //slLogger.Trace("Saving parameters for next time. Bye.");
+        }
+
+        private void btNewFolder_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Create new folder Click");
             String sFolderPath = tbFolderPath.Text;
             // refresh without updating display, reupdate at the end
             Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
@@ -824,34 +728,19 @@ namespace pbPSCReAlpha
                 {
                     try
                     {
-                        foreach (String s in lsFolders)
+                        int iCount = lsFolders.Count;
+                        int iNext = 1 + iCount;
+                        while(Directory.Exists(sFolderPath + "\\" + iNext.ToString()))
                         {
-                            if (dcGames.ContainsKey(s))
-                            {
-                                int index = int.Parse(s);
-                                Directory.Move(sFolderPath + "\\" + index.ToString(), sFolderPath + "\\" + (index + iDecalage).ToString());
-                                //lbGames.Items.Add(dcGames[s]);
-                            }
+                            iNext++;
                         }
-                        int iNewIndex = 1;
-                        foreach (String s in lsTitles)
-                        {
-                            foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
-                            {
-                                ClGameStructure c1 = pair.Value;
-                                int iIndexFolder = int.Parse(c1.FolderIndex);
-                                if (((c1.Alphatitle != String.Empty) && (c1.Alphatitle == s)) || ((c1.Alphatitle == String.Empty) && (c1.Title == s)))
-                                {
-                                    Directory.Move(sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderPath + "\\" + (iNewIndex).ToString());
-                                    iNewIndex++;
-                                    break;
-                                }
-                            }
-                        }
+                        Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString());
+                        Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData");
+                        File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
                     }
                     catch(Exception ex)
                     {
-                        tbLogExplorer.AppendText(ex.Message + "\n");
+                        slLogger.Fatal(ex.Message);
                     }
                     refreshGameListFolders();
                 }
@@ -860,12 +749,149 @@ namespace pbPSCReAlpha
                     MessageBox.Show("Correct the wrong folder names before doing this.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
+            slLogger.Trace("<< Create new folder Click");
+        }
+        
+        private void btLaunchBleemsync_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Launch BleemSync Click");
+            String sFolderPath = tbFolderPath.Text;
+            if(sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            if (Directory.Exists(sFolderPath))
+            {
+                String[] sFolderDecomposed = sFolderPath.Split('\\');
+                if((sFolderDecomposed.Length > 1) && (sFolderDecomposed[sFolderDecomposed.Length - 1] == "Games"))
+                {
+                    sFolderDecomposed[sFolderDecomposed.Length - 1] = "BleemSync";
+                    String sFolderBleemsync = String.Join("\\", sFolderDecomposed);
+                    if (Directory.Exists(sFolderBleemsync))
+                    {
+                        if (File.Exists(sFolderBleemsync + "\\BleemSync.exe"))
+                        {
+                            MyProcessHelper mph = new MyProcessHelper(sFolderBleemsync + "\\BleemSync.exe");
+                            String s = mph.DoIt();
+                            slLogger.Info(s);
+                        }
+                        else
+                        {
+                            MessageBox.Show("There is not the BleemSync executable here: " + sFolderBleemsync, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("There is not a BleemSync folder: " + sFolderBleemsync, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("There is a problem with the folder path: " + sFolderPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Folder " + sFolderPath + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            slLogger.Trace("<< Launch BleemSync Click");
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void btClearLog_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
-            Properties.Settings.Default.Save();
+            // slLogger.Trace(">> ClearLog Click"); // never displayed due to next line...
+            tbLogDebug.Clear();
+            // slLogger.Trace("<< ClearLog Click"); // want to clear, stupid to re-write something :)
+        }
+
+        private void tabControlAll_Selected(object sender, TabControlEventArgs e)
+        {
+            int iDbgIndex = tabControlAll.TabPages.IndexOf(tabControlAll.TabPages["tabDebug"]);
+            if (tabControlAll.SelectedIndex == iDbgIndex)
+            {
+                bAccessingDebugTab = true;
+            }
+        }
+
+        private void DebugLogScrollToEnd()
+        {
+            tbLogDebug.SelectionStart = tbLogDebug.Text.Length;
+            tbLogDebug.ScrollToCaret();
+        }
+
+        private void tabDebug_Paint(object sender, PaintEventArgs e)
+        {
+            if(true == bAccessingDebugTab)
+            { 
+                DebugLogScrollToEnd();
+                bAccessingDebugTab = false;
+            }
+        }
+
+        private void btEditGameIni_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Edit Game.ini Click");
+            String sFolderPath = tbFolderPath.Text;
+            Form2 f = null;
+            if (lbGames.SelectedIndex > -1)
+            {
+                ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                f = new Form2(sFolderPath, slLogger, dcPs1Games, cgs);
+            }
+            else
+            {
+                f = new Form2(sFolderPath, slLogger, dcPs1Games);
+            }
+            f.ShowDialog();
+            slLogger.Trace("<< Edit Game.ini Click");
+        }
+
+        private void btEditPng_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Edit image Click");
+            String sFolderPath = tbFolderPath.Text;
+            Form3 f = null;
+            if (lbGames.SelectedIndex > -1)
+            {
+                ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                f = new Form3(sFolderPath, slLogger, dcPs1Games, cgs);
+            }
+            else
+            {
+                f = new Form3(sFolderPath, slLogger, dcPs1Games);
+            }
+            f.ShowDialog();
+            slLogger.Trace("<< Edit image Click");
+        }
+
+        private void btAddPcsxCfg_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Add pcsx.cfg Click");
+            String sFolderPath = tbFolderPath.Text;
+            if (lbGames.SelectedIndex > -1)
+            {
+                ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + cgs.FolderIndex.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
+            }
+            slLogger.Trace("<< Add pcsx.cfg Click");
+        }
+
+        private void btEditCue_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Edit cue file Click");
+            String sFolderPath = tbFolderPath.Text;
+            Form4 f = null;
+            if (lbGames.SelectedIndex > -1)
+            {
+                ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                f = new Form4(sFolderPath, slLogger, dcPs1Games, cgs);
+            }
+            else
+            {
+                f = new Form4(sFolderPath, slLogger, dcPs1Games);
+            }
+            f.ShowDialog();
+            slLogger.Trace("<< Edit cue file Click");
         }
     }
 }

@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace pbPSCReAlpha
 {
-    class ClGameStructure
+    public class ClGameStructure
     {
-        private String _folderIndex;
-        private String _title;
-        private String _alphatitle;
-        private String _discs;
-        private String _publisher;
-        private String _year;
-        private String _players;
+        private String _folderIndex = String.Empty;
+        private String _title = String.Empty;
+        private String _alphatitle = String.Empty;
+        private String _discs = String.Empty;
+        private String _publisher = String.Empty;
+        private String _year = String.Empty;
+        private String _players = String.Empty;
         private Image _pictureFile;
-        private String _pictureFileName;
+        private String _pictureFileName = String.Empty;
         private List<String> _filenames;
         private bool _gameDataMissing;
         private bool _pngMissing;

@@ -1,23 +1,25 @@
-﻿namespace pbPSCReAlpha
-{
-    internal class ClPS1Game
-    {
-        private string _title;
-        private string _serial;
-        private string _link;
+﻿using System;
 
-        public ClPS1Game(string title, string serial, string link)
+namespace pbPSCReAlpha
+{
+    public class ClPS1Game
+    {
+        private String _title;
+        private String _serial;
+        private String _link;
+
+        public ClPS1Game(String title, String serial, String link)
         {
             _title = title;
             _serial = serial;
             _link = link;
         }
 
-        public string Title { get => _title; set => _title = value; }
-        public string Serial { get => _serial; set => _serial = value; }
-        public string Link { get => _link; set => _link = value; }
+        public String Title { get => _title; set => _title = value; }
+        public String Serial { get => _serial; set => _serial = value; }
+        public String Link { get => _link; set => _link = value; }
 
-        public string DisplayTitle { get => Title + " " + ((Serial.Contains("ES")) ? "(EUR)" : ((Serial.Contains("US")) ? "(USA)" : ((Serial.Contains("PM")) ? "(JAP)" : ((Serial.Contains("PS")) ? "(JAP)" : "")))); }
+        public String DisplayTitle { get => ((Serial.Contains("ES")) ? "[EUR]" : ((Serial.Contains("US")) ? "[USA]" : ((Serial.Contains("PM")) ? "[JAP]" : ((Serial.Contains("PS")) ? "[JAP]" : "")))) + " " + Title; }
         
     }
 }
