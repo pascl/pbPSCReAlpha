@@ -52,7 +52,7 @@ namespace pbPSCReAlpha
                         GroupBox gb = new GroupBox();
                         gb.Text = s;
                         gb.Width = 400;
-                        gb.Height = 300;
+                        gb.Height = 250;
                         gb.Parent = flpCueFiles;
 
 
@@ -61,7 +61,7 @@ namespace pbPSCReAlpha
                         tb.Parent = gb;
                         tb.Dock = DockStyle.Top;
                         tb.Height = 200;
-                        tb.ReadOnly = true;
+                        //tb.ReadOnly = true;
 
                         if(File.Exists(_folderPath + "\\" + s))
                         {
@@ -78,13 +78,41 @@ namespace pbPSCReAlpha
                         Button btSave = new Button();
                         btSave.Text = "Save";
                         btSave.Parent = gb;
-                        btSave.Top = 250;
-                        btSave.Enabled = false;
+                        btSave.Top = 220;
+                        btSave.Left = 4;
+                        //btSave.Enabled = false;
+                        btSave.Tag = (object)(gb);
+                        btSave.Click += cueSave;
                     }
                 }
                 if(cueCount > 1)
                 {
                     this.Width = 850;
+                }
+            }
+        }
+
+        private void cueSave(object sender, EventArgs e)
+        {
+            Button bt = (Button)(sender);
+            GroupBox gb = (GroupBox)(bt.Tag);
+            TextBox tb = null;
+            
+            if(gb.HasChildren)
+            {
+                foreach(Control ct in gb.Controls)
+                {
+                    if(ct is TextBox)
+                    {
+                        tb = (TextBox)ct;
+                    }
+                }
+                if(tb != null)
+                {
+                    using (StreamWriter sw = new StreamWriter(_folderPath + "\\" + gb.Text))
+                    {
+                        sw.WriteLine(tb.Text);
+                    }
                 }
             }
         }

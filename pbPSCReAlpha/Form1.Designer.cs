@@ -35,6 +35,7 @@
             this.tabExplorer = new System.Windows.Forms.TabPage();
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
+            this.btAddFiles = new System.Windows.Forms.Button();
             this.btEditCue = new System.Windows.Forms.Button();
             this.btAddPcsxCfg = new System.Windows.Forms.Button();
             this.btEditPng = new System.Windows.Forms.Button();
@@ -66,6 +67,7 @@
             this.btClearLog = new System.Windows.Forms.Button();
             this.btTest = new System.Windows.Forms.Button();
             this.tbLogDebug = new System.Windows.Forms.TextBox();
+            this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -118,6 +120,7 @@
             // 
             // gbExploreEdit
             // 
+            this.gbExploreEdit.Controls.Add(this.btAddFiles);
             this.gbExploreEdit.Controls.Add(this.btEditCue);
             this.gbExploreEdit.Controls.Add(this.btAddPcsxCfg);
             this.gbExploreEdit.Controls.Add(this.btEditPng);
@@ -129,12 +132,26 @@
             this.gbExploreEdit.TabStop = false;
             this.gbExploreEdit.Text = "Edit";
             // 
+            // btAddFiles
+            // 
+            this.btAddFiles.Enabled = false;
+            this.btAddFiles.Image = global::pbPSCReAlpha.Properties.Resources.brick_add;
+            this.btAddFiles.Location = new System.Drawing.Point(127, 19);
+            this.btAddFiles.Name = "btAddFiles";
+            this.btAddFiles.Size = new System.Drawing.Size(115, 25);
+            this.btAddFiles.TabIndex = 6;
+            this.btAddFiles.Text = "Add files";
+            this.btAddFiles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btAddFiles.UseVisualStyleBackColor = true;
+            this.btAddFiles.Visible = false;
+            this.btAddFiles.Click += new System.EventHandler(this.btAddFiles_Click);
+            // 
             // btEditCue
             // 
             this.btEditCue.Enabled = false;
             this.btEditCue.Image = global::pbPSCReAlpha.Properties.Resources.accessories_text_editor_3;
             this.btEditCue.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditCue.Location = new System.Drawing.Point(6, 84);
+            this.btEditCue.Location = new System.Drawing.Point(6, 81);
             this.btEditCue.Name = "btEditCue";
             this.btEditCue.Size = new System.Drawing.Size(115, 25);
             this.btEditCue.TabIndex = 3;
@@ -148,7 +165,7 @@
             // 
             this.btAddPcsxCfg.Enabled = false;
             this.btAddPcsxCfg.Image = global::pbPSCReAlpha.Properties.Resources.cog_add;
-            this.btAddPcsxCfg.Location = new System.Drawing.Point(6, 115);
+            this.btAddPcsxCfg.Location = new System.Drawing.Point(6, 112);
             this.btAddPcsxCfg.Name = "btAddPcsxCfg";
             this.btAddPcsxCfg.Size = new System.Drawing.Size(115, 25);
             this.btAddPcsxCfg.TabIndex = 2;
@@ -162,7 +179,7 @@
             // 
             this.btEditPng.Image = global::pbPSCReAlpha.Properties.Resources.picture_edit;
             this.btEditPng.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditPng.Location = new System.Drawing.Point(6, 53);
+            this.btEditPng.Location = new System.Drawing.Point(6, 50);
             this.btEditPng.Name = "btEditPng";
             this.btEditPng.Size = new System.Drawing.Size(115, 25);
             this.btEditPng.TabIndex = 1;
@@ -175,7 +192,7 @@
             // 
             this.btEditGameIni.Image = global::pbPSCReAlpha.Properties.Resources.edit_3;
             this.btEditGameIni.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditGameIni.Location = new System.Drawing.Point(6, 22);
+            this.btEditGameIni.Location = new System.Drawing.Point(6, 19);
             this.btEditGameIni.Name = "btEditGameIni";
             this.btEditGameIni.Size = new System.Drawing.Size(115, 25);
             this.btEditGameIni.TabIndex = 0;
@@ -269,8 +286,10 @@
             // 
             // lvFiles
             // 
+            this.lvFiles.AllowDrop = true;
             this.lvFiles.FullRowSelect = true;
             this.lvFiles.GridLines = true;
+            this.lvFiles.LabelEdit = true;
             this.lvFiles.LargeImageList = this.ilFlags;
             this.lvFiles.Location = new System.Drawing.Point(6, 175);
             this.lvFiles.MultiSelect = false;
@@ -282,6 +301,10 @@
             this.lvFiles.TabIndex = 16;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.List;
+            this.lvFiles.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.lvFiles_AfterLabelEdit);
+            this.lvFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.lvFiles_DragDrop);
+            this.lvFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.lvFiles_DragEnter);
+            this.lvFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvFiles_KeyDown);
             // 
             // ilFlags
             // 
@@ -481,6 +504,10 @@
             this.tbLogDebug.Size = new System.Drawing.Size(601, 563);
             this.tbLogDebug.TabIndex = 3;
             // 
+            // ofdAddFiles
+            // 
+            this.ofdAddFiles.Multiselect = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -544,6 +571,8 @@
         private System.Windows.Forms.Button btEditGameIni;
         private System.Windows.Forms.Button btEditCue;
         private System.Windows.Forms.Button btAddPcsxCfg;
+        private System.Windows.Forms.Button btAddFiles;
+        private System.Windows.Forms.OpenFileDialog ofdAddFiles;
     }
 }
 

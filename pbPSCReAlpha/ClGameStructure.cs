@@ -138,6 +138,7 @@ namespace pbPSCReAlpha
         public void setFilesList(List<String> sList)
         {
             _filenames = sList;
+            _filenames.Sort();
         }
 
         public void setPicture(String imgFileName, Image imgFile)

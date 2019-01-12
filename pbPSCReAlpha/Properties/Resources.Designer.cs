@@ -83,6 +83,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap brick_add {
+            get {
+                object obj = ResourceManager.GetObject("brick-add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cog_add {
             get {
                 object obj = ResourceManager.GetObject("cog-add", resourceCulture);

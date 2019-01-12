@@ -31,11 +31,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btSave = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
+            this.pbCover = new System.Windows.Forms.PictureBox();
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
             this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.btBack = new System.Windows.Forms.Button();
             this.btCompress = new System.Windows.Forms.Button();
-            this.pbCover = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             this.SuspendLayout();
@@ -71,6 +71,16 @@
             this.btLoad.Text = "Load...";
             this.btLoad.UseVisualStyleBackColor = true;
             this.btLoad.Click += new System.EventHandler(this.btLoad_Click);
+            // 
+            // pbCover
+            // 
+            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCover.Location = new System.Drawing.Point(6, 19);
+            this.pbCover.Name = "pbCover";
+            this.pbCover.Size = new System.Drawing.Size(150, 150);
+            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbCover.TabIndex = 26;
+            this.pbCover.TabStop = false;
             // 
             // ofdGeneLoadImage
             // 
@@ -109,16 +119,6 @@
             this.btCompress.Text = "Compress PNG in all folders";
             this.btCompress.UseVisualStyleBackColor = true;
             this.btCompress.Click += new System.EventHandler(this.btCompress_Click);
-            // 
-            // pbCover
-            // 
-            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCover.Location = new System.Drawing.Point(6, 19);
-            this.pbCover.Name = "pbCover";
-            this.pbCover.Size = new System.Drawing.Size(150, 150);
-            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbCover.TabIndex = 26;
-            this.pbCover.TabStop = false;
             // 
             // Form3
             // 

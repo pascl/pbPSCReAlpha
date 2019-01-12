@@ -61,6 +61,10 @@
   <ItemGroup>
     <Compile Include="ClGameScraper.cs" />
     <Compile Include="ClGameStructure.cs" />
+    <Compile Include="ClPbProgessBarLabeled.cs" />
+    <Compile Include="ClPbWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ClPS1Game.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -86,6 +90,12 @@
     <Compile Include="Form4.Designer.cs">
       <DependentUpon>Form4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form5.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form5.Designer.cs">
+      <DependentUpon>Form5.cs</DependentUpon>
+    </Compile>
     <Compile Include="SimpleLogger.cs" />
     <Compile Include="MyProcessHelper.cs" />
     <Compile Include="NaturalComparer.cs" />
@@ -102,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
       <DependentUpon>Form4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form5.resx">
+      <DependentUpon>Form5.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -158,6 +171,7 @@
     <None Include="Resources\edit-3.png" />
     <None Include="Resources\picture-edit.png" />
     <None Include="Resources\bleem_logo48.png" />
+    <None Include="Resources\brick-add.png" />
     <Content Include="Sony-Playstation-2-icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
