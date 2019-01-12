@@ -27,10 +27,6 @@ namespace pbPSCReAlpha
 
         private void tmAutoHide_Tick(object sender, EventArgs e)
         {
-            /*if(tlpFilesCopying.RowCount == 0)
-            {
-                this.Visible = false;
-            }*/
             bool bVisible = false;
             if(tlpFilesCopying.HasChildren)
             {

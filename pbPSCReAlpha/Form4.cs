@@ -20,23 +20,20 @@ namespace pbPSCReAlpha
 
         String _folderPath;
         SimpleLogger slLogger;
-        Dictionary<String, ClPS1Game> dcPs1Games;
         ClGameStructure newGame;
 
-        public Form4(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games)
+        public Form4(String sFolderPath, SimpleLogger sl)
         {
             InitializeComponent();
             _folderPath = sFolderPath;
             slLogger = sl;
-            dcPs1Games = dcClPS1Games;
             newGame = null;
         }
 
-        public Form4(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClGameStructure myGame)
+        public Form4(String sFolderPath, SimpleLogger sl, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
-            dcPs1Games = dcClPS1Games;
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
 
@@ -94,27 +91,38 @@ namespace pbPSCReAlpha
 
         private void cueSave(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Save cue Click");
             Button bt = (Button)(sender);
             GroupBox gb = (GroupBox)(bt.Tag);
             TextBox tb = null;
-            
-            if(gb.HasChildren)
+
+            try
             {
-                foreach(Control ct in gb.Controls)
+
+                if (gb.HasChildren)
                 {
-                    if(ct is TextBox)
+                    foreach (Control ct in gb.Controls)
                     {
-                        tb = (TextBox)ct;
+                        if (ct is TextBox)
+                        {
+                            tb = (TextBox)ct;
+                        }
                     }
-                }
-                if(tb != null)
-                {
-                    using (StreamWriter sw = new StreamWriter(_folderPath + "\\" + gb.Text))
+                    if (tb != null)
                     {
-                        sw.WriteLine(tb.Text);
+                        slLogger.Debug("Saving " + _folderPath + "\\" + gb.Text);
+                        using (StreamWriter sw = new StreamWriter(_folderPath + "\\" + gb.Text))
+                        {
+                            sw.WriteLine(tb.Text);
+                        }
                     }
                 }
             }
+            catch(Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
+            slLogger.Trace("<< Save cue Click");
         }
 
         private void btBack_Click(object sender, EventArgs e)

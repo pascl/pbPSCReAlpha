@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form5));
             this.tlpFilesCopying = new System.Windows.Forms.TableLayoutPanel();
             this.tmAutoHide = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
@@ -90,6 +91,7 @@
             this.ControlBox = false;
             this.Controls.Add(this.tlpFilesCopying);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form5";

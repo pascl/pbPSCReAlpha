@@ -16,23 +16,22 @@ namespace pbPSCReAlpha
     {
         String _folderPath;
         SimpleLogger slLogger;
-        Dictionary<String, ClPS1Game> dcPs1Games;
         ClGameStructure newGame;
 
-        public Form3(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games)
+        public Form3(String sFolderPath, SimpleLogger sl)
         {
             InitializeComponent();
             _folderPath = sFolderPath;
             slLogger = sl;
-            dcPs1Games = dcClPS1Games;
             newGame = null;
+
+            pbCover.AllowDrop = true;
         }
 
-        public Form3(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClGameStructure myGame)
+        public Form3(String sFolderPath, SimpleLogger sl, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
-            dcPs1Games = dcClPS1Games;
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
 
@@ -47,6 +46,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            pbCover.AllowDrop = true;
         }
 
         private void btLoad_Click(object sender, EventArgs e)
@@ -132,6 +132,46 @@ namespace pbPSCReAlpha
             MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sList + " --force --ext .png --verbose");
             pPngQuant.DoIt();
             slLogger.Trace("<< Compress all PNG Click");
+        }
+
+        private void pbCover_DragDrop(object sender, DragEventArgs e)
+        {
+            slLogger.Trace(">> Dragdrop image");
+            try
+            {
+                String[] sFileList = (String[])e.Data.GetData(DataFormats.FileDrop, false);
+                if (sFileList.Length == 1)
+                {
+                    String sExt = Path.GetExtension(sFileList[0]);
+                    List<String> lsAcceptedExt = new List<string>() {".png", ".jpg", ".jpeg", ".bmp"};
+                    if (lsAcceptedExt.IndexOf(sExt) > -1)
+                    {
+                        Bitmap bmPicture = new Bitmap(sFileList[0]);
+                        pbCover.Image = (Image)(new Bitmap(bmPicture));
+                        bmPicture.Dispose();
+                    }
+                    else
+                    {
+                        slLogger.Error("Extension " + sExt + " not accepted. Dragdrop a file with extension png, bmp, jpg or jpeg.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Only one file for drag&drop operation please.");
+                    slLogger.Error("Dragdrop only one file please.");
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
+            slLogger.Trace("<< Dragdrop image");
+        }
+
+        private void pbCover_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
         }
     }
 }

@@ -35,6 +35,7 @@
             this.tabExplorer = new System.Windows.Forms.TabPage();
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
+            this.btRefreshFolderOnly = new System.Windows.Forms.Button();
             this.btAddFiles = new System.Windows.Forms.Button();
             this.btEditCue = new System.Windows.Forms.Button();
             this.btAddPcsxCfg = new System.Windows.Forms.Button();
@@ -68,18 +69,23 @@
             this.btTest = new System.Windows.Forms.Button();
             this.tbLogDebug = new System.Windows.Forms.TextBox();
             this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
+            this.sfdSaveImage = new System.Windows.Forms.SaveFileDialog();
+            this.tabReadMe = new System.Windows.Forms.TabPage();
+            this.wbReadme = new System.Windows.Forms.WebBrowser();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
             this.gbExploreDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
             this.tabDebug.SuspendLayout();
+            this.tabReadMe.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlAll
             // 
             this.tabControlAll.Controls.Add(this.tabExplorer);
             this.tabControlAll.Controls.Add(this.tabDebug);
+            this.tabControlAll.Controls.Add(this.tabReadMe);
             this.tabControlAll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlAll.Location = new System.Drawing.Point(0, 0);
             this.tabControlAll.Name = "tabControlAll";
@@ -120,6 +126,7 @@
             // 
             // gbExploreEdit
             // 
+            this.gbExploreEdit.Controls.Add(this.btRefreshFolderOnly);
             this.gbExploreEdit.Controls.Add(this.btAddFiles);
             this.gbExploreEdit.Controls.Add(this.btEditCue);
             this.gbExploreEdit.Controls.Add(this.btAddPcsxCfg);
@@ -131,6 +138,20 @@
             this.gbExploreEdit.TabIndex = 9;
             this.gbExploreEdit.TabStop = false;
             this.gbExploreEdit.Text = "Edit";
+            // 
+            // btRefreshFolderOnly
+            // 
+            this.btRefreshFolderOnly.Enabled = false;
+            this.btRefreshFolderOnly.Image = global::pbPSCReAlpha.Properties.Resources.view_refresh_6;
+            this.btRefreshFolderOnly.Location = new System.Drawing.Point(363, 19);
+            this.btRefreshFolderOnly.Name = "btRefreshFolderOnly";
+            this.btRefreshFolderOnly.Size = new System.Drawing.Size(115, 25);
+            this.btRefreshFolderOnly.TabIndex = 7;
+            this.btRefreshFolderOnly.Text = "Refresh folder";
+            this.btRefreshFolderOnly.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btRefreshFolderOnly.UseVisualStyleBackColor = true;
+            this.btRefreshFolderOnly.Visible = false;
+            this.btRefreshFolderOnly.Click += new System.EventHandler(this.btRefreshFolderOnly_Click);
             // 
             // btAddFiles
             // 
@@ -433,6 +454,8 @@
             this.pbExploreImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbExploreImage.TabIndex = 3;
             this.pbExploreImage.TabStop = false;
+            this.pbExploreImage.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbExploreImage_DragDrop);
+            this.pbExploreImage.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbExploreImage_DragEnter);
             // 
             // lbGames
             // 
@@ -508,6 +531,35 @@
             // 
             this.ofdAddFiles.Multiselect = true;
             // 
+            // sfdSaveImage
+            // 
+            this.sfdSaveImage.DefaultExt = "png";
+            this.sfdSaveImage.FileName = "Game.png";
+            this.sfdSaveImage.Filter = "png files|*.png";
+            this.sfdSaveImage.RestoreDirectory = true;
+            this.sfdSaveImage.ShowHelp = true;
+            this.sfdSaveImage.Title = "Save file";
+            // 
+            // tabReadMe
+            // 
+            this.tabReadMe.Controls.Add(this.wbReadme);
+            this.tabReadMe.Location = new System.Drawing.Point(4, 22);
+            this.tabReadMe.Name = "tabReadMe";
+            this.tabReadMe.Padding = new System.Windows.Forms.Padding(3);
+            this.tabReadMe.Size = new System.Drawing.Size(696, 575);
+            this.tabReadMe.TabIndex = 4;
+            this.tabReadMe.Text = "Readme";
+            this.tabReadMe.UseVisualStyleBackColor = true;
+            // 
+            // wbReadme
+            // 
+            this.wbReadme.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.wbReadme.Location = new System.Drawing.Point(3, 3);
+            this.wbReadme.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wbReadme.Name = "wbReadme";
+            this.wbReadme.Size = new System.Drawing.Size(690, 569);
+            this.wbReadme.TabIndex = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -529,6 +581,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
             this.tabDebug.ResumeLayout(false);
             this.tabDebug.PerformLayout();
+            this.tabReadMe.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -573,6 +626,10 @@
         private System.Windows.Forms.Button btAddPcsxCfg;
         private System.Windows.Forms.Button btAddFiles;
         private System.Windows.Forms.OpenFileDialog ofdAddFiles;
+        private System.Windows.Forms.SaveFileDialog sfdSaveImage;
+        private System.Windows.Forms.Button btRefreshFolderOnly;
+        private System.Windows.Forms.TabPage tabReadMe;
+        private System.Windows.Forms.WebBrowser wbReadme;
     }
 }
 

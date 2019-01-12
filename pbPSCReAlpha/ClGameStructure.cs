@@ -27,17 +27,18 @@ namespace pbPSCReAlpha
         private bool _iniIncomplete;
         private bool _cueMissing;
         private bool _binMissing;
-        private bool _binCueMismatch;
         private bool _pngMismatch;
         private bool _cfgMissing;
         private bool _badCueName;
         private bool _badBinName;
         private bool _cueCountMisMatchDiscsCount;
+        private bool _neededSbiMissing;
         private List<String> _errorString;
         private List<String> _filesBinOk;
         private List<String> _filesCueOk;
+        private List<String> _filesSbiOk;
 
-        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount)
+        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, bool bNeededSbiMissing)
         {
             _folderIndex = folderIndex;
             _gameDataMissing = false; // if i have all these variables, i have at least the folder...
@@ -53,6 +54,7 @@ namespace pbPSCReAlpha
             _binMissing = binMissing;
             _badBinName = badBinName;
             _cueCountMisMatchDiscsCount = cueCountMisMatchdiscsCount;
+            _neededSbiMissing = bNeededSbiMissing;
             _errorString = new List<String>();
             if (_nanFolder)
             {
@@ -162,7 +164,6 @@ namespace pbPSCReAlpha
         public List<String> Filenames { get => _filenames; }
         public bool CueMissing { get => _cueMissing; set => _cueMissing = value; }
         public bool BinMissing { get => _binMissing; set => _binMissing = value; }
-        public bool BinCueMismatch { get => _binCueMismatch; set => _binCueMismatch = value; }
         public List<String> ErrorString { get => _errorString; set => _errorString = value; }
         public bool NanFolder { get => _nanFolder; set => _nanFolder = value; }
         public bool PngMissing { get => _pngMissing; set => _pngMissing = value; }
@@ -173,10 +174,12 @@ namespace pbPSCReAlpha
         public bool BadBinName { get => _badBinName; set => _badBinName = value; }
         public bool CueCountMisMatchDiscsCount { get => _cueCountMisMatchDiscsCount; set => _cueCountMisMatchDiscsCount = value; }
         public bool GeneralError { get => _cueCountMisMatchDiscsCount || _badBinName || _badCueName || _pngMismatch
-                || _iniIncomplete || _pngMultiple || _pngMissing || _nanFolder || _binCueMismatch || _binMissing
-                || _cueMissing || _cfgMissing || IniMissing || GameDataMissing; }
+                || _iniIncomplete || _pngMultiple || _pngMissing || _nanFolder || _binMissing
+                || _cueMissing || _cfgMissing || _iniMissing || _gameDataMissing || _neededSbiMissing; }
         public List<String> FilesBinOk { get => _filesBinOk; set => _filesBinOk = value; }
         public List<String> FilesCueOk { get => _filesCueOk; set => _filesCueOk = value; }
+        public List<String> FilesSbiOk { get => _filesSbiOk; set => _filesSbiOk = value; }
         public string PictureFileName { get => _pictureFileName; set => _pictureFileName = value; }
+        public bool NeededSbiMissing { get => _neededSbiMissing; set => _neededSbiMissing = value; }
     }
 }

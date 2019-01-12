@@ -13,8 +13,9 @@ namespace pbPSCReAlpha
     {
         ClPbProgessBarLabeled _pbl;
         Timer _tm;
+        SimpleLogger slLogger;
 
-        public ClPbWebClient(ClPbProgessBarLabeled pbl)
+        public ClPbWebClient(ClPbProgessBarLabeled pbl, SimpleLogger sl)
         {
             this._pbl = pbl;
             this.DownloadProgressChanged += DownloadProgress;
@@ -23,6 +24,7 @@ namespace pbPSCReAlpha
             _tm.Interval = 5000;
             _tm.Enabled = false;
             _tm.Tick += HideLine;
+            slLogger = sl;
         }
 
         private void HideLine(object sender, EventArgs e)
@@ -35,6 +37,7 @@ namespace pbPSCReAlpha
         {
             /*_pbl.PbProgressBar.Visible = false;
             _pbl.PbLabel.Visible = false;*/
+            slLogger.Debug("Copy OK: " + _pbl.PbLabel.Text);
             _tm.Enabled = true;
         }
 

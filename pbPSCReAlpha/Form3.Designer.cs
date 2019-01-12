@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btSave = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
@@ -81,6 +82,8 @@
             this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbCover.TabIndex = 26;
             this.pbCover.TabStop = false;
+            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
+            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
             // 
             // ofdGeneLoadImage
             // 
@@ -129,6 +132,7 @@
             this.Controls.Add(this.btBack);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form3";
