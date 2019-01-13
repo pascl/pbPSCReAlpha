@@ -33,7 +33,9 @@ namespace pbPSCReAlpha
             this.Text = "pbPSCReAlpha v" + Assembly.GetExecutingAssembly().GetName().Version;
             dcPs1Games = new Dictionary<string, ClPS1Game>();
             lsSbiNeeds = new List<string>();
-            tbFolderPath.Text = Properties.Settings.Default.sFolderPath;
+            String sFolderPath = Properties.Settings.Default.sFolderPath;
+            tbFolderPath.Text = sFolderPath;
+            
             slLogger = new SimpleLogger(tbLogDebug);
             try
             {
@@ -124,7 +126,17 @@ namespace pbPSCReAlpha
             {
                 slLogger.Fatal(ex.Message);
             }
-            
+
+            try
+            {
+                long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
+                lbFreeSpace.Text = FormatFreeSpace(lSpace);
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
+
             String st = String.Empty;
             using (StreamReader sr = new StreamReader(Application.StartupPath + "\\" + "README.md"))
             {
@@ -140,6 +152,15 @@ namespace pbPSCReAlpha
             {
                 String sFolderPath = fbdGamesFolder.SelectedPath;
                 tbFolderPath.Text = sFolderPath;
+                try
+                {
+                    long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
+                    lbFreeSpace.Text = FormatFreeSpace(lSpace);
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
             }
             slLogger.Trace("<< Browse 'Games' Folder Click");
         }
@@ -291,30 +312,35 @@ namespace pbPSCReAlpha
                                 {
                                     uiGameIni++;
                                     sTitle = s.Substring(6).Trim();
+                                    sTitle = ClPbHelper.RemoveQuotes(sTitle);
                                 }
                                 else
                                 if (s.StartsWith("Publisher="))
                                 {
                                     uiGameIni++;
                                     sPublisher = s.Substring(10).Trim();
+                                    sPublisher = ClPbHelper.RemoveQuotes(sPublisher);
                                 }
                                 else
                                 if (s.StartsWith("Year="))
                                 {
                                     uiGameIni++;
                                     sYear = s.Substring(5).Trim();
+                                    sYear = ClPbHelper.RemoveQuotes(sYear);
                                 }
                                 else
                                 if (s.StartsWith("Players="))
                                 {
                                     uiGameIni++;
                                     sPlayers = s.Substring(8).Trim();
+                                    sPlayers = ClPbHelper.RemoveQuotes(sPlayers);
                                 }
                                 else
                                 if (s.StartsWith("Discs="))
                                 {
                                     uiGameIni++;
                                     sDiscs = s.Substring(6).Trim();
+                                    sDiscs = ClPbHelper.RemoveQuotes(sDiscs);
                                 }
                                 else
                                 if (s.StartsWith("AlphaTitle="))
@@ -322,6 +348,7 @@ namespace pbPSCReAlpha
                                     // facultative, doesn't count: uiGameIni++;
                                     bAlphaTitlePresent = true;
                                     sAlphaTitle = s.Substring(11).Trim();
+                                    sAlphaTitle = ClPbHelper.RemoveQuotes(sAlphaTitle);
                                 }
                             }
                         }
@@ -720,6 +747,9 @@ namespace pbPSCReAlpha
 
                     btRefreshFolderOnly.Enabled = true;
                     btRefreshFolderOnly.Visible = true;
+
+                    btOpenFolder.Enabled = true;
+                    btOpenFolder.Visible = true;
                 }
                 else
                 {
@@ -732,6 +762,9 @@ namespace pbPSCReAlpha
 
                     btRefreshFolderOnly.Enabled = true;
                     btRefreshFolderOnly.Visible = true;
+
+                    btOpenFolder.Enabled = true;
+                    btOpenFolder.Visible = true;
                 }
             }
             else
@@ -747,6 +780,9 @@ namespace pbPSCReAlpha
 
                 btRefreshFolderOnly.Enabled = false;
                 btRefreshFolderOnly.Visible = false;
+
+                btOpenFolder.Enabled = false;
+                btOpenFolder.Visible = false;
 
                 pbExploreImage.AllowDrop = false;
             }
@@ -1059,7 +1095,7 @@ namespace pbPSCReAlpha
             else
             {
                 slLogger.Error("Destination directory doesn't exist");
-                MessageBox.Show("Directory doesn't exist");
+                MessageBox.Show("Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -1280,7 +1316,7 @@ namespace pbPSCReAlpha
                 }
                 else
                 {
-                    MessageBox.Show("Only one file for drag&drop operation please.");
+                    MessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     slLogger.Error("Dragdrop only one file please.");
                 }
             }
@@ -1307,6 +1343,13 @@ namespace pbPSCReAlpha
                 String sFolderPath = tbFolderPath.Text;
                 String sFolder = sFolderPath + "\\" + cgsSave.FolderIndex;
 
+                int iFileIndex = -1;
+                ListView.SelectedIndexCollection indices = lvFiles.SelectedIndices;
+                if (indices.Count > 0)
+                {
+                    iFileIndex = indices[0];
+                }
+
                 DirectoryInfo directoryInfo = new DirectoryInfo(sFolder);
                 slLogger.Debug("Refreshing " + sFolder);
                 ClGameStructure cgs = manageFolder(cgsSave.FolderIndex, directoryInfo, ref lsFolders, ref lsTitles, false);
@@ -1315,6 +1358,12 @@ namespace pbPSCReAlpha
                     lbGames.Items.RemoveAt(iIndex);
                     lbGames.Items.Insert(iIndex, cgs);
                     lbGames.SelectedIndex = iIndex;
+                    if ((iFileIndex > -1) && (iFileIndex < lvFiles.Items.Count))
+                    {
+                        lvFiles.Items[iFileIndex].Selected = true;
+                        lvFiles.Select();
+                        lvFiles.EnsureVisible(iFileIndex);
+                    }
                 }
             }
         }
@@ -1324,6 +1373,84 @@ namespace pbPSCReAlpha
             slLogger.Trace(">> Refresh folder Click");
             refreshOneFolder();
             slLogger.Trace("<< Refresh folder Click");
+        }
+
+        private void btOpenFolder_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Open folder Click");
+            if (lbGames.SelectedIndex > -1)
+            {
+                try
+                {
+                    ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                    String sFolderPath = tbFolderPath.Text;
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    if (!cgs.GameDataMissing)
+                    {
+                         sPath += "GameData" + "\\";
+                    }
+                    MyProcessHelper explo = new MyProcessHelper("explorer.exe", sPath);
+                    explo.DoIt();
+                }
+                catch(Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Open folder Click");
+        }
+
+        private long GetAvailableFreeSpace(String driveName)
+        {
+            String sDrive = driveName.ToUpper();
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.IsReady && drive.Name == sDrive)
+                {
+                    return drive.AvailableFreeSpace;
+                }
+            }
+            return -1;
+        }
+
+        private String FormatFreeSpace(long lfp)
+        {
+            String s = "--";
+            if (lfp > -1)
+            {
+                long l = lfp;
+                String[] ss = new String[] { "B", "kB", "MB", "GB", "TB", "PB", "EB" };
+                int i = 0;
+                while (l > 1024)
+                {
+                    l = l / 1024;
+                    i++;
+                }
+                if (i < ss.Length)
+                {
+                    s = l.ToString() + " " + ss[i];
+                }
+                else
+                {
+                    s = lfp.ToString() + " " + ss[0];
+                }
+                s = "(" + s + ")";
+            }
+            return s;
+        }
+
+        private void tbFolderPath_Leave(object sender, EventArgs e)
+        {
+            String sFolderPath = tbFolderPath.Text;
+            try
+            {
+                long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
+                lbFreeSpace.Text = FormatFreeSpace(lSpace);
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
         }
     }
 }

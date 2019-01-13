@@ -68,10 +68,12 @@
             this.btClearLog = new System.Windows.Forms.Button();
             this.btTest = new System.Windows.Forms.Button();
             this.tbLogDebug = new System.Windows.Forms.TextBox();
-            this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
-            this.sfdSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.tabReadMe = new System.Windows.Forms.TabPage();
             this.wbReadme = new System.Windows.Forms.WebBrowser();
+            this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
+            this.sfdSaveImage = new System.Windows.Forms.SaveFileDialog();
+            this.btOpenFolder = new System.Windows.Forms.Button();
+            this.lbFreeSpace = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -96,6 +98,7 @@
             // 
             // tabExplorer
             // 
+            this.tabExplorer.Controls.Add(this.lbFreeSpace);
             this.tabExplorer.Controls.Add(this.btLaunchBleemsync);
             this.tabExplorer.Controls.Add(this.gbExploreEdit);
             this.tabExplorer.Controls.Add(this.btNewFolder);
@@ -126,6 +129,7 @@
             // 
             // gbExploreEdit
             // 
+            this.gbExploreEdit.Controls.Add(this.btOpenFolder);
             this.gbExploreEdit.Controls.Add(this.btRefreshFolderOnly);
             this.gbExploreEdit.Controls.Add(this.btAddFiles);
             this.gbExploreEdit.Controls.Add(this.btEditCue);
@@ -270,6 +274,7 @@
             this.tbFolderPath.Size = new System.Drawing.Size(160, 20);
             this.tbFolderPath.TabIndex = 5;
             this.tbFolderPath.Text = "F:\\Games";
+            this.tbFolderPath.Leave += new System.EventHandler(this.tbFolderPath_Leave);
             // 
             // gbExploreDetails
             // 
@@ -527,19 +532,6 @@
             this.tbLogDebug.Size = new System.Drawing.Size(601, 563);
             this.tbLogDebug.TabIndex = 3;
             // 
-            // ofdAddFiles
-            // 
-            this.ofdAddFiles.Multiselect = true;
-            // 
-            // sfdSaveImage
-            // 
-            this.sfdSaveImage.DefaultExt = "png";
-            this.sfdSaveImage.FileName = "Game.png";
-            this.sfdSaveImage.Filter = "png files|*.png";
-            this.sfdSaveImage.RestoreDirectory = true;
-            this.sfdSaveImage.ShowHelp = true;
-            this.sfdSaveImage.Title = "Save file";
-            // 
             // tabReadMe
             // 
             this.tabReadMe.Controls.Add(this.wbReadme);
@@ -559,6 +551,42 @@
             this.wbReadme.Name = "wbReadme";
             this.wbReadme.Size = new System.Drawing.Size(690, 569);
             this.wbReadme.TabIndex = 0;
+            // 
+            // ofdAddFiles
+            // 
+            this.ofdAddFiles.Multiselect = true;
+            // 
+            // sfdSaveImage
+            // 
+            this.sfdSaveImage.DefaultExt = "png";
+            this.sfdSaveImage.FileName = "Game.png";
+            this.sfdSaveImage.Filter = "png files|*.png";
+            this.sfdSaveImage.RestoreDirectory = true;
+            this.sfdSaveImage.ShowHelp = true;
+            this.sfdSaveImage.Title = "Save file";
+            // 
+            // btOpenFolder
+            // 
+            this.btOpenFolder.Enabled = false;
+            this.btOpenFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
+            this.btOpenFolder.Location = new System.Drawing.Point(363, 112);
+            this.btOpenFolder.Name = "btOpenFolder";
+            this.btOpenFolder.Size = new System.Drawing.Size(115, 25);
+            this.btOpenFolder.TabIndex = 8;
+            this.btOpenFolder.Text = "Open folder";
+            this.btOpenFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btOpenFolder.UseVisualStyleBackColor = true;
+            this.btOpenFolder.Visible = false;
+            this.btOpenFolder.Click += new System.EventHandler(this.btOpenFolder_Click);
+            // 
+            // lbFreeSpace
+            // 
+            this.lbFreeSpace.Location = new System.Drawing.Point(271, 16);
+            this.lbFreeSpace.Name = "lbFreeSpace";
+            this.lbFreeSpace.Size = new System.Drawing.Size(170, 16);
+            this.lbFreeSpace.TabIndex = 11;
+            this.lbFreeSpace.Text = "--";
+            this.lbFreeSpace.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // Form1
             // 
@@ -630,6 +658,8 @@
         private System.Windows.Forms.Button btRefreshFolderOnly;
         private System.Windows.Forms.TabPage tabReadMe;
         private System.Windows.Forms.WebBrowser wbReadme;
+        private System.Windows.Forms.Button btOpenFolder;
+        private System.Windows.Forms.Label lbFreeSpace;
     }
 }
 

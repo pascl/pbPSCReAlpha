@@ -58,6 +58,7 @@ namespace pbPSCReAlpha
                         tb.Parent = gb;
                         tb.Dock = DockStyle.Top;
                         tb.Height = 200;
+                        tb.ScrollBars = ScrollBars.Both;
                         //tb.ReadOnly = true;
 
                         if(File.Exists(_folderPath + "\\" + s))

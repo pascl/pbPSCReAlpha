@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="ClGameScraper.cs" />
     <Compile Include="ClGameStructure.cs" />
+    <Compile Include="ClPbHelper.cs" />
     <Compile Include="ClPbProgessBarLabeled.cs" />
     <Compile Include="ClPbWebClient.cs">
       <SubType>Component</SubType>

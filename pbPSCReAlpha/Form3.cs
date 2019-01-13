@@ -157,7 +157,7 @@ namespace pbPSCReAlpha
                 }
                 else
                 {
-                    MessageBox.Show("Only one file for drag&drop operation please.");
+                    MessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     slLogger.Error("Dragdrop only one file please.");
                 }
             }

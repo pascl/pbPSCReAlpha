@@ -85,24 +85,24 @@ namespace pbPSCReAlpha
                         {
                             if (s.StartsWith("Discs="))
                             {
-                                tbGeneDiscs.Text = s.Substring(6);
+                                tbGeneDiscs.Text = ClPbHelper.RemoveQuotes(s.Substring(6));
                             }
                             else
                             if (s.StartsWith("Title="))
                             {
-                                tbGeneTitle.Text = s.Substring(6);
+                                tbGeneTitle.Text = ClPbHelper.RemoveQuotes(s.Substring(6));
                             }
                             else
                             if (s.StartsWith("Publisher="))
                             {
-                                tbGenePublisher.Text = s.Substring(10);
+                                tbGenePublisher.Text = ClPbHelper.RemoveQuotes(s.Substring(10));
                             }
                             else
                             if (s.StartsWith("Players="))
                             {
                                 try
                                 {
-                                    nuGenePlayers.Value = (decimal)(int.Parse(s.Substring(8)));
+                                    nuGenePlayers.Value = (decimal)(int.Parse(ClPbHelper.RemoveQuotes(s.Substring(8))));
                                 }
                                 catch (Exception ex)
                                 {
@@ -114,7 +114,7 @@ namespace pbPSCReAlpha
                             {
                                 try
                                 {
-                                    nuGeneYear.Value = (decimal)(int.Parse(s.Substring(5)));
+                                    nuGeneYear.Value = (decimal)(int.Parse(ClPbHelper.RemoveQuotes(s.Substring(5))));
                                 }
                                 catch (Exception ex)
                                 {
@@ -124,7 +124,7 @@ namespace pbPSCReAlpha
                             else
                             if (s.StartsWith("AlphaTitle="))
                             {
-                                tbGeneAlphaTitle.Text = s.Substring(11);
+                                tbGeneAlphaTitle.Text = ClPbHelper.RemoveQuotes(s.Substring(11));
                             }
                         }
                     }
@@ -140,12 +140,12 @@ namespace pbPSCReAlpha
         private void btGenerateIni_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Save Game.ini Click");
-            String s1 = tbGeneTitle.Text.Trim(); // have to be not empty
-            String s2 = tbGeneDiscs.Text.Trim(); // have to be not empty
+            String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text.Trim()); // have to be not empty
+            String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text.Trim()); // have to be not empty
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
             {
-                String s3 = tbGenePublisher.Text.Trim();
-                String s4 = tbGeneAlphaTitle.Text.Trim();
+                String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text.Trim());
+                String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text.Trim());
                 int i1 = (int)(nuGenePlayers.Value);
                 int i2 = (int)(nuGeneYear.Value);
                 if (Directory.Exists(_folderPath))
