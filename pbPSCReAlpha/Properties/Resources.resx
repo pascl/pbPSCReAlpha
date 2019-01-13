@@ -121,14 +121,17 @@
   <data name="picture-edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\picture-edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bleem_logo48" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bleem_logo48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="cog-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cog-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="bleem_logo48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bleem_logo48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="folder-new-7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\folder-new-7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="brick-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brick-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="accessories-text-editor-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\accessories-text-editor-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -145,7 +148,7 @@
   <data name="view-refresh-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\view-refresh-6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="brick-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\brick-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="file-clipboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\file-clipboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

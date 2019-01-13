@@ -183,6 +183,7 @@
     <None Include="Resources\picture-edit.png" />
     <None Include="Resources\bleem_logo48.png" />
     <None Include="Resources\brick-add.png" />
+    <None Include="Resources\file-clipboard.png" />
     <Content Include="sbigames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
