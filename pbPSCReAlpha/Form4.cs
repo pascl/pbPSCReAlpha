@@ -13,28 +13,21 @@ namespace pbPSCReAlpha
 {
     public partial class Form4 : Form
     {
+        String _folderPath;
+        SimpleLogger slLogger;
+        ClGameStructure newGame;
+        
         public Form4()
         {
             InitializeComponent();
         }
-
-        String _folderPath;
-        SimpleLogger slLogger;
-        ClGameStructure newGame;
-
-        public Form4(String sFolderPath, SimpleLogger sl)
-        {
-            InitializeComponent();
-            _folderPath = sFolderPath;
-            slLogger = sl;
-            newGame = null;
-        }
-
+        
         public Form4(String sFolderPath, SimpleLogger sl, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
             newGame = myGame;
+
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
 
             if (!newGame.CueMissing)
@@ -65,11 +58,7 @@ namespace pbPSCReAlpha
                         {
                             using (StreamReader sr = new StreamReader(_folderPath + "\\" + s))
                             {
-                                string sline = String.Empty;
-                                while ((sline = sr.ReadLine()) != null)
-                                {
-                                    tb.AppendText(sline + Environment.NewLine);
-                                }
+                                tb.AppendText(sr.ReadToEnd()); // faster than readlines...
                             }
                         }
 
@@ -83,9 +72,23 @@ namespace pbPSCReAlpha
                         btSave.Click += cueSave;
                     }
                 }
-                if(cueCount > 1)
+                if(cueCount > 2)
                 {
-                    this.Width = 850;
+                    this.Width = 994;
+                }
+            }
+            lbBinFiles.Items.Clear();
+            if (!newGame.BinMissing)
+            {
+                if(newGame.Filenames.Count > 0)
+                {
+                    foreach(String s in newGame.Filenames)
+                    {
+                        if (s.EndsWith(".bin"))
+                        {
+                            lbBinFiles.Items.Add(s);
+                        }
+                    }
                 }
             }
         }
@@ -129,6 +132,14 @@ namespace pbPSCReAlpha
         private void btBack_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void btClipboardCopy_Click(object sender, EventArgs e)
+        {
+            if (lbBinFiles.SelectedIndex > -1)
+            {
+                Clipboard.SetText(lbBinFiles.Items[lbBinFiles.SelectedIndex].ToString());
+            }
         }
     }
 }

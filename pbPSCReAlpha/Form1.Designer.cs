@@ -33,8 +33,10 @@
             this.fbdGamesFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.tabControlAll = new System.Windows.Forms.TabControl();
             this.tabExplorer = new System.Windows.Forms.TabPage();
+            this.lbFreeSpace = new System.Windows.Forms.Label();
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
+            this.btOpenFolder = new System.Windows.Forms.Button();
             this.btRefreshFolderOnly = new System.Windows.Forms.Button();
             this.btAddFiles = new System.Windows.Forms.Button();
             this.btEditCue = new System.Windows.Forms.Button();
@@ -72,8 +74,7 @@
             this.wbReadme = new System.Windows.Forms.WebBrowser();
             this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
             this.sfdSaveImage = new System.Windows.Forms.SaveFileDialog();
-            this.btOpenFolder = new System.Windows.Forms.Button();
-            this.lbFreeSpace = new System.Windows.Forms.Label();
+            this.tmRefreshFolder = new System.Windows.Forms.Timer(this.components);
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -116,6 +117,15 @@
             this.tabExplorer.Text = "Explorer";
             this.tabExplorer.UseVisualStyleBackColor = true;
             // 
+            // lbFreeSpace
+            // 
+            this.lbFreeSpace.Location = new System.Drawing.Point(271, 16);
+            this.lbFreeSpace.Name = "lbFreeSpace";
+            this.lbFreeSpace.Size = new System.Drawing.Size(170, 16);
+            this.lbFreeSpace.TabIndex = 11;
+            this.lbFreeSpace.Text = "--";
+            this.lbFreeSpace.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // btLaunchBleemsync
             // 
             this.btLaunchBleemsync.Image = global::pbPSCReAlpha.Properties.Resources.bleem_logo48;
@@ -142,6 +152,20 @@
             this.gbExploreEdit.TabIndex = 9;
             this.gbExploreEdit.TabStop = false;
             this.gbExploreEdit.Text = "Edit";
+            // 
+            // btOpenFolder
+            // 
+            this.btOpenFolder.Enabled = false;
+            this.btOpenFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
+            this.btOpenFolder.Location = new System.Drawing.Point(363, 112);
+            this.btOpenFolder.Name = "btOpenFolder";
+            this.btOpenFolder.Size = new System.Drawing.Size(115, 25);
+            this.btOpenFolder.TabIndex = 8;
+            this.btOpenFolder.Text = "Open folder";
+            this.btOpenFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btOpenFolder.UseVisualStyleBackColor = true;
+            this.btOpenFolder.Visible = false;
+            this.btOpenFolder.Click += new System.EventHandler(this.btOpenFolder_Click);
             // 
             // btRefreshFolderOnly
             // 
@@ -565,28 +589,9 @@
             this.sfdSaveImage.ShowHelp = true;
             this.sfdSaveImage.Title = "Save file";
             // 
-            // btOpenFolder
+            // tmRefreshFolder
             // 
-            this.btOpenFolder.Enabled = false;
-            this.btOpenFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
-            this.btOpenFolder.Location = new System.Drawing.Point(363, 112);
-            this.btOpenFolder.Name = "btOpenFolder";
-            this.btOpenFolder.Size = new System.Drawing.Size(115, 25);
-            this.btOpenFolder.TabIndex = 8;
-            this.btOpenFolder.Text = "Open folder";
-            this.btOpenFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btOpenFolder.UseVisualStyleBackColor = true;
-            this.btOpenFolder.Visible = false;
-            this.btOpenFolder.Click += new System.EventHandler(this.btOpenFolder_Click);
-            // 
-            // lbFreeSpace
-            // 
-            this.lbFreeSpace.Location = new System.Drawing.Point(271, 16);
-            this.lbFreeSpace.Name = "lbFreeSpace";
-            this.lbFreeSpace.Size = new System.Drawing.Size(170, 16);
-            this.lbFreeSpace.TabIndex = 11;
-            this.lbFreeSpace.Text = "--";
-            this.lbFreeSpace.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.tmRefreshFolder.Tick += new System.EventHandler(this.tmRefreshFolder_Tick);
             // 
             // Form1
             // 
@@ -660,6 +665,7 @@
         private System.Windows.Forms.WebBrowser wbReadme;
         private System.Windows.Forms.Button btOpenFolder;
         private System.Windows.Forms.Label lbFreeSpace;
+        private System.Windows.Forms.Timer tmRefreshFolder;
     }
 }
 

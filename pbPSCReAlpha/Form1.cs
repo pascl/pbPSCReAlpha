@@ -1058,13 +1058,9 @@ namespace pbPSCReAlpha
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                 f = new Form4(sFolderPath, slLogger, cgs);
+                f.ShowDialog();
+                refreshOneFolder();
             }
-            else
-            {
-                f = new Form4(sFolderPath, slLogger);
-            }
-            f.ShowDialog();
-            refreshOneFolder();
             slLogger.Trace("<< Edit cue file Click");
         }
 
@@ -1182,6 +1178,7 @@ namespace pbPSCReAlpha
                             {
                                 slLogger.Debug("Renaming " + sPath + cgs.Filenames[e.Item] + " to " + sPath + e.Label);
                                 File.Move(sPath + cgs.Filenames[e.Item], sPath + e.Label);
+                                tmRefreshFolder.Enabled = true;
                             }
                             else
                             {
@@ -1202,7 +1199,7 @@ namespace pbPSCReAlpha
                 {
                     slLogger.Fatal(ex.Message);
                 }
-                refreshOneFolder();
+                //refreshOneFolder(); // launched by activated timer
             }
             slLogger.Trace("<< Filename edit");
         }
@@ -1451,6 +1448,12 @@ namespace pbPSCReAlpha
             {
                 slLogger.Fatal(ex.Message);
             }
+        }
+
+        private void tmRefreshFolder_Tick(object sender, EventArgs e)
+        {
+            refreshOneFolder();
+            tmRefreshFolder.Enabled = false;
         }
     }
 }
