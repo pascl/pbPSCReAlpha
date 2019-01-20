@@ -58,7 +58,11 @@ namespace pbPSCReAlpha
                         {
                             using (StreamReader sr = new StreamReader(_folderPath + "\\" + s))
                             {
-                                
+                                String sline = String.Empty;
+                                while ((sline = sr.ReadLine()) != null)
+                                {
+                                    tb.AppendText(sline + Environment.NewLine);
+                                }
                             }
                         }
 
