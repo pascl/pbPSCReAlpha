@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form23));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btIniReload = new System.Windows.Forms.Button();
+            this.btReloadTitleDiscs = new System.Windows.Forms.Button();
             this.lbCurrentGameIniFile = new System.Windows.Forms.Label();
             this.btSaveIni = new System.Windows.Forms.Button();
             this.btGeneCopyTitle = new System.Windows.Forms.Button();
@@ -61,18 +63,16 @@
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
             this.wbViewer = new System.Windows.Forms.WebBrowser();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btPictureReload = new System.Windows.Forms.Button();
             this.lbCurrentPngFile = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
             this.btSaveAs = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
+            this.pbCover = new System.Windows.Forms.PictureBox();
             this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
             this.btScrapeImg = new System.Windows.Forms.Button();
-            this.pbCover = new System.Windows.Forms.PictureBox();
             this.btScraper = new System.Windows.Forms.Button();
-            this.btReloadTitleDiscs = new System.Windows.Forms.Button();
-            this.btIniReload = new System.Windows.Forms.Button();
-            this.btPictureReload = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
@@ -110,6 +110,26 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Game.ini";
+            // 
+            // btIniReload
+            // 
+            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btIniReload.Location = new System.Drawing.Point(121, 175);
+            this.btIniReload.Name = "btIniReload";
+            this.btIniReload.Size = new System.Drawing.Size(30, 23);
+            this.btIniReload.TabIndex = 37;
+            this.btIniReload.UseVisualStyleBackColor = true;
+            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
+            // 
+            // btReloadTitleDiscs
+            // 
+            this.btReloadTitleDiscs.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btReloadTitleDiscs.Location = new System.Drawing.Point(361, 19);
+            this.btReloadTitleDiscs.Name = "btReloadTitleDiscs";
+            this.btReloadTitleDiscs.Size = new System.Drawing.Size(30, 46);
+            this.btReloadTitleDiscs.TabIndex = 36;
+            this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
+            this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
             // 
             // lbCurrentGameIniFile
             // 
@@ -437,6 +457,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Picture";
             // 
+            // btPictureReload
+            // 
+            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
+            this.btPictureReload.Name = "btPictureReload";
+            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
+            this.btPictureReload.TabIndex = 38;
+            this.btPictureReload.UseVisualStyleBackColor = true;
+            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
+            // 
             // lbCurrentPngFile
             // 
             this.lbCurrentPngFile.AutoSize = true;
@@ -477,6 +507,20 @@
             this.btLoad.UseVisualStyleBackColor = true;
             this.btLoad.Click += new System.EventHandler(this.btLoad_Click);
             // 
+            // pbCover
+            // 
+            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCover.Location = new System.Drawing.Point(6, 19);
+            this.pbCover.Name = "pbCover";
+            this.pbCover.Size = new System.Drawing.Size(150, 150);
+            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbCover.TabIndex = 26;
+            this.pbCover.TabStop = false;
+            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
+            this.pbCover.LocationChanged += new System.EventHandler(this.pbCover_LocationChanged);
+            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
+            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
+            // 
             // sfdGeneSaveImage
             // 
             this.sfdGeneSaveImage.DefaultExt = "png";
@@ -506,19 +550,6 @@
             this.btScrapeImg.UseVisualStyleBackColor = true;
             this.btScrapeImg.Click += new System.EventHandler(this.btScrapeImg_Click);
             // 
-            // pbCover
-            // 
-            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCover.Location = new System.Drawing.Point(6, 19);
-            this.pbCover.Name = "pbCover";
-            this.pbCover.Size = new System.Drawing.Size(150, 150);
-            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbCover.TabIndex = 26;
-            this.pbCover.TabStop = false;
-            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
-            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
-            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
-            // 
             // btScraper
             // 
             this.btScraper.Enabled = false;
@@ -529,36 +560,6 @@
             this.btScraper.TabIndex = 30;
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
-            // 
-            // btReloadTitleDiscs
-            // 
-            this.btReloadTitleDiscs.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btReloadTitleDiscs.Location = new System.Drawing.Point(361, 19);
-            this.btReloadTitleDiscs.Name = "btReloadTitleDiscs";
-            this.btReloadTitleDiscs.Size = new System.Drawing.Size(30, 46);
-            this.btReloadTitleDiscs.TabIndex = 36;
-            this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
-            this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
-            // 
-            // btIniReload
-            // 
-            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btIniReload.Location = new System.Drawing.Point(121, 175);
-            this.btIniReload.Name = "btIniReload";
-            this.btIniReload.Size = new System.Drawing.Size(30, 23);
-            this.btIniReload.TabIndex = 37;
-            this.btIniReload.UseVisualStyleBackColor = true;
-            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
-            // 
-            // btPictureReload
-            // 
-            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
-            this.btPictureReload.Name = "btPictureReload";
-            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
-            this.btPictureReload.TabIndex = 38;
-            this.btPictureReload.UseVisualStyleBackColor = true;
-            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
             // 
             // Form23
             // 

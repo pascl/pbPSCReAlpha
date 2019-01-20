@@ -761,5 +761,10 @@ namespace pbPSCReAlpha
         {
             //MessageBox.Show("picture complete");
         }
+
+        private void pbCover_LocationChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show("location changed");
+        }
     }
 }
