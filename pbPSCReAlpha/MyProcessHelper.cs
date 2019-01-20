@@ -111,7 +111,7 @@ namespace pbPSCReAlpha
             if (numErrorLines > 0)
             {
                 sResult += Environment.NewLine + "--------- Errors ---------" + Environment.NewLine + consoleError.ToString();
-                //MessageBox.Show(consoleError.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); // bad idea, pngquant outputs errors only
+                //FlexibleMessageBox.Show(consoleError.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation); // bad idea, pngquant outputs errors only
             }
 
             pProcess.Close();

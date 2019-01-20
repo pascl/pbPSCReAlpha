@@ -17,6 +17,7 @@ namespace pbPSCReAlpha
         String _folderPath;
         SimpleLogger slLogger;
         ClGameStructure newGame;
+        String _currentFilePathImg;
 
         public Form3(String sFolderPath, SimpleLogger sl)
         {
@@ -26,6 +27,9 @@ namespace pbPSCReAlpha
             newGame = null;
 
             pbCover.AllowDrop = true;
+            _currentFilePathImg = String.Empty;
+            lbCurrentPngFile.Text = _currentFilePathImg;
+            btSave.Enabled = false;
         }
 
         public Form3(String sFolderPath, SimpleLogger sl, ClGameStructure myGame)
@@ -34,12 +38,18 @@ namespace pbPSCReAlpha
             slLogger = sl;
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
+            _currentFilePathImg = String.Empty;
+            lbCurrentPngFile.Text = _currentFilePathImg;
+            btSave.Enabled = false;
 
             if (!newGame.PngMissing)
             {
                 try
                 {
                     pbCover.Image = (Image)(new Bitmap(newGame.PictureFile));
+                    _currentFilePathImg = newGame.PictureFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -64,6 +74,9 @@ namespace pbPSCReAlpha
                     Bitmap bmPicture = new Bitmap(sFileName);
                     pbCover.Image = (Image)(new Bitmap(bmPicture));
                     bmPicture.Dispose();
+                    _currentFilePathImg = sFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -76,32 +89,19 @@ namespace pbPSCReAlpha
         private void btSave_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Save PNG Click");
-            if (Directory.Exists(_folderPath))
+            if (!String.IsNullOrEmpty(_currentFilePathImg))
             {
-                sfdGeneSaveImage.InitialDirectory = _folderPath;
-            }
-            String sDefFile = "Game.png";
-            if (!String.IsNullOrEmpty(newGame.PictureFileName))
-            {
-                sDefFile = newGame.PictureFileName;
-                sfdGeneSaveImage.FileName = sDefFile;
-            }
-            else
-            if (!String.IsNullOrEmpty(newGame.Discs))
-            {
-                sDefFile = newGame.Discs.Split(',')[0] + ".png";
-                sfdGeneSaveImage.FileName = sDefFile;
-            }
-            if (DialogResult.OK == sfdGeneSaveImage.ShowDialog())
-            {
-                String sFileName = sfdGeneSaveImage.FileName;
+                String sFileName = _currentFilePathImg;
                 pbCover.Image.Save(sFileName, ImageFormat.Png);
+
+                _currentFilePathImg = sFileName;
+                lbCurrentPngFile.Text = _currentFilePathImg;
+                btSave.Enabled = true;
 
                 MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFileName + " --force --ext .png --verbose");
                 pPngQuant.DoIt();
+                // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
             }
-            // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
-            
             slLogger.Trace("<< Save PNG Click");
         }
 
@@ -157,7 +157,7 @@ namespace pbPSCReAlpha
                 }
                 else
                 {
-                    MessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    FlexibleMessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     slLogger.Error("Dragdrop only one file please.");
                 }
             }
@@ -172,6 +172,49 @@ namespace pbPSCReAlpha
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;
+        }
+
+        private void btSaveAs_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Save as PNG Click");
+            if (Directory.Exists(_folderPath))
+            {
+                sfdGeneSaveImage.InitialDirectory = _folderPath;
+            }
+            String sDefFile = "Game.png";
+            if (null == newGame)
+            {
+
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(newGame.PictureFileName))
+                {
+                    sDefFile = newGame.PictureFileName;
+                    sfdGeneSaveImage.FileName = sDefFile;
+                }
+                else
+                if (!String.IsNullOrEmpty(newGame.Discs))
+                {
+                    sDefFile = newGame.Discs.Split(',')[0] + ".png";
+                    sfdGeneSaveImage.FileName = sDefFile;
+                }
+            }
+            if (DialogResult.OK == sfdGeneSaveImage.ShowDialog())
+            {
+                String sFileName = sfdGeneSaveImage.FileName;
+                pbCover.Image.Save(sFileName, ImageFormat.Png);
+
+                _currentFilePathImg = sFileName;
+                lbCurrentPngFile.Text = _currentFilePathImg;
+                btSave.Enabled = true;
+
+                MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFileName + " --force --ext .png --verbose");
+                pPngQuant.DoIt();
+            }
+            // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
+
+            slLogger.Trace("<< Save as PNG Click");
         }
     }
 }

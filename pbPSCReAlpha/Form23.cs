@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,15 +12,16 @@ using System.Windows.Forms;
 
 namespace pbPSCReAlpha
 {
-    public partial class Form2 : Form
+    public partial class Form23 : Form
     {
         String _folderPath;
         SimpleLogger slLogger;
         Dictionary<String, ClPS1Game> dcPs1Games;
         ClGameStructure newGame;
         String _currentFilePathIni;
+        String _currentFilePathImg;
 
-        public Form2(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games)
         {
             InitializeComponent();
             _folderPath = sFolderPath;
@@ -30,9 +32,16 @@ namespace pbPSCReAlpha
             lbCurrentGameIniFile.Text = _currentFilePathIni;
             btSaveIni.Enabled = false;
             btReloadTitleDiscs.Enabled = false;
+            btIniReload.Enabled = false;
+
+            pbCover.AllowDrop = true;
+            _currentFilePathImg = String.Empty;
+            lbCurrentPngFile.Text = _currentFilePathImg;
+            btSave.Enabled = false;
+            btPictureReload.Enabled = false;
         }
 
-        public Form2(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClGameStructure myGame)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
@@ -40,6 +49,7 @@ namespace pbPSCReAlpha
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
             _currentFilePathIni = String.Empty;
+            _currentFilePathImg = String.Empty;
             btSaveIni.Enabled = false;
 
             if (!newGame.IniMissing)
@@ -68,8 +78,31 @@ namespace pbPSCReAlpha
                 lbCurrentGameIniFile.Text = _currentFilePathIni;
                 btSaveIni.Enabled = true;
                 btReloadTitleDiscs.Enabled = true;
+                btIniReload.Enabled = true;
                 tbGeneSearchText.Text = newGame.Title;
             }
+
+            _currentFilePathImg = String.Empty;
+            lbCurrentPngFile.Text = _currentFilePathImg;
+            btSave.Enabled = false;
+            btPictureReload.Enabled = false;
+
+            if (!newGame.PngMissing)
+            {
+                try
+                {
+                    pbCover.Image = (Image)(new Bitmap(newGame.PictureFile));
+                    _currentFilePathImg = newGame.PictureFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
+                    btPictureReload.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            pbCover.AllowDrop = true;
         }
 
         private void btLoadIni_Click(object sender, EventArgs e)
@@ -145,10 +178,36 @@ namespace pbPSCReAlpha
                             }
                         }
                     }
+                    if(null == newGame)
+                    {
+                        newGame = new ClGameStructure("", true, true);
+                        newGame.IniMissing = false;
+                    }
+                    newGame.Title = tbGeneTitle.Text;
+                    newGame.Discs = tbGeneDiscs.Text;
+                    newGame.Publisher = tbGenePublisher.Text;
+                    newGame.Alphatitle = tbGeneAlphaTitle.Text;
+                    try
+                    {
+                        newGame.Players = ((int)(nuGenePlayers.Value)).ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        //
+                    }
+                    try
+                    {
+                        newGame.Year = ((int)nuGeneYear.Value).ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        //
+                    }
                     _currentFilePathIni = sFileName;
                     lbCurrentGameIniFile.Text = _currentFilePathIni;
                     btSaveIni.Enabled = true;
                     btReloadTitleDiscs.Enabled = true;
+                    btIniReload.Enabled = true;
                 }
                 catch (Exception ex)
                 {
@@ -200,6 +259,33 @@ namespace pbPSCReAlpha
                         lbCurrentGameIniFile.Text = _currentFilePathIni;
                         btSaveIni.Enabled = true;
                         btReloadTitleDiscs.Enabled = true;
+                        btIniReload.Enabled = true;
+
+                        if (null == newGame)
+                        {
+                            newGame = new ClGameStructure("", true, true);
+                            newGame.IniMissing = false;
+                        }
+                        newGame.Title = s1;
+                        newGame.Discs = s2;
+                        newGame.Publisher = s3;
+                        newGame.Alphatitle = s4;
+                        try
+                        {
+                            newGame.Players = i1.ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            //
+                        }
+                        try
+                        {
+                            newGame.Year = i2.ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            //
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -227,6 +313,7 @@ namespace pbPSCReAlpha
             lbGeneBigData.DisplayMember = "DisplayTitle";
             tbHiddenLink.Text = "";
             btScraper.Enabled = false;
+            btScrapeImg.Enabled = false;
             btViewPage.Enabled = false;
             btLink.Enabled = false;
             if (dcPs1Games.Count > 0)
@@ -319,6 +406,33 @@ namespace pbPSCReAlpha
                         lbCurrentGameIniFile.Text = _currentFilePathIni;
                         btSaveIni.Enabled = true;
                         btReloadTitleDiscs.Enabled = true;
+                        btIniReload.Enabled = true;
+                        
+                        if (null == newGame)
+                        {
+                            newGame = new ClGameStructure("", true, true);
+                            newGame.IniMissing = false;
+                        }
+                        newGame.Title = s1;
+                        newGame.Discs = s2;
+                        newGame.Publisher = s3;
+                        newGame.Alphatitle = s4;
+                        try
+                        {
+                            newGame.Players = i1.ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            //
+                        }
+                        try
+                        {
+                            newGame.Year = i2.ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            //
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -353,9 +467,17 @@ namespace pbPSCReAlpha
             slLogger.Trace(">> View webpage Click");
             if (lbGeneBigData.SelectedIndex > -1)
             {
-                btScraper.Enabled = false;
-                ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
-                wbViewer.Url = new Uri("http://psxdatacenter.com/" + psGame.Link.Trim());
+                try
+                {
+                    btScraper.Enabled = false;
+                    btScrapeImg.Enabled = false;
+                    ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
+                    wbViewer.Url = new Uri("http://psxdatacenter.com/" + psGame.Link.Trim());
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
             }
             slLogger.Trace("<< View webpage Click");
         }
@@ -363,10 +485,12 @@ namespace pbPSCReAlpha
         private void wbViewer_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             btScraper.Enabled = true;
+            btScrapeImg.Enabled = true;
         }
 
         private void btScraper_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Scrape webpage Click");
             ClGameScraper clgs = new ClGameScraper(wbViewer.DocumentText);
 
             tbGenePublisher.Text = clgs.Publisher;
@@ -387,6 +511,7 @@ namespace pbPSCReAlpha
             {
                 nuGeneYear.Value = (decimal)1995;
             }
+            slLogger.Trace("<< Scrape webpage Click");
         }
 
         private void btReloadTitleDiscs_Click(object sender, EventArgs e)
@@ -398,6 +523,243 @@ namespace pbPSCReAlpha
                 tbGeneDiscs.Text = newGame.Discs;
             }
             slLogger.Trace("<< Reload title and discs Click");
+        }
+
+        private void btLoad_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Load image Click");
+            if (Directory.Exists(_folderPath))
+            {
+                ofdGeneLoadImage.InitialDirectory = _folderPath;
+            }
+            if (DialogResult.OK == ofdGeneLoadImage.ShowDialog())
+            {
+                String sFileName = ofdGeneLoadImage.FileName;
+                try
+                {
+                    Bitmap bmPicture = new Bitmap(sFileName);
+                    pbCover.Image = (Image)(new Bitmap(bmPicture));
+                    bmPicture.Dispose();
+                    _currentFilePathImg = sFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
+                    btPictureReload.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Load image Click");
+        }
+
+        private void btSave_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Save PNG Click");
+            if (!String.IsNullOrEmpty(_currentFilePathImg))
+            {
+                String sFileName = _currentFilePathImg;
+                try
+                {
+                    pbCover.Image.Save(sFileName, ImageFormat.Png);
+
+                    _currentFilePathImg = sFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
+                    btPictureReload.Enabled = true;
+
+                    MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFileName + " --force --ext .png --verbose");
+                    pPngQuant.DoIt();
+                    // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
+
+                    if (null == newGame)
+                    {
+                        newGame = new ClGameStructure("", true, true);
+                        newGame.PngMissing = false;
+                    }
+                    Bitmap bmPicture = new Bitmap(pbCover.Image);
+                    newGame.setPicture(sFileName, (Image)(new Bitmap(bmPicture)));
+                    bmPicture.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Save PNG Click");
+        }
+
+        private void btSaveAs_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Save as PNG Click");
+            if (Directory.Exists(_folderPath))
+            {
+                sfdGeneSaveImage.InitialDirectory = _folderPath;
+            }
+            String sDefFile = "Game.png";
+            if (null == newGame)
+            {
+
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(newGame.PictureFileName))
+                {
+                    sDefFile = newGame.PictureFileName;
+                    sfdGeneSaveImage.FileName = sDefFile;
+                }
+                else
+                if (!String.IsNullOrEmpty(newGame.Discs))
+                {
+                    sDefFile = newGame.Discs.Split(',')[0] + ".png";
+                    sfdGeneSaveImage.FileName = sDefFile;
+                }
+            }
+            if (DialogResult.OK == sfdGeneSaveImage.ShowDialog())
+            {
+                String sFileName = sfdGeneSaveImage.FileName;
+                try
+                {
+                    pbCover.Image.Save(sFileName, ImageFormat.Png);
+
+                    _currentFilePathImg = sFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
+                    btPictureReload.Enabled = true;
+
+                    MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFileName + " --force --ext .png --verbose");
+                    pPngQuant.DoIt();
+
+                    if (null == newGame)
+                    {
+                        newGame = new ClGameStructure("", true, true);
+                        newGame.PngMissing = false;
+                    }
+                    Bitmap bmPicture = new Bitmap(pbCover.Image);
+                    newGame.setPicture(sFileName, (Image)(new Bitmap(bmPicture)));
+                    bmPicture.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
+
+            slLogger.Trace("<< Save as PNG Click");
+        }
+
+        private void btScrapeImg_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Scrape image Click");
+            try
+            {
+                ClGameScraper clgs = new ClGameScraper(wbViewer.DocumentText);
+                pbCover.Image = null;
+                //pbCover.LoadAsync(clgs.ImgUrl);
+                pbCover.ImageLocation = clgs.ImgUrl;
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
+            slLogger.Trace("<< Scrape image Click");
+            
+        }
+
+        private void pbCover_DragDrop(object sender, DragEventArgs e)
+        {
+            slLogger.Trace(">> Dragdrop image");
+            try
+            {
+                String[] sFileList = (String[])e.Data.GetData(DataFormats.FileDrop, false);
+                if (sFileList.Length == 1)
+                {
+                    String sExt = Path.GetExtension(sFileList[0]);
+                    List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
+                    if (lsAcceptedExt.IndexOf(sExt) > -1)
+                    {
+                        Bitmap bmPicture = new Bitmap(sFileList[0]);
+                        pbCover.Image = (Image)(new Bitmap(bmPicture));
+                        bmPicture.Dispose();
+                    }
+                    else
+                    {
+                        slLogger.Error("Extension " + sExt + " not accepted. Dragdrop a file with extension png, bmp, jpg or jpeg.");
+                    }
+                }
+                else
+                {
+                    FlexibleMessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    slLogger.Error("Dragdrop only one file please.");
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
+            slLogger.Trace("<< Dragdrop image");
+        }
+
+        private void pbCover_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+        }
+
+        private void btIniReload_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Game.ini Reload Click");
+            if (!newGame.IniMissing)
+            {
+                tbGeneTitle.Text = newGame.Title;
+                tbGeneDiscs.Text = newGame.Discs;
+                tbGenePublisher.Text = newGame.Publisher;
+                tbGeneAlphaTitle.Text = newGame.Alphatitle;
+                try
+                {
+                    nuGenePlayers.Value = (decimal)int.Parse(newGame.Players);
+                }
+                catch (Exception ex)
+                {
+                    //
+                }
+                try
+                {
+                    nuGeneYear.Value = (decimal)int.Parse(newGame.Year);
+                }
+                catch (Exception ex)
+                {
+                    //
+                }
+            }
+            slLogger.Trace("<< Game.ini Reload Click");
+        }
+
+        private void btPictureReload_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Picture Reload Click");
+            if(!newGame.PngMissing)
+            {
+                try
+                {
+                    pbCover.Image = (Image)(new Bitmap(newGame.PictureFile));
+                    _currentFilePathImg = newGame.PictureFileName;
+                    lbCurrentPngFile.Text = _currentFilePathImg;
+                    btSave.Enabled = true;
+                    btPictureReload.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Picture Reload Click");
+        }
+
+        private void pbCover_LoadCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            //MessageBox.Show("picture complete");
         }
     }
 }

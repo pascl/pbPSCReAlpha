@@ -30,38 +30,42 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btSave = new System.Windows.Forms.Button();
+            this.btSaveAs = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
             this.pbCover = new System.Windows.Forms.PictureBox();
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
             this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.btBack = new System.Windows.Forms.Button();
             this.btCompress = new System.Windows.Forms.Button();
+            this.btSave = new System.Windows.Forms.Button();
+            this.lbCurrentPngFile = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lbCurrentPngFile);
             this.groupBox1.Controls.Add(this.btSave);
+            this.groupBox1.Controls.Add(this.btSaveAs);
             this.groupBox1.Controls.Add(this.btLoad);
             this.groupBox1.Controls.Add(this.pbCover);
             this.groupBox1.Location = new System.Drawing.Point(3, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(245, 180);
+            this.groupBox1.Size = new System.Drawing.Size(245, 195);
             this.groupBox1.TabIndex = 27;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Picture Edit";
             // 
-            // btSave
+            // btSaveAs
             // 
-            this.btSave.Location = new System.Drawing.Point(162, 48);
-            this.btSave.Name = "btSave";
-            this.btSave.Size = new System.Drawing.Size(75, 23);
-            this.btSave.TabIndex = 28;
-            this.btSave.Text = "Save...";
-            this.btSave.UseVisualStyleBackColor = true;
-            this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            this.btSaveAs.Location = new System.Drawing.Point(162, 77);
+            this.btSaveAs.Name = "btSaveAs";
+            this.btSaveAs.Size = new System.Drawing.Size(75, 23);
+            this.btSaveAs.TabIndex = 28;
+            this.btSaveAs.Text = "Save as...";
+            this.btSaveAs.UseVisualStyleBackColor = true;
+            this.btSaveAs.Click += new System.EventHandler(this.btSaveAs_Click);
             // 
             // btLoad
             // 
@@ -115,13 +119,33 @@
             // 
             // btCompress
             // 
-            this.btCompress.Location = new System.Drawing.Point(3, 188);
+            this.btCompress.Location = new System.Drawing.Point(3, 203);
             this.btCompress.Name = "btCompress";
             this.btCompress.Size = new System.Drawing.Size(245, 23);
             this.btCompress.TabIndex = 29;
             this.btCompress.Text = "Compress PNG in all folders";
             this.btCompress.UseVisualStyleBackColor = true;
             this.btCompress.Click += new System.EventHandler(this.btCompress_Click);
+            // 
+            // btSave
+            // 
+            this.btSave.Enabled = false;
+            this.btSave.Location = new System.Drawing.Point(162, 48);
+            this.btSave.Name = "btSave";
+            this.btSave.Size = new System.Drawing.Size(75, 23);
+            this.btSave.TabIndex = 29;
+            this.btSave.Text = "Save";
+            this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            // 
+            // lbCurrentPngFile
+            // 
+            this.lbCurrentPngFile.AutoSize = true;
+            this.lbCurrentPngFile.Location = new System.Drawing.Point(6, 179);
+            this.lbCurrentPngFile.Name = "lbCurrentPngFile";
+            this.lbCurrentPngFile.Size = new System.Drawing.Size(16, 13);
+            this.lbCurrentPngFile.TabIndex = 36;
+            this.lbCurrentPngFile.Text = "---";
             // 
             // Form3
             // 
@@ -138,6 +162,7 @@
             this.Name = "Form3";
             this.Text = "Image Helper";
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
             this.ResumeLayout(false);
 
@@ -147,11 +172,13 @@
 
         private System.Windows.Forms.PictureBox pbCover;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.Button btSaveAs;
         private System.Windows.Forms.Button btLoad;
         private System.Windows.Forms.OpenFileDialog ofdGeneLoadImage;
         private System.Windows.Forms.SaveFileDialog sfdGeneSaveImage;
         private System.Windows.Forms.Button btBack;
         private System.Windows.Forms.Button btCompress;
+        private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.Label lbCurrentPngFile;
     }
 }

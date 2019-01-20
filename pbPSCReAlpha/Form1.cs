@@ -35,7 +35,7 @@ namespace pbPSCReAlpha
             lsSbiNeeds = new List<string>();
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
-            
+
             slLogger = new SimpleLogger(tbLogDebug);
             try
             {
@@ -85,7 +85,7 @@ namespace pbPSCReAlpha
                     slLogger.Debug("Found games in xml for search function: " + dcPs1Games.Count.ToString());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 slLogger.Fatal(ex.Message);
             }
@@ -127,15 +127,7 @@ namespace pbPSCReAlpha
                 slLogger.Fatal(ex.Message);
             }
 
-            try
-            {
-                long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
-                lbFreeSpace.Text = FormatFreeSpace(lSpace);
-            }
-            catch (Exception ex)
-            {
-                slLogger.Fatal(ex.Message);
-            }
+            ReCalcFreeSpace(sFolderPath);
 
             String st = String.Empty;
             using (StreamReader sr = new StreamReader(Application.StartupPath + "\\" + "README.md"))
@@ -152,17 +144,22 @@ namespace pbPSCReAlpha
             {
                 String sFolderPath = fbdGamesFolder.SelectedPath;
                 tbFolderPath.Text = sFolderPath;
-                try
-                {
-                    long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
-                    lbFreeSpace.Text = FormatFreeSpace(lSpace);
-                }
-                catch (Exception ex)
-                {
-                    slLogger.Fatal(ex.Message);
-                }
+                ReCalcFreeSpace(sFolderPath);
             }
             slLogger.Trace("<< Browse 'Games' Folder Click");
+        }
+
+        private void ReCalcFreeSpace(String sFolderPath)
+        {
+            try
+            {
+                long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
+                lbFreeSpace.Text = "(" + ClPbHelper.FormatBytes(lSpace) + ")";
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
         }
 
         private void btTest_Click(object sender, EventArgs e)
@@ -186,7 +183,7 @@ namespace pbPSCReAlpha
             {
                 lsTest.Sort(comparer);
             }
-            foreach(String s in lsTest)
+            foreach (String s in lsTest)
             {
                 slLogger.Debug(s);
             }
@@ -234,8 +231,10 @@ namespace pbPSCReAlpha
                 List<String> lsSbiPresent = new List<string>();
                 List<string> sFiles = new List<string>();
                 FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + "\\GameData").GetFiles("*.*", SearchOption.AllDirectories);
+                long lSizeFolder = 0;
                 foreach (FileInfo fi in inDirfileList)
                 {
+                    lSizeFolder += fi.Length;
                     sFiles.Add(fi.Name);
                     slLogger.Debug("**** File: " + fi.Name);
                     if (fi.Extension.ToLower() == ".png")
@@ -457,6 +456,7 @@ namespace pbPSCReAlpha
                 cgs.setFilesList(sFiles);
                 cgs.setPicture(bmPictureString, (Image)(new Bitmap(bmPicture)));
                 bmPicture.Dispose();
+                cgs.setSize(lSizeFolder);
                 if (true == bInitial)
                 {
                     lsFolders.Add(sFolderIndex);
@@ -528,7 +528,7 @@ namespace pbPSCReAlpha
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 slLogger.Fatal(ex.Message);
             }
@@ -557,9 +557,9 @@ namespace pbPSCReAlpha
                     if (dcGames.ContainsKey(s))
                     {
                         lbGames.Items.Add(dcGames[s]);
-                        if(iSelected > -1)
+                        if (iSelected > -1)
                         {
-                            if(((cgs.Alphatitle != String.Empty) && (dcGames[s].Alphatitle == cgs.Alphatitle)) || ((cgs.Alphatitle == String.Empty) && (dcGames[s].Title == cgs.Title))) // if (s == cgs.FolderIndex)
+                            if (((cgs.Alphatitle != String.Empty) && (dcGames[s].Alphatitle == cgs.Alphatitle)) || ((cgs.Alphatitle == String.Empty) && (dcGames[s].Title == cgs.Title))) // if (s == cgs.FolderIndex)
                             {
                                 lbGames.SelectedIndex = lbGames.Items.Count - 1;
                             }
@@ -580,9 +580,11 @@ namespace pbPSCReAlpha
 
         private void lbGames_SelectedIndexChanged(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Game Selection changed in gamelist");
+            //slLogger.Trace(">> Game Selection changed in gamelist");
             if (lbGames.SelectedIndex > -1)
             {
+                lbFolderSize.Visible = true;
+                lbFolderSizeLabel.Visible = true;
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                 lbExploreTitle.Text = cgs.Title;
                 lbExploreDiscs.Text = cgs.Discs;
@@ -590,6 +592,7 @@ namespace pbPSCReAlpha
                 lbExplorePublisher.Text = cgs.Publisher;
                 lbExploreYear.Text = cgs.Year;
                 lbExploreAlphaTitle.Text = cgs.Alphatitle;
+                lbFolderSize.Text = ClPbHelper.FormatBytes(cgs.FolderSize);
                 try
                 {
                     /*pbExploreImage.ImageLocation = cgs.PictureFileName;
@@ -636,7 +639,7 @@ namespace pbPSCReAlpha
                             else
                             if (s.EndsWith(".bin"))
                             {
-                                if(cgs.FilesBinOk.IndexOf(s) > -1)
+                                if (cgs.FilesBinOk.IndexOf(s) > -1)
                                 {
                                     iIndexImg = 1;
                                 }
@@ -687,7 +690,7 @@ namespace pbPSCReAlpha
                         }
                         else
                         //if ((s == "pcsx.cfg") || (s == "Game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png")))
-                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png")) 
+                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png"))
                             || ((s.EndsWith(".sbi")) && (cgs.Discs.ToLower().Contains(s.Substring(0, s.Length - 4)))))
                         {
                             iIndexImg = 1;
@@ -703,8 +706,42 @@ namespace pbPSCReAlpha
                         tbErrString.AppendText(s + "\n");
                     }
                 }
-                if(true == cgs.GeneralError)
+                if (true == cgs.GeneralError)
                 {
+                    bool bPng = false;
+                    bool bCue = false;
+                    bool bBin = false;
+                    bool bSbi = false;
+                    if ((!cgs.IniMissing) && (!cgs.IniIncomplete))
+                    {
+                        if (!cgs.PngMissing) // png exist
+                        {
+                            if ((!cgs.PngMultiple) && (cgs.PngMismatch)) // only 1 png and not good name
+                            {
+                                bPng = true;
+                            }
+                        }
+                        if (!cgs.CueMissing) // cue exist
+                        {
+                            if ((!cgs.CueCountMisMatchDiscsCount) && (cgs.BadCueName)) // numbers cue an discs ok and bad cue filename
+                            {
+                                bCue = true;
+                            }
+                        }
+                        if(cgs.NeededSbiMissing)
+                        {
+                            bSbi = true;
+                        }
+                        if (!cgs.BinMissing)
+                        {
+                            bBin = true;
+                        }
+                    }
+                    btCueRename.Enabled = bCue;
+                    btPngRename.Enabled = bPng;
+                    btSbiRename.Enabled = bSbi;
+                    btBinRename.Enabled = bBin;
+
                     /*if(cgs.IniIncomplete || cgs.IniMissing)
                     {
 
@@ -721,7 +758,7 @@ namespace pbPSCReAlpha
                     {
 
                     }*/
-                    if(cgs.CueMissing)
+                    if (cgs.CueMissing)
                     {
                         btEditCue.Visible = false;
                         btEditCue.Enabled = false;
@@ -765,10 +802,18 @@ namespace pbPSCReAlpha
 
                     btOpenFolder.Enabled = true;
                     btOpenFolder.Visible = true;
+
+                    btBinRename.Enabled = true;
+                    btCueRename.Enabled = false;
+                    btPngRename.Enabled = false;
+                    btSbiRename.Enabled = false;
                 }
             }
             else
             {
+                lbFolderSize.Visible = false;
+                lbFolderSizeLabel.Visible = false;
+
                 btAddFiles.Enabled = false;
                 btAddFiles.Visible = false;
 
@@ -785,8 +830,13 @@ namespace pbPSCReAlpha
                 btOpenFolder.Visible = false;
 
                 pbExploreImage.AllowDrop = false;
+
+                btBinRename.Enabled = false;
+                btCueRename.Enabled = false;
+                btPngRename.Enabled = false;
+                btSbiRename.Enabled = false;
             }
-            slLogger.Trace("<< Game Selection changed in gamelist");
+            //slLogger.Trace("<< Game Selection changed in gamelist");
         }
 
         private void btReSort_Click(object sender, EventArgs e)
@@ -844,7 +894,7 @@ namespace pbPSCReAlpha
                                     }
                                 }
                             }
-                            if(iNewIndex == iPrevIndex)
+                            if (iNewIndex == iPrevIndex)
                             {
                                 // just in case
                                 iNewIndex++;
@@ -852,15 +902,15 @@ namespace pbPSCReAlpha
                         }
                         refreshGameListFolders();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         slLogger.Fatal(ex.Message);
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Correct the wrong detected folders (not numbered names, GameData or Game.ini missing).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    FlexibleMessageBox.Show("Correct the wrong detected folders (not numbered names, GameData or Game.ini missing).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             slLogger.Trace("<< Resort gamelist Click");
@@ -893,7 +943,7 @@ namespace pbPSCReAlpha
                     {
                         int iCount = lsFolders.Count;
                         int iNext = 1 + iCount;
-                        while(Directory.Exists(sFolderPath + "\\" + iNext.ToString()))
+                        while (Directory.Exists(sFolderPath + "\\" + iNext.ToString()))
                         {
                             iNext++;
                         }
@@ -901,7 +951,7 @@ namespace pbPSCReAlpha
                         Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData");
                         File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         slLogger.Fatal(ex.Message);
                     }
@@ -909,24 +959,24 @@ namespace pbPSCReAlpha
                 }
                 else
                 {
-                    MessageBox.Show("Correct the wrong folder names before doing this.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    FlexibleMessageBox.Show("Correct the wrong folder names before doing this.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             slLogger.Trace("<< Create new folder Click");
         }
-        
+
         private void btLaunchBleemsync_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Launch BleemSync Click");
             String sFolderPath = tbFolderPath.Text;
-            if(sFolderPath.EndsWith("\\"))
+            if (sFolderPath.EndsWith("\\"))
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
             if (Directory.Exists(sFolderPath))
             {
                 String[] sFolderDecomposed = sFolderPath.Split('\\');
-                if((sFolderDecomposed.Length > 1) && (sFolderDecomposed[sFolderDecomposed.Length - 1] == "Games"))
+                if ((sFolderDecomposed.Length > 1) && (sFolderDecomposed[sFolderDecomposed.Length - 1] == "Games"))
                 {
                     sFolderDecomposed[sFolderDecomposed.Length - 1] = "BleemSync";
                     String sFolderBleemsync = String.Join("\\", sFolderDecomposed);
@@ -940,22 +990,22 @@ namespace pbPSCReAlpha
                         }
                         else
                         {
-                            MessageBox.Show("There is not the BleemSync executable here: " + sFolderBleemsync, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            FlexibleMessageBox.Show("There is not the BleemSync executable here: " + sFolderBleemsync, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("There is not a BleemSync folder: " + sFolderBleemsync, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        FlexibleMessageBox.Show("There is not a BleemSync folder: " + sFolderBleemsync, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("There is a problem with the folder path: " + sFolderPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    FlexibleMessageBox.Show("There is a problem with the folder path: " + sFolderPath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
             else
             {
-                MessageBox.Show("Folder " + sFolderPath + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                FlexibleMessageBox.Show("Folder " + sFolderPath + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             slLogger.Trace("<< Launch BleemSync Click");
         }
@@ -984,8 +1034,8 @@ namespace pbPSCReAlpha
 
         private void tabDebug_Paint(object sender, PaintEventArgs e)
         {
-            if(true == bAccessingDebugTab)
-            { 
+            if (true == bAccessingDebugTab)
+            {
                 DebugLogScrollToEnd();
                 bAccessingDebugTab = false;
             }
@@ -995,15 +1045,15 @@ namespace pbPSCReAlpha
         {
             slLogger.Trace(">> Edit Game.ini Click");
             String sFolderPath = tbFolderPath.Text;
-            Form2 f = null;
+            Form23 f = null;
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form2(sFolderPath, slLogger, dcPs1Games, cgs);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, cgs);
             }
             else
             {
-                f = new Form2(sFolderPath, slLogger, dcPs1Games);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games);
             }
             f.ShowDialog();
             refreshOneFolder();
@@ -1014,15 +1064,15 @@ namespace pbPSCReAlpha
         {
             slLogger.Trace(">> Edit image Click");
             String sFolderPath = tbFolderPath.Text;
-            Form3 f = null;
+            Form23 f = null;
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form3(sFolderPath, slLogger, cgs);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, cgs);
             }
             else
             {
-                f = new Form3(sFolderPath, slLogger);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games);
             }
             f.ShowDialog();
             refreshOneFolder();
@@ -1040,7 +1090,7 @@ namespace pbPSCReAlpha
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + cgs.FolderIndex.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     slLogger.Fatal(ex.Message);
                 }
@@ -1071,7 +1121,7 @@ namespace pbPSCReAlpha
                 foreach (string sFile in sFiles)
                 {
                     //File.Copy(sFile, sMyFolder + "\\" + sFile.Substring(sFile.LastIndexOf('\\')));
-                    //MessageBox.Show("File Copied from" + sFile + "\n to" + sMyFolder);
+                    //FlexibleMessageBox.Show("File Copied from" + sFile + "\n to" + sMyFolder);
                     if (this.frmCopy != null)
                     {
                         this.frmCopy.Location = new Point(this.Location.X + this.Width, this.Location.Y);
@@ -1091,7 +1141,7 @@ namespace pbPSCReAlpha
             else
             {
                 slLogger.Error("Destination directory doesn't exist");
-                MessageBox.Show("Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                FlexibleMessageBox.Show("Directory doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -1111,11 +1161,11 @@ namespace pbPSCReAlpha
                         pbCopyFiles(sFileList, sPath);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     slLogger.Fatal(ex.Message);
                 }
-                refreshOneFolder(); // refresh but probably copying not done yet...
+                tmRefreshFolder.Enabled = true;
             }
             slLogger.Trace("<< DragDrop file");
         }
@@ -1146,11 +1196,11 @@ namespace pbPSCReAlpha
                         pbCopyFiles(sFileList, sPath);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     slLogger.Fatal(ex.Message);
                 }
-                refreshOneFolder(); // refresh but probably copying not done yet...
+                tmRefreshFolder.Enabled = true;
             }
             slLogger.Trace("<< Add Files Click");
         }
@@ -1313,7 +1363,7 @@ namespace pbPSCReAlpha
                 }
                 else
                 {
-                    MessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    FlexibleMessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     slLogger.Error("Dragdrop only one file please.");
                 }
             }
@@ -1361,6 +1411,7 @@ namespace pbPSCReAlpha
                         lvFiles.Select();
                         lvFiles.EnsureVisible(iFileIndex);
                     }
+                    ReCalcFreeSpace(sFolderPath);
                 }
             }
         }
@@ -1384,12 +1435,12 @@ namespace pbPSCReAlpha
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if (!cgs.GameDataMissing)
                     {
-                         sPath += "GameData" + "\\";
+                        sPath += "GameData" + "\\";
                     }
                     MyProcessHelper explo = new MyProcessHelper("explorer.exe", sPath);
                     explo.DoIt();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     slLogger.Fatal(ex.Message);
                 }
@@ -1410,50 +1461,716 @@ namespace pbPSCReAlpha
             return -1;
         }
 
-        private String FormatFreeSpace(long lfp)
-        {
-            String s = "--";
-            if (lfp > -1)
-            {
-                long l = lfp;
-                String[] ss = new String[] { "B", "kB", "MB", "GB", "TB", "PB", "EB" };
-                int i = 0;
-                while (l > 1024)
-                {
-                    l = l / 1024;
-                    i++;
-                }
-                if (i < ss.Length)
-                {
-                    s = l.ToString() + " " + ss[i];
-                }
-                else
-                {
-                    s = lfp.ToString() + " " + ss[0];
-                }
-                s = "(" + s + ")";
-            }
-            return s;
-        }
-
         private void tbFolderPath_Leave(object sender, EventArgs e)
         {
             String sFolderPath = tbFolderPath.Text;
-            try
-            {
-                long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
-                lbFreeSpace.Text = FormatFreeSpace(lSpace);
-            }
-            catch (Exception ex)
-            {
-                slLogger.Fatal(ex.Message);
-            }
+            ReCalcFreeSpace(sFolderPath);
         }
 
         private void tmRefreshFolder_Tick(object sender, EventArgs e)
         {
             refreshOneFolder();
             tmRefreshFolder.Enabled = false;
+        }
+
+        private void btCueRename_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Cue AutoRename Click");
+            if (lbGames.SelectedIndex > -1)
+            {
+                try
+                {
+                    ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                    String sFolderPath = tbFolderPath.Text;
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.CueMissing) && (!cgs.CueCountMisMatchDiscsCount) && (cgs.BadCueName))
+                    {
+                        String[] sDiscs = cgs.Discs.Split(',');
+                        List<String> lsFilenamesOk = cgs.FilesCueOk;
+                        List<String> lsFileNamesCueLower = new List<string>();
+                        List<String> lsFileToRename = new List<string>();
+                        foreach (String s in cgs.Filenames)
+                        {
+                            if (s.ToLower().EndsWith(".cue"))
+                            {
+                                lsFileNamesCueLower.Add(s.ToLower());
+                            }
+                        }
+                        if (lsFileNamesCueLower.Count > 0)
+                        {
+                            using (NaturalComparer comparer = new NaturalComparer())
+                            {
+                                lsFileNamesCueLower.Sort(comparer);
+                            }
+                            foreach (String sOneFile in lsFileNamesCueLower)
+                            {
+                                if (lsFilenamesOk.IndexOf(sOneFile) > -1)
+                                {
+                                    //
+                                }
+                                else
+                                {
+                                    lsFileToRename.Add(sOneFile);
+                                }
+                            }
+                            String[] sFileToRename = lsFileToRename.ToArray();
+                            int iIndex = 0;
+                            String sQuestion = String.Empty;
+                            foreach (String s in sDiscs)
+                            {
+                                String sDisc = s.ToLower();
+                                if (lsFilenamesOk.IndexOf(sDisc + ".cue") > -1)
+                                {
+                                    iIndex++;
+                                }
+                                else
+                                {
+                                    if (iIndex < sFileToRename.Length)
+                                    {
+                                        if (File.Exists(sPath + "GameData" + "\\" + sFileToRename[iIndex]))
+                                        {
+                                            sQuestion = sQuestion + Environment.NewLine + sPath + "GameData" + "\\" + sFileToRename[iIndex] + " >> " + sPath + "GameData" + "\\" + s + ".cue";
+                                        }
+                                        iIndex++;
+                                    }
+                                }
+                            }
+                            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                            {
+                                iIndex = 0;
+                                foreach (String s in sDiscs)
+                                {
+                                    String sDisc = s.ToLower();
+                                    if (lsFilenamesOk.IndexOf(sDisc + ".cue") > -1)
+                                    {
+                                        iIndex++;
+                                    }
+                                    else
+                                    {
+                                        if (iIndex < sFileToRename.Length)
+                                        {
+                                            if (File.Exists(sPath + "GameData" + "\\" + sFileToRename[iIndex]))
+                                            {
+                                                File.Move(sPath + "GameData" + "\\" + sFileToRename[iIndex], sPath + "GameData" + "\\" + s + ".cue");
+                                                slLogger.Debug("Renaming file " + sFileToRename[iIndex] + " -> " + s + ".cue");
+                                            }
+                                            iIndex++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        refreshOneFolder();
+                    }
+                    else
+                    {
+                        //
+                    }
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Cue AutoRename Click");
+        }
+
+        private void btPngRename_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Png AutoRename Click");
+            if (lbGames.SelectedIndex > -1)
+            {
+                try
+                {
+                    ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                    String sFolderPath = tbFolderPath.Text;
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.PngMissing) && (!cgs.PngMultiple) && (cgs.PngMismatch))
+                    {
+                        String sSrcName = cgs.PictureFileName;
+                        String sDiscFirst = cgs.Discs.Split(',')[0];
+                        String sDstName = sPath + "GameData" + "\\" + sDiscFirst + ".png";
+                        if (sSrcName.ToLower() != sDstName.ToLower())
+                        {
+                            if (File.Exists(sSrcName))
+                            {
+                                if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename this file ?" + sSrcName + " >> " + sDstName, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                                {
+                                    File.Move(sSrcName, sDstName);
+                                    slLogger.Debug("Renaming file " + sSrcName + " -> " + sDstName);
+                                    refreshOneFolder();
+                                }
+                            }
+                            else
+                            {
+                                //
+                            }
+                        }
+                        else
+                        {
+                            //
+                        }
+                    }
+                    else
+                    {
+                        //
+                    }
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Png AutoRename Click");
+        }
+
+        private void btBinRename_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Bin AutoRename Click");
+            if (lbGames.SelectedIndex > -1)
+            {
+                try
+                {
+                    ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                    String sFolderPath = tbFolderPath.Text;
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData" + "\\";
+                    String[] sDisc = cgs.Discs.Split(',');
+                    List<String> sFilesOrigine = new List<string>();
+                    foreach (String s in cgs.Filenames)
+                    {
+                        if (s.ToLower().EndsWith(".bin"))
+                        {
+                            sFilesOrigine.Add(s);
+                        }
+                    }
+                    List<String> sFiles = new List<string>();
+                    List<String> sFilesToSplit = new List<string>();
+                    bool bSerialFound = false;
+                    foreach (String sOneFile in sFilesOrigine)
+                    {
+                        String sLow = sOneFile.ToLower();
+                        for(int i=0;i<sDisc.Length;i++)
+                        {
+                            // need to rename serialnumbers if present, to prevent from detecting false common strings
+                            // for example, Street Fighter Collection [SLUS-00423,SLUS-00584] -> SLUS-00, then 4 for common string
+                            String s = sDisc[i].ToLower();
+                            int iPos = sLow.IndexOf(s);
+                            if (iPos > -1)
+                            {
+                                bSerialFound = true;
+                                int iLen = s.Length;
+                                sLow = sLow.Remove(iPos, iLen);
+                                sLow = sLow.Insert(iPos, (i + 1).ToString());
+                            }
+                        }
+                        sFiles.Add(sLow);
+                        sFilesToSplit.Add(sLow);
+                    }
+                    String sCommonStr = String.Empty;
+                    List<String> lsCommonstrings = new List<string>();
+                    int iIter = 0;
+                    do
+                    {
+                        String sPreviousFile = String.Empty;
+                        sCommonStr = String.Empty;
+                        ClPbHelper.LongestCommonSubstring(sFiles[0].ToLower(), sFiles[sFiles.Count-1].ToLower(), out sCommonStr);
+                        foreach (String sOneFile in sFiles)
+                        {
+                            String s = sOneFile.ToLower();
+                            //if (String.IsNullOrEmpty(sPreviousFile))
+                            //{
+                            //    sPreviousFile = s;
+                            //}
+                            //else
+                            //{
+                            //    if (String.IsNullOrEmpty(sCommonStr))
+                            //    {
+                            //        ClPbHelper.LongestCommonSubstring(sPreviousFile, s, out sCommonStr);
+                            //    }
+                            //    else
+                            //    {
+                                    ClPbHelper.LongestCommonSubstring(sCommonStr, s, out sCommonStr);
+                                //}
+                            //}
+                        }
+                        if (!String.IsNullOrEmpty(sCommonStr))
+                        {
+                            lsCommonstrings.Add(sCommonStr);
+                            iIter++;
+                            for (int i = 0; i < sFiles.Count; i++)
+                            {
+                                int iPos = sFiles[i].IndexOf(sCommonStr);
+                                int iLen = sCommonStr.Length;
+                                sFiles[i] = sFiles[i].Remove(iPos, iLen);
+                                //sFiles[i] = sFiles[i].Insert(iPos, "/");
+                            }
+                        }
+                    } while (!String.IsNullOrEmpty(sCommonStr));
+
+                    String ss = "***** " + iIter.ToString() + " *****";
+                    int iInd = 0;
+                    Dictionary<String, String> dcFiles = new Dictionary<string, string>();
+                    Dictionary<String, String> dcFilesToSplit = new Dictionary<string, string>();
+                    foreach (String sCommon in lsCommonstrings)
+                    {
+                        for (int i = 0; i < sFilesToSplit.Count; i++)
+                        {
+                            int iPos = sFilesToSplit[i].IndexOf(sCommon);
+                            int iLen = sCommon.Length;
+                            sFilesToSplit[i] = sFilesToSplit[i].Remove(iPos, iLen);
+                            sFilesToSplit[i] = sFilesToSplit[i].Insert(iPos, "/");
+                        }
+                    }
+                    foreach (String s in sFilesToSplit)
+                    {
+                        dcFilesToSplit.Add(s, sFilesOrigine[iInd]);
+                        ss += Environment.NewLine + s + " - " + sFilesOrigine[iInd];
+                        iInd++;
+                    }
+                    iInd = 0;
+                    foreach (String s in sFiles)
+                    {
+                        dcFiles.Add(s, sFilesOrigine[iInd]);
+                        iInd++;
+                    }
+                    if (sDisc.Length == 1)
+                    {
+                        if (sFiles.Count == 1)
+                        {
+                            String s = sFiles[0];
+                            if (dcFiles.ContainsKey(s))
+                            {
+                                String sSrcName = sPath + dcFiles[s];
+                                String sDstName = sPath + sDisc[0] + ".bin";
+                                if (sSrcName.ToLower() != sDstName.ToLower())
+                                {
+                                    if (File.Exists(sSrcName))
+                                    {
+                                        if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename this file ?" + Environment.NewLine + sSrcName + " >> " + sDstName, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                                        {
+                                            File.Move(sSrcName, sDstName);
+                                            slLogger.Debug("Renaming file " + sSrcName + " -> " + sDstName);
+                                            refreshOneFolder();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    slLogger.Debug("No renaming to do");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // iIter==1: filenames are 1_toto.bin, 2_toto.bin, etc
+                            // iIter==2: filenames are toto_1.bin, toto_2.bin, etc
+                            using (NaturalComparer comparer = new NaturalComparer())
+                            {
+                                sFiles.Sort(comparer);
+                            }
+                            int iInc = 1;
+                            String sQuestion = String.Empty;
+                            foreach (String s in sFiles)
+                            {
+                                if (dcFiles.ContainsKey(s))
+                                {
+                                    String sSrcName = sPath + dcFiles[s];
+                                    String sDstName = sPath + sDisc[0] + "_" + iInc.ToString("00") + ".bin";
+                                    if (sSrcName.ToLower() != sDstName.ToLower())
+                                    {
+                                        if (File.Exists(sSrcName))
+                                        {
+                                            sQuestion = sQuestion + Environment.NewLine + sSrcName + " >> " + sDstName;
+                                        }
+                                    }
+                                    iInc++;
+                                }
+                            }
+                            if (!String.IsNullOrEmpty(sQuestion))
+                            {
+                                if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                                {
+                                    int iIncr = 1;
+                                    foreach (String s in sFiles)
+                                    {
+                                        if (dcFiles.ContainsKey(s))
+                                        {
+                                            String sSrcName = sPath + dcFiles[s];
+                                            String sDstName = sPath + sDisc[0] + "_" + iIncr.ToString("00") + ".bin";
+                                            if (sSrcName.ToLower() != sDstName.ToLower())
+                                            {
+                                                if (File.Exists(sSrcName))
+                                                {
+                                                    File.Move(sSrcName, sDstName);
+                                                    slLogger.Debug("Renaming file " + sSrcName + " -> " + sDstName);
+                                                }
+                                            }
+                                            iIncr++;
+                                        }
+                                    }
+                                    refreshOneFolder();
+                                }
+                            }
+                            else
+                            {
+                                slLogger.Debug("No renaming to do");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (sDisc.Length == sFiles.Count)
+                        {
+                            // iIter==1: filenames are 1_toto.bin, 2_toto.bin, etc
+                            // iIter==2: filenames are toto_1.bin, toto2.bin, etc
+                            using (NaturalComparer comparer = new NaturalComparer())
+                            {
+                                sFiles.Sort(comparer);
+                            }
+                            int iInc = 0;
+                            String sQuestion = String.Empty;
+                            foreach (String s in sFiles)
+                            {
+                                if (dcFiles.ContainsKey(s))
+                                {
+                                    String sSrcName = sPath + dcFiles[s];
+                                    String sDstName = sPath + sDisc[iInc] + ".bin";
+                                    if (sSrcName.ToLower() != sDstName.ToLower())
+                                    {
+                                        if (File.Exists(sSrcName))
+                                        {
+                                            sQuestion = sQuestion + Environment.NewLine + sSrcName + " >> " + sDstName;
+                                        }
+                                    }
+                                    iInc++;
+                                }
+                            }
+                            if (!String.IsNullOrEmpty(sQuestion))
+                            {
+                                if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                                {
+                                    int iIncr = 0;
+                                    foreach (String s in sFiles)
+                                    {
+                                        if (dcFiles.ContainsKey(s))
+                                        {
+                                            String sSrcName = sPath + dcFiles[s];
+                                            String sDstName = sPath + sDisc[iIncr] + ".bin";
+                                            if (sSrcName.ToLower() != sDstName.ToLower())
+                                            {
+                                                if (File.Exists(sSrcName))
+                                                {
+                                                    File.Move(sSrcName, sDstName);
+                                                    slLogger.Debug("Renaming file " + sSrcName + " -> " + sDstName);
+                                                }
+                                            }
+                                            iIncr++;
+                                        }
+                                    }
+                                    refreshOneFolder();
+                                }
+                            }
+                            else
+                            {
+                                slLogger.Debug("No renaming to do");
+                            }
+                        }
+                        else
+                        if (sDisc.Length < sFiles.Count)
+                        {
+                            // multi discs + multi tracks
+                            // 2: filenames are: 1_1_toto.bin, 1_2_toto.bin, 2_1_toto.bin, 2_2_toto.bin, etc
+                            // 3: filenames are: toto_1_1.bin, toto_1_2.bin, toto_2_1.bin, toto_2_2.bin, etc
+                            if (lsCommonstrings.Count > 0)
+                            {
+                                /*
+                                String sTest = String.Empty;
+                                foreach (String s in lsCommonstrings)
+                                {
+                                    sTest += Environment.NewLine + s;
+                                }
+                                FlexibleMessageBox.Show(ss + Environment.NewLine + sTest);
+                                */
+                                List<String> lsWorkDisc = new List<String>();
+                                List<String>[] lsWorkTrack = new List<String>[sDisc.Length];
+                                Dictionary<String,String[]> dcTracks = new Dictionary<String,String[]>();
+                                bool bStop = false;
+                                foreach (String s in dcFilesToSplit.Keys)
+                                {
+                                    if (!bStop)
+                                    {
+                                        String[] sArr = s.Split(new String[] { "/" }, StringSplitOptions.RemoveEmptyEntries); // assume format [/]DISC/TRACK/
+                                        if (sArr.Length == 2)
+                                        {
+                                            if (lsWorkDisc.IndexOf(sArr[0]) == -1)
+                                            {
+                                                lsWorkDisc.Add(sArr[0]);
+                                            }
+                                            int iIndex = lsWorkDisc.IndexOf(sArr[0]);
+                                            if(lsWorkTrack[iIndex] == null)
+                                            {
+                                                lsWorkTrack[iIndex] = new List<string>();
+                                            }
+                                            if (lsWorkTrack[iIndex].IndexOf(sArr[1]) == -1)
+                                            {
+                                                lsWorkTrack[iIndex].Add(sArr[1]);
+                                            }
+                                            else
+                                            {
+                                                // stop. if here, there is a problem
+                                                bStop = true;
+                                                slLogger.Error("Problem A2 were detected during parsing bin filenames [" + dcFilesToSplit[s] + "] - Track already found.");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            bStop = true;
+                                            slLogger.Error("Problem A1 were detected during parsing bin filenames: [" + dcFilesToSplit[s] + "] - Not an expected format.");
+                                        }
+                                    }
+                                }
+                                if (!bStop)
+                                {
+                                    using (NaturalComparer comparer = new NaturalComparer())
+                                    {
+                                        lsWorkDisc.Sort(comparer);
+                                    }
+                                    for (int i = 0; i < lsWorkTrack.Length; i++)
+                                    {
+                                        using (NaturalComparer comparer = new NaturalComparer())
+                                        {
+                                            if (lsWorkTrack[i] == null)
+                                            {
+                                                // should go out, a disc is defined but no tracks found
+                                                bStop = true;
+                                                slLogger.Error("Problem A3 were detected during sorting tracks - No tracks for one disc.");
+                                            }
+                                            else
+                                            {
+                                                lsWorkTrack[i].Sort(comparer);
+                                            }
+                                        }
+                                    }
+                                }
+                                if (!bStop)
+                                {
+                                    String[] sCommons = lsCommonstrings.ToArray();
+                                    int iCommonSubstring = lsCommonstrings.Count;
+                                    int iCommonIndex1 = 0;
+                                    int iCommonIndex2 = 0;
+                                    String sCommonStart = sPath;
+                                    switch (iCommonSubstring)
+                                    {
+                                        case 2:
+                                            iCommonIndex1 = 0;
+                                            iCommonIndex2 = 1;
+                                            sCommonStart = sPath;
+                                            break;
+                                        case 3:
+                                            iCommonIndex1 = 1;
+                                            iCommonIndex2 = 2;
+                                            sCommonStart = sPath + sCommons[0];
+                                            break;
+                                        default:
+                                            bStop = true;
+                                            slLogger.Error("Problem A4 were detected during recreating filenames - Wrong format for origin filenames.");
+                                            break;
+                                    }
+                                    if (!bStop)
+                                    {
+                                        String sQuestion = String.Empty;
+                                        for (int i = 0; i < lsWorkDisc.Count; i++)
+                                        {
+                                            for (int j = 0; j < lsWorkTrack[i].Count; j++)
+                                            {
+                                                String sSrcName = String.Empty;
+                                                if (dcFiles.ContainsKey(lsWorkDisc[i] + lsWorkTrack[i][j]))
+                                                {
+                                                    sSrcName = sCommonStart + dcFiles[lsWorkDisc[i] + lsWorkTrack[i][j]];
+                                                }
+                                                if (!String.IsNullOrEmpty(sSrcName))
+                                                {
+                                                    String sDstName = sPath + sDisc[i] + "_" + (1 + j).ToString("00") + ".bin";
+                                                    if (sSrcName.ToLower() != sDstName.ToLower())
+                                                    {
+                                                        if (File.Exists(sSrcName))
+                                                        {
+                                                            sQuestion = sQuestion + Environment.NewLine + sSrcName + " >> " + sDstName;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (!String.IsNullOrEmpty(sQuestion))
+                                        {
+                                            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                                            {
+                                                for (int i = 0; i < lsWorkDisc.Count; i++)
+                                                {
+                                                    for (int j = 0; j < lsWorkTrack[i].Count; j++)
+                                                    {
+                                                        String sSrcName = String.Empty;
+                                                        if (dcFiles.ContainsKey(lsWorkDisc[i] + lsWorkTrack[i][j]))
+                                                        {
+                                                            sSrcName = sCommonStart + dcFiles[lsWorkDisc[i] + lsWorkTrack[i][j]];
+                                                        }
+                                                        if (!String.IsNullOrEmpty(sSrcName))
+                                                        {
+                                                            String sDstName = sPath + sDisc[i] + "_" + (1 + j).ToString("00") + ".bin";
+                                                            if (sSrcName.ToLower() != sDstName.ToLower())
+                                                            {
+                                                                if (File.Exists(sSrcName))
+                                                                {
+                                                                    File.Move(sSrcName, sDstName);
+                                                                    slLogger.Debug("Renaming file " + sSrcName + " -> " + sDstName);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                refreshOneFolder();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            slLogger.Debug("No renaming to do");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    {
+                        slLogger.Fatal(ex.Message);
+                    }
+                }
+                slLogger.Trace("<< Bin AutoRename Click");
+            }
+        }
+
+        private void btSbiRename_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Sbi AutoRename Click");
+            if (lbGames.SelectedIndex > -1)
+            {
+                try
+                {
+                    ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                    String sFolderPath = tbFolderPath.Text;
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete))
+                    {
+                        List<String> lsDiscNeedSbi = new List<string>();
+                        String[] sDiscs = cgs.Discs.Split(',');
+                        foreach (String sDisc in sDiscs)
+                        {
+                            String s1 = sDisc.ToUpper();
+                            if (lsSbiNeeds.IndexOf(s1) > -1)
+                            {
+                                // sbi needed
+                                lsDiscNeedSbi.Add(sDisc);
+                            }
+                        }
+                        List<String> lsFilenamesOk = cgs.FilesSbiOk;
+                        List<String> lsFileNamesSbiLower = new List<string>();
+                        List<String> lsFileToRename = new List<string>();
+                        foreach (String s in cgs.Filenames)
+                        {
+                            if (s.ToLower().EndsWith(".sbi"))
+                            {
+                                lsFileNamesSbiLower.Add(s.ToLower());
+                            }
+                        }
+                        if (lsFileNamesSbiLower.Count > 0)
+                        {
+                            using (NaturalComparer comparer = new NaturalComparer())
+                            {
+                                lsFileNamesSbiLower.Sort(comparer);
+                            }
+                            foreach (String sOneFile in lsFileNamesSbiLower)
+                            {
+                                if (lsFilenamesOk.IndexOf(sOneFile) > -1)
+                                {
+                                    //
+                                }
+                                else
+                                {
+                                    lsFileToRename.Add(sOneFile);
+                                }
+                            }
+                            String[] sFileToRename = lsFileToRename.ToArray();
+                            int iIndex = 0;
+                            String sQuestion = String.Empty;
+                            foreach (String s in lsDiscNeedSbi)
+                            {
+                                String sDisc = s.ToLower();
+                                if (lsFilenamesOk.IndexOf(sDisc + ".sbi") > -1)
+                                {
+                                    iIndex++;
+                                }
+                                else
+                                {
+                                    if (iIndex < sFileToRename.Length)
+                                    {
+                                        String sSrcName = sPath + "GameData" + "\\" + sFileToRename[iIndex];
+                                        String sDstName = sPath + "GameData" + "\\" + s + ".sbi";
+                                        if (sSrcName.ToLower() != sDstName.ToLower())
+                                        {
+                                            if (File.Exists(sSrcName))
+                                            {
+                                                sQuestion = sQuestion + Environment.NewLine + sSrcName + " >> " + sDstName;
+                                            }
+                                        }
+                                        iIndex++;
+                                    }
+                                }
+                            }
+                            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                            {
+                                iIndex = 0;
+                                foreach (String s in lsDiscNeedSbi)
+                                {
+                                    String sDisc = s.ToLower();
+                                    if (lsFilenamesOk.IndexOf(sDisc + ".sbi") > -1)
+                                    {
+                                        iIndex++;
+                                    }
+                                    else
+                                    {
+                                        if (iIndex < sFileToRename.Length)
+                                        {
+                                            String sSrcName = sPath + "GameData" + "\\" + sFileToRename[iIndex];
+                                            String sDstName = sPath + "GameData" + "\\" + s + ".sbi";
+                                            if (sSrcName.ToLower() != sDstName.ToLower())
+                                            {
+                                                if (File.Exists(sSrcName))
+                                                {
+                                                    File.Move(sSrcName, sDstName);
+                                                    slLogger.Debug("Renaming file " + sSrcName + " -> " + sDstName);
+                                                }
+                                            }
+                                            iIndex++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        refreshOneFolder();
+                    }
+                    else
+                    {
+                        //
+                    }
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Sbi AutoRename Click");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace pbPSCReAlpha
 {
-    partial class Form2
+    partial class Form23
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form23));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbCurrentGameIniFile = new System.Windows.Forms.Label();
             this.btSaveIni = new System.Windows.Forms.Button();
@@ -50,26 +50,40 @@
             this.tbGeneTitle = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btViewPage = new System.Windows.Forms.Button();
             this.btLink = new System.Windows.Forms.Button();
             this.btGeneSearch = new System.Windows.Forms.Button();
+            this.tbHiddenLink = new System.Windows.Forms.TextBox();
             this.tbGeneSearchText = new System.Windows.Forms.TextBox();
             this.lbGeneBigData = new System.Windows.Forms.ListBox();
-            this.tbHiddenLink = new System.Windows.Forms.TextBox();
             this.btBack = new System.Windows.Forms.Button();
             this.sfdGeneSaveIni = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
             this.wbViewer = new System.Windows.Forms.WebBrowser();
-            this.btViewPage = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lbCurrentPngFile = new System.Windows.Forms.Label();
+            this.btSave = new System.Windows.Forms.Button();
+            this.btSaveAs = new System.Windows.Forms.Button();
+            this.btLoad = new System.Windows.Forms.Button();
+            this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
+            this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
+            this.btScrapeImg = new System.Windows.Forms.Button();
+            this.pbCover = new System.Windows.Forms.PictureBox();
             this.btScraper = new System.Windows.Forms.Button();
             this.btReloadTitleDiscs = new System.Windows.Forms.Button();
+            this.btIniReload = new System.Windows.Forms.Button();
+            this.btPictureReload = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btIniReload);
             this.groupBox1.Controls.Add(this.btReloadTitleDiscs);
             this.groupBox1.Controls.Add(this.lbCurrentGameIniFile);
             this.groupBox1.Controls.Add(this.btSaveIni);
@@ -95,7 +109,7 @@
             this.groupBox1.Size = new System.Drawing.Size(404, 215);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Edit Game.ini";
+            this.groupBox1.Text = "Game.ini";
             // 
             // lbCurrentGameIniFile
             // 
@@ -303,12 +317,23 @@
             this.groupBox2.Controls.Add(this.tbHiddenLink);
             this.groupBox2.Controls.Add(this.tbGeneSearchText);
             this.groupBox2.Controls.Add(this.lbGeneBigData);
-            this.groupBox2.Location = new System.Drawing.Point(1, 223);
+            this.groupBox2.Location = new System.Drawing.Point(1, 424);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(404, 197);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Search";
+            // 
+            // btViewPage
+            // 
+            this.btViewPage.Enabled = false;
+            this.btViewPage.Location = new System.Drawing.Point(273, 43);
+            this.btViewPage.Name = "btViewPage";
+            this.btViewPage.Size = new System.Drawing.Size(125, 23);
+            this.btViewPage.TabIndex = 30;
+            this.btViewPage.Text = "View page here";
+            this.btViewPage.UseVisualStyleBackColor = true;
+            this.btViewPage.Click += new System.EventHandler(this.btViewPage_Click);
             // 
             // btLink
             // 
@@ -331,6 +356,15 @@
             this.btGeneSearch.UseVisualStyleBackColor = true;
             this.btGeneSearch.Click += new System.EventHandler(this.btGeneSearch_Click);
             // 
+            // tbHiddenLink
+            // 
+            this.tbHiddenLink.Enabled = false;
+            this.tbHiddenLink.Location = new System.Drawing.Point(6, 45);
+            this.tbHiddenLink.Name = "tbHiddenLink";
+            this.tbHiddenLink.Size = new System.Drawing.Size(119, 20);
+            this.tbHiddenLink.TabIndex = 28;
+            this.tbHiddenLink.Visible = false;
+            // 
             // tbGeneSearchText
             // 
             this.tbGeneSearchText.Location = new System.Drawing.Point(6, 16);
@@ -349,18 +383,9 @@
             this.lbGeneBigData.TabIndex = 25;
             this.lbGeneBigData.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigData_SelectedIndexChanged);
             // 
-            // tbHiddenLink
-            // 
-            this.tbHiddenLink.Enabled = false;
-            this.tbHiddenLink.Location = new System.Drawing.Point(6, 45);
-            this.tbHiddenLink.Name = "tbHiddenLink";
-            this.tbHiddenLink.Size = new System.Drawing.Size(119, 20);
-            this.tbHiddenLink.TabIndex = 28;
-            this.tbHiddenLink.Visible = false;
-            // 
             // btBack
             // 
-            this.btBack.Location = new System.Drawing.Point(330, 426);
+            this.btBack.Location = new System.Drawing.Point(330, 627);
             this.btBack.Name = "btBack";
             this.btBack.Size = new System.Drawing.Size(75, 23);
             this.btBack.TabIndex = 2;
@@ -393,29 +418,115 @@
             this.wbViewer.Location = new System.Drawing.Point(442, 0);
             this.wbViewer.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbViewer.Name = "wbViewer";
-            this.wbViewer.Size = new System.Drawing.Size(822, 450);
+            this.wbViewer.Size = new System.Drawing.Size(822, 658);
             this.wbViewer.TabIndex = 29;
             this.wbViewer.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbViewer_DocumentCompleted);
             // 
-            // btViewPage
+            // groupBox3
             // 
-            this.btViewPage.Enabled = false;
-            this.btViewPage.Location = new System.Drawing.Point(273, 43);
-            this.btViewPage.Name = "btViewPage";
-            this.btViewPage.Size = new System.Drawing.Size(125, 23);
-            this.btViewPage.TabIndex = 30;
-            this.btViewPage.Text = "View page here";
-            this.btViewPage.UseVisualStyleBackColor = true;
-            this.btViewPage.Click += new System.EventHandler(this.btViewPage_Click);
+            this.groupBox3.Controls.Add(this.btPictureReload);
+            this.groupBox3.Controls.Add(this.lbCurrentPngFile);
+            this.groupBox3.Controls.Add(this.btSave);
+            this.groupBox3.Controls.Add(this.btSaveAs);
+            this.groupBox3.Controls.Add(this.btLoad);
+            this.groupBox3.Controls.Add(this.pbCover);
+            this.groupBox3.Location = new System.Drawing.Point(1, 223);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(404, 195);
+            this.groupBox3.TabIndex = 31;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Picture";
+            // 
+            // lbCurrentPngFile
+            // 
+            this.lbCurrentPngFile.AutoSize = true;
+            this.lbCurrentPngFile.Location = new System.Drawing.Point(6, 179);
+            this.lbCurrentPngFile.Name = "lbCurrentPngFile";
+            this.lbCurrentPngFile.Size = new System.Drawing.Size(16, 13);
+            this.lbCurrentPngFile.TabIndex = 36;
+            this.lbCurrentPngFile.Text = "---";
+            // 
+            // btSave
+            // 
+            this.btSave.Enabled = false;
+            this.btSave.Location = new System.Drawing.Point(240, 19);
+            this.btSave.Name = "btSave";
+            this.btSave.Size = new System.Drawing.Size(75, 23);
+            this.btSave.TabIndex = 29;
+            this.btSave.Text = "Save";
+            this.btSave.UseVisualStyleBackColor = true;
+            this.btSave.Click += new System.EventHandler(this.btSave_Click);
+            // 
+            // btSaveAs
+            // 
+            this.btSaveAs.Location = new System.Drawing.Point(323, 19);
+            this.btSaveAs.Name = "btSaveAs";
+            this.btSaveAs.Size = new System.Drawing.Size(75, 23);
+            this.btSaveAs.TabIndex = 28;
+            this.btSaveAs.Text = "Save as...";
+            this.btSaveAs.UseVisualStyleBackColor = true;
+            this.btSaveAs.Click += new System.EventHandler(this.btSaveAs_Click);
+            // 
+            // btLoad
+            // 
+            this.btLoad.Location = new System.Drawing.Point(157, 19);
+            this.btLoad.Name = "btLoad";
+            this.btLoad.Size = new System.Drawing.Size(75, 23);
+            this.btLoad.TabIndex = 27;
+            this.btLoad.Text = "Load...";
+            this.btLoad.UseVisualStyleBackColor = true;
+            this.btLoad.Click += new System.EventHandler(this.btLoad_Click);
+            // 
+            // sfdGeneSaveImage
+            // 
+            this.sfdGeneSaveImage.DefaultExt = "png";
+            this.sfdGeneSaveImage.FileName = "Game.png";
+            this.sfdGeneSaveImage.Filter = "png files|*.png";
+            this.sfdGeneSaveImage.RestoreDirectory = true;
+            this.sfdGeneSaveImage.ShowHelp = true;
+            this.sfdGeneSaveImage.Title = "Save file";
+            // 
+            // ofdGeneLoadImage
+            // 
+            this.ofdGeneLoadImage.DefaultExt = "png";
+            this.ofdGeneLoadImage.FileName = "Game.png";
+            this.ofdGeneLoadImage.Filter = "image files|*.png;*.jpg;*.jpeg;*.bmp";
+            this.ofdGeneLoadImage.RestoreDirectory = true;
+            this.ofdGeneLoadImage.ShowHelp = true;
+            this.ofdGeneLoadImage.Title = "Load file";
+            // 
+            // btScrapeImg
+            // 
+            this.btScrapeImg.Enabled = false;
+            this.btScrapeImg.Image = global::pbPSCReAlpha.Properties.Resources.arrow_left_double;
+            this.btScrapeImg.Location = new System.Drawing.Point(411, 231);
+            this.btScrapeImg.Name = "btScrapeImg";
+            this.btScrapeImg.Size = new System.Drawing.Size(25, 184);
+            this.btScrapeImg.TabIndex = 32;
+            this.btScrapeImg.UseVisualStyleBackColor = true;
+            this.btScrapeImg.Click += new System.EventHandler(this.btScrapeImg_Click);
+            // 
+            // pbCover
+            // 
+            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCover.Location = new System.Drawing.Point(6, 19);
+            this.pbCover.Name = "pbCover";
+            this.pbCover.Size = new System.Drawing.Size(150, 150);
+            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbCover.TabIndex = 26;
+            this.pbCover.TabStop = false;
+            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
+            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
+            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
             // 
             // btScraper
             // 
             this.btScraper.Enabled = false;
+            this.btScraper.Image = global::pbPSCReAlpha.Properties.Resources.arrow_left_double;
             this.btScraper.Location = new System.Drawing.Point(411, 12);
             this.btScraper.Name = "btScraper";
             this.btScraper.Size = new System.Drawing.Size(25, 202);
             this.btScraper.TabIndex = 30;
-            this.btScraper.Text = "<-";
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
             // 
@@ -429,11 +540,33 @@
             this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
             this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
             // 
-            // Form2
+            // btIniReload
+            // 
+            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btIniReload.Location = new System.Drawing.Point(121, 175);
+            this.btIniReload.Name = "btIniReload";
+            this.btIniReload.Size = new System.Drawing.Size(30, 23);
+            this.btIniReload.TabIndex = 37;
+            this.btIniReload.UseVisualStyleBackColor = true;
+            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
+            // 
+            // btPictureReload
+            // 
+            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
+            this.btPictureReload.Name = "btPictureReload";
+            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
+            this.btPictureReload.TabIndex = 38;
+            this.btPictureReload.UseVisualStyleBackColor = true;
+            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
+            // 
+            // Form23
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1264, 452);
+            this.ClientSize = new System.Drawing.Size(1264, 657);
+            this.Controls.Add(this.btScrapeImg);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btScraper);
             this.Controls.Add(this.wbViewer);
             this.Controls.Add(this.btBack);
@@ -443,14 +576,17 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form2";
-            this.Text = "Game.ini Helper";
+            this.Name = "Form23";
+            this.Text = "Picture & Game.ini Helper";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -490,5 +626,16 @@
         private System.Windows.Forms.WebBrowser wbViewer;
         private System.Windows.Forms.Button btScraper;
         private System.Windows.Forms.Button btReloadTitleDiscs;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label lbCurrentPngFile;
+        private System.Windows.Forms.Button btSave;
+        private System.Windows.Forms.Button btSaveAs;
+        private System.Windows.Forms.Button btLoad;
+        private System.Windows.Forms.PictureBox pbCover;
+        private System.Windows.Forms.SaveFileDialog sfdGeneSaveImage;
+        private System.Windows.Forms.OpenFileDialog ofdGeneLoadImage;
+        private System.Windows.Forms.Button btScrapeImg;
+        private System.Windows.Forms.Button btIniReload;
+        private System.Windows.Forms.Button btPictureReload;
     }
 }

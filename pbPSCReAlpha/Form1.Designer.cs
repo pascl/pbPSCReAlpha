@@ -36,6 +36,11 @@
             this.lbFreeSpace = new System.Windows.Forms.Label();
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
+            this.gbAutoRename = new System.Windows.Forms.GroupBox();
+            this.btSbiRename = new System.Windows.Forms.Button();
+            this.btPngRename = new System.Windows.Forms.Button();
+            this.btBinRename = new System.Windows.Forms.Button();
+            this.btCueRename = new System.Windows.Forms.Button();
             this.btOpenFolder = new System.Windows.Forms.Button();
             this.btRefreshFolderOnly = new System.Windows.Forms.Button();
             this.btAddFiles = new System.Windows.Forms.Button();
@@ -48,6 +53,8 @@
             this.btCrowseGamesFolder = new System.Windows.Forms.Button();
             this.tbFolderPath = new System.Windows.Forms.TextBox();
             this.gbExploreDetails = new System.Windows.Forms.GroupBox();
+            this.lbFolderSizeLabel = new System.Windows.Forms.Label();
+            this.lbFolderSize = new System.Windows.Forms.Label();
             this.tbErrString = new System.Windows.Forms.TextBox();
             this.lvFiles = new System.Windows.Forms.ListView();
             this.ilFlags = new System.Windows.Forms.ImageList(this.components);
@@ -78,6 +85,7 @@
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
+            this.gbAutoRename.SuspendLayout();
             this.gbExploreDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
             this.tabDebug.SuspendLayout();
@@ -139,6 +147,7 @@
             // 
             // gbExploreEdit
             // 
+            this.gbExploreEdit.Controls.Add(this.gbAutoRename);
             this.gbExploreEdit.Controls.Add(this.btOpenFolder);
             this.gbExploreEdit.Controls.Add(this.btRefreshFolderOnly);
             this.gbExploreEdit.Controls.Add(this.btAddFiles);
@@ -153,11 +162,76 @@
             this.gbExploreEdit.TabStop = false;
             this.gbExploreEdit.Text = "Edit";
             // 
+            // gbAutoRename
+            // 
+            this.gbAutoRename.Controls.Add(this.btSbiRename);
+            this.gbAutoRename.Controls.Add(this.btPngRename);
+            this.gbAutoRename.Controls.Add(this.btBinRename);
+            this.gbAutoRename.Controls.Add(this.btCueRename);
+            this.gbAutoRename.Location = new System.Drawing.Point(127, 95);
+            this.gbAutoRename.Name = "gbAutoRename";
+            this.gbAutoRename.Size = new System.Drawing.Size(351, 54);
+            this.gbAutoRename.TabIndex = 11;
+            this.gbAutoRename.TabStop = false;
+            this.gbAutoRename.Text = "Auto-Rename";
+            // 
+            // btSbiRename
+            // 
+            this.btSbiRename.Enabled = false;
+            this.btSbiRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btSbiRename.Location = new System.Drawing.Point(264, 19);
+            this.btSbiRename.Name = "btSbiRename";
+            this.btSbiRename.Size = new System.Drawing.Size(82, 25);
+            this.btSbiRename.TabIndex = 12;
+            this.btSbiRename.Text = "sbi file(s)";
+            this.btSbiRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btSbiRename.UseVisualStyleBackColor = true;
+            this.btSbiRename.Click += new System.EventHandler(this.btSbiRename_Click);
+            // 
+            // btPngRename
+            // 
+            this.btPngRename.Enabled = false;
+            this.btPngRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btPngRename.Location = new System.Drawing.Point(178, 19);
+            this.btPngRename.Name = "btPngRename";
+            this.btPngRename.Size = new System.Drawing.Size(82, 25);
+            this.btPngRename.TabIndex = 11;
+            this.btPngRename.Text = "png file";
+            this.btPngRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btPngRename.UseVisualStyleBackColor = true;
+            this.btPngRename.Click += new System.EventHandler(this.btPngRename_Click);
+            // 
+            // btBinRename
+            // 
+            this.btBinRename.Enabled = false;
+            this.btBinRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btBinRename.Location = new System.Drawing.Point(6, 19);
+            this.btBinRename.Name = "btBinRename";
+            this.btBinRename.Size = new System.Drawing.Size(82, 25);
+            this.btBinRename.TabIndex = 9;
+            this.btBinRename.Text = "bin file(s)";
+            this.btBinRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btBinRename.UseVisualStyleBackColor = true;
+            this.btBinRename.Click += new System.EventHandler(this.btBinRename_Click);
+            // 
+            // btCueRename
+            // 
+            this.btCueRename.Enabled = false;
+            this.btCueRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btCueRename.Location = new System.Drawing.Point(92, 19);
+            this.btCueRename.Name = "btCueRename";
+            this.btCueRename.Size = new System.Drawing.Size(82, 25);
+            this.btCueRename.TabIndex = 10;
+            this.btCueRename.Text = "cue file(s)";
+            this.btCueRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btCueRename.UseVisualStyleBackColor = true;
+            this.btCueRename.Click += new System.EventHandler(this.btCueRename_Click);
+            // 
             // btOpenFolder
             // 
             this.btOpenFolder.Enabled = false;
             this.btOpenFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
-            this.btOpenFolder.Location = new System.Drawing.Point(363, 112);
+            this.btOpenFolder.Location = new System.Drawing.Point(363, 50);
             this.btOpenFolder.Name = "btOpenFolder";
             this.btOpenFolder.Size = new System.Drawing.Size(115, 25);
             this.btOpenFolder.TabIndex = 8;
@@ -302,6 +376,8 @@
             // 
             // gbExploreDetails
             // 
+            this.gbExploreDetails.Controls.Add(this.lbFolderSizeLabel);
+            this.gbExploreDetails.Controls.Add(this.lbFolderSize);
             this.gbExploreDetails.Controls.Add(this.tbErrString);
             this.gbExploreDetails.Controls.Add(this.lvFiles);
             this.gbExploreDetails.Controls.Add(this.lbExploreAlphaTitle);
@@ -323,6 +399,26 @@
             this.gbExploreDetails.TabIndex = 4;
             this.gbExploreDetails.TabStop = false;
             this.gbExploreDetails.Text = "Details";
+            // 
+            // lbFolderSizeLabel
+            // 
+            this.lbFolderSizeLabel.AutoSize = true;
+            this.lbFolderSizeLabel.Location = new System.Drawing.Point(360, 156);
+            this.lbFolderSizeLabel.Name = "lbFolderSizeLabel";
+            this.lbFolderSizeLabel.Size = new System.Drawing.Size(60, 13);
+            this.lbFolderSizeLabel.TabIndex = 19;
+            this.lbFolderSizeLabel.Text = "Folder size:";
+            this.lbFolderSizeLabel.Visible = false;
+            // 
+            // lbFolderSize
+            // 
+            this.lbFolderSize.Location = new System.Drawing.Point(419, 156);
+            this.lbFolderSize.Name = "lbFolderSize";
+            this.lbFolderSize.Size = new System.Drawing.Size(60, 13);
+            this.lbFolderSize.TabIndex = 18;
+            this.lbFolderSize.Text = "---";
+            this.lbFolderSize.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lbFolderSize.Visible = false;
             // 
             // tbErrString
             // 
@@ -609,6 +705,7 @@
             this.tabExplorer.ResumeLayout(false);
             this.tabExplorer.PerformLayout();
             this.gbExploreEdit.ResumeLayout(false);
+            this.gbAutoRename.ResumeLayout(false);
             this.gbExploreDetails.ResumeLayout(false);
             this.gbExploreDetails.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
@@ -666,6 +763,13 @@
         private System.Windows.Forms.Button btOpenFolder;
         private System.Windows.Forms.Label lbFreeSpace;
         private System.Windows.Forms.Timer tmRefreshFolder;
+        private System.Windows.Forms.Button btBinRename;
+        private System.Windows.Forms.GroupBox gbAutoRename;
+        private System.Windows.Forms.Button btPngRename;
+        private System.Windows.Forms.Button btCueRename;
+        private System.Windows.Forms.Label lbFolderSizeLabel;
+        private System.Windows.Forms.Label lbFolderSize;
+        private System.Windows.Forms.Button btSbiRename;
     }
 }
 

@@ -37,6 +37,7 @@ namespace pbPSCReAlpha
         private List<String> _filesBinOk;
         private List<String> _filesCueOk;
         private List<String> _filesSbiOk;
+        private long _size;
 
         public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, bool bNeededSbiMissing)
         {
@@ -56,6 +57,7 @@ namespace pbPSCReAlpha
             _cueCountMisMatchDiscsCount = cueCountMisMatchdiscsCount;
             _neededSbiMissing = bNeededSbiMissing;
             _errorString = new List<String>();
+            _size = 0;
             if (_nanFolder)
             {
                 this.ErrorString.Add("Folder name has to be numeric.");
@@ -149,6 +151,11 @@ namespace pbPSCReAlpha
             _pictureFileName = imgFileName;
         }
 
+        public void setSize(long lSize)
+        {
+            _size = lSize;
+        }
+
         public String Title { get => _title; set => _title = value; }
         public String FolderIndex { get => _folderIndex; set => _folderIndex = value; }
         public String IndexAndTitle { get => (GeneralError ? "* " : "") + _folderIndex + " - " + _title; }
@@ -181,5 +188,6 @@ namespace pbPSCReAlpha
         public List<String> FilesSbiOk { get => _filesSbiOk; set => _filesSbiOk = value; }
         public string PictureFileName { get => _pictureFileName; set => _pictureFileName = value; }
         public bool NeededSbiMissing { get => _neededSbiMissing; set => _neededSbiMissing = value; }
+        public long FolderSize { get => _size; }
     }
 }

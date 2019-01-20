@@ -31,11 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form4));
             this.flpCueFiles = new System.Windows.Forms.FlowLayoutPanel();
             this.scCueSplitter = new System.Windows.Forms.SplitContainer();
-            this.btBack = new System.Windows.Forms.Button();
             this.scBinCueFiles = new System.Windows.Forms.SplitContainer();
-            this.lbBinFiles = new System.Windows.Forms.ListBox();
             this.scBinFiles = new System.Windows.Forms.SplitContainer();
+            this.lbBinFiles = new System.Windows.Forms.ListBox();
             this.btClipboardCopy = new System.Windows.Forms.Button();
+            this.btBack = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scCueSplitter)).BeginInit();
             this.scCueSplitter.Panel1.SuspendLayout();
             this.scCueSplitter.Panel2.SuspendLayout();
@@ -79,17 +79,6 @@
             this.scCueSplitter.SplitterDistance = 514;
             this.scCueSplitter.TabIndex = 1;
             // 
-            // btBack
-            // 
-            this.btBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btBack.Location = new System.Drawing.Point(506, 3);
-            this.btBack.Name = "btBack";
-            this.btBack.Size = new System.Drawing.Size(75, 23);
-            this.btBack.TabIndex = 0;
-            this.btBack.Text = "Back";
-            this.btBack.UseVisualStyleBackColor = true;
-            this.btBack.Click += new System.EventHandler(this.btBack_Click);
-            // 
             // scBinCueFiles
             // 
             this.scBinCueFiles.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -108,16 +97,6 @@
             this.scBinCueFiles.Size = new System.Drawing.Size(584, 514);
             this.scBinCueFiles.SplitterDistance = 160;
             this.scBinCueFiles.TabIndex = 1;
-            // 
-            // lbBinFiles
-            // 
-            this.lbBinFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbBinFiles.FormattingEnabled = true;
-            this.lbBinFiles.Location = new System.Drawing.Point(0, 0);
-            this.lbBinFiles.Name = "lbBinFiles";
-            this.lbBinFiles.ScrollAlwaysVisible = true;
-            this.lbBinFiles.Size = new System.Drawing.Size(160, 481);
-            this.lbBinFiles.TabIndex = 0;
             // 
             // scBinFiles
             // 
@@ -139,6 +118,17 @@
             this.scBinFiles.SplitterDistance = 481;
             this.scBinFiles.TabIndex = 1;
             // 
+            // lbBinFiles
+            // 
+            this.lbBinFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbBinFiles.FormattingEnabled = true;
+            this.lbBinFiles.Location = new System.Drawing.Point(0, 0);
+            this.lbBinFiles.Name = "lbBinFiles";
+            this.lbBinFiles.ScrollAlwaysVisible = true;
+            this.lbBinFiles.Size = new System.Drawing.Size(160, 481);
+            this.lbBinFiles.TabIndex = 0;
+            this.lbBinFiles.DoubleClick += new System.EventHandler(this.lbBinFiles_DoubleClick);
+            // 
             // btClipboardCopy
             // 
             this.btClipboardCopy.Image = global::pbPSCReAlpha.Properties.Resources.file_clipboard;
@@ -150,6 +140,17 @@
             this.btClipboardCopy.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btClipboardCopy.UseVisualStyleBackColor = true;
             this.btClipboardCopy.Click += new System.EventHandler(this.btClipboardCopy_Click);
+            // 
+            // btBack
+            // 
+            this.btBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btBack.Location = new System.Drawing.Point(506, 3);
+            this.btBack.Name = "btBack";
+            this.btBack.Size = new System.Drawing.Size(75, 23);
+            this.btBack.TabIndex = 0;
+            this.btBack.Text = "Back";
+            this.btBack.UseVisualStyleBackColor = true;
+            this.btBack.Click += new System.EventHandler(this.btBack_Click);
             // 
             // Form4
             // 

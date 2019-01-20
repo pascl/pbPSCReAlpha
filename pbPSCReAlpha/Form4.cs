@@ -58,7 +58,11 @@ namespace pbPSCReAlpha
                         {
                             using (StreamReader sr = new StreamReader(_folderPath + "\\" + s))
                             {
-                                tb.AppendText(sr.ReadToEnd()); // faster than readlines...
+                                String sline = String.Empty;
+                                while ((sline = sr.ReadLine()) != null)
+                                {
+                                    tb.AppendText(sline + Environment.NewLine);
+                                }
                             }
                         }
 
@@ -70,6 +74,15 @@ namespace pbPSCReAlpha
                         //btSave.Enabled = false;
                         btSave.Tag = (object)(gb);
                         btSave.Click += cueSave;
+
+                        Button btAutoedit = new Button();
+                        btAutoedit.Text = "Auto";
+                        btAutoedit.Parent = gb;
+                        btAutoedit.Top = 220;
+                        btAutoedit.Left = 90;
+                        //btAutoedit.Enabled = false;
+                        btAutoedit.Tag = (object)(gb);
+                        btAutoedit.Click += cueAuto;
                     }
                 }
                 if(cueCount > 2)
@@ -93,6 +106,73 @@ namespace pbPSCReAlpha
             }
         }
 
+        private void cueAuto(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Autoedit cue Click");
+            Button bt = (Button)(sender);
+            GroupBox gb = (GroupBox)(bt.Tag);
+            TextBox tb = null;
+            try
+            {
+                if (gb.HasChildren)
+                {
+                    foreach (Control ct in gb.Controls)
+                    {
+                        if (ct is TextBox)
+                        {
+                            tb = (TextBox)ct;
+                        }
+                    }
+                    if (tb != null)
+                    {
+                        String sCue = gb.Text;
+                        sCue = sCue.Substring(0, sCue.IndexOf(".cue"));
+                        List<String> lsBinFilesForCue = new List<string>();
+                        foreach(String item in lbBinFiles.Items)
+                        {
+                            if(item.ToLower().IndexOf(sCue.ToLower()) > -1)
+                            {
+                                lsBinFilesForCue.Add(item);
+                            }
+                        }
+                        String sAll = tb.Text;
+                        using (StringReader sr = new StringReader(sAll))
+                        {
+                            int iIndex = 0;
+                            String s = String.Empty;
+                            String sBack = String.Empty;
+                            while ((s = sr.ReadLine()) != null)
+                            {
+                                //s = s.Trim();
+                                if (s.Trim().ToUpper().StartsWith("FILE"))
+                                {
+                                    int ipos1 = s.IndexOf("\"");
+                                    int ipos2 = s.LastIndexOf("\"");
+                                    if ((ipos1 > -1) && (ipos2 > -1) && (ipos1 != ipos2))
+                                    {
+                                        String sBin = s.Substring(ipos1 + 1, ipos2 - ipos1 - 1);
+                                        if (iIndex < lsBinFilesForCue.Count)
+                                        {
+                                            s = s.Remove(ipos1 + 1, ipos2 - ipos1 - 1);
+                                            s = s.Insert(ipos1 + 1, lsBinFilesForCue[iIndex]);
+                                        }
+                                    }
+                                    iIndex++;
+                                }
+                                sBack += s + Environment.NewLine;
+                            }
+                            tb.Text = sBack;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+            }
+            slLogger.Trace("<< Autoedit cue Click");
+        }
+
         private void cueSave(object sender, EventArgs e)
         {
             slLogger.Trace(">> Save cue Click");
@@ -102,7 +182,6 @@ namespace pbPSCReAlpha
 
             try
             {
-
                 if (gb.HasChildren)
                 {
                     foreach (Control ct in gb.Controls)
@@ -117,7 +196,7 @@ namespace pbPSCReAlpha
                         slLogger.Debug("Saving " + _folderPath + "\\" + gb.Text);
                         using (StreamWriter sw = new StreamWriter(_folderPath + "\\" + gb.Text))
                         {
-                            sw.WriteLine(tb.Text);
+                            sw.Write(tb.Text);
                         }
                     }
                 }
@@ -134,12 +213,22 @@ namespace pbPSCReAlpha
             Close();
         }
 
-        private void btClipboardCopy_Click(object sender, EventArgs e)
+        private void CopyBinNameToClipboard()
         {
             if (lbBinFiles.SelectedIndex > -1)
             {
                 Clipboard.SetText(lbBinFiles.Items[lbBinFiles.SelectedIndex].ToString());
             }
+        }
+
+        private void btClipboardCopy_Click(object sender, EventArgs e)
+        {
+            CopyBinNameToClipboard();
+        }
+
+        private void lbBinFiles_DoubleClick(object sender, EventArgs e)
+        {
+            CopyBinNameToClipboard();
         }
     }
 }
