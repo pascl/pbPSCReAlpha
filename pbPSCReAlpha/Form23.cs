@@ -20,6 +20,7 @@ namespace pbPSCReAlpha
         ClGameStructure newGame;
         String _currentFilePathIni;
         String _currentFilePathImg;
+        String _docHtmlStr;
 
         public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games)
         {
@@ -29,6 +30,7 @@ namespace pbPSCReAlpha
             dcPs1Games = dcClPS1Games;
             newGame = null;
             _currentFilePathIni = String.Empty;
+            _docHtmlStr = String.Empty;
             lbCurrentGameIniFile.Text = _currentFilePathIni;
             btSaveIni.Enabled = false;
             btReloadTitleDiscs.Enabled = false;
@@ -49,7 +51,7 @@ namespace pbPSCReAlpha
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
             _currentFilePathIni = String.Empty;
-            _currentFilePathImg = String.Empty;
+            _docHtmlStr = String.Empty;
             btSaveIni.Enabled = false;
 
             if (!newGame.IniMissing)
@@ -181,8 +183,8 @@ namespace pbPSCReAlpha
                     if(null == newGame)
                     {
                         newGame = new ClGameStructure("", true, true);
-                        newGame.IniMissing = false;
                     }
+                    newGame.IniMissing = false;
                     newGame.Title = tbGeneTitle.Text;
                     newGame.Discs = tbGeneDiscs.Text;
                     newGame.Publisher = tbGenePublisher.Text;
@@ -264,8 +266,8 @@ namespace pbPSCReAlpha
                         if (null == newGame)
                         {
                             newGame = new ClGameStructure("", true, true);
-                            newGame.IniMissing = false;
                         }
+                        newGame.IniMissing = false;
                         newGame.Title = s1;
                         newGame.Discs = s2;
                         newGame.Publisher = s3;
@@ -316,6 +318,7 @@ namespace pbPSCReAlpha
             btScrapeImg.Enabled = false;
             btViewPage.Enabled = false;
             btLink.Enabled = false;
+            _docHtmlStr = String.Empty;
             if (dcPs1Games.Count > 0)
             {
                 if (s.Length > 2)
@@ -411,8 +414,8 @@ namespace pbPSCReAlpha
                         if (null == newGame)
                         {
                             newGame = new ClGameStructure("", true, true);
-                            newGame.IniMissing = false;
                         }
+                        newGame.IniMissing = false;
                         newGame.Title = s1;
                         newGame.Discs = s2;
                         newGame.Publisher = s3;
@@ -469,10 +472,12 @@ namespace pbPSCReAlpha
             {
                 try
                 {
+                    wbViewer.Navigate("about:blank");
                     btScraper.Enabled = false;
                     btScrapeImg.Enabled = false;
                     ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
-                    wbViewer.Url = new Uri("http://psxdatacenter.com/" + psGame.Link.Trim());
+                    //wbViewer.Url = new Uri("http://psxdatacenter.com/" + psGame.Link.Trim());
+                    wbViewer.Navigate("http://psxdatacenter.com/" + psGame.Link.Trim());
                 }
                 catch (Exception ex)
                 {
@@ -488,21 +493,23 @@ namespace pbPSCReAlpha
             HtmlElementCollection htmlElementCollection = htmlDocument.Images;
             this.pbTmp.Image = null;
             btScraper.Enabled = true;
+            _docHtmlStr = wbViewer.DocumentText.ToString();
             foreach (HtmlElement htmlElement in htmlElementCollection)
             {
                 string imgUrl = htmlElement.GetAttribute("src");
                 if (imgUrl.StartsWith("http://psxdatacenter.com/images/covers/"))
                 {
+                    this.pbTmp.WaitOnLoad = false;
                     this.pbTmp.ImageLocation = imgUrl;
+                    break;
                 }
             }
-            btScrapeImg.Enabled = true;
         }
 
         private void btScraper_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Scrape webpage Click");
-            ClGameScraper clgs = new ClGameScraper(wbViewer.DocumentText);
+            ClGameScraper clgs = new ClGameScraper(_docHtmlStr);
 
             tbGenePublisher.Text = clgs.Publisher;
             tbGeneTitle.Text = clgs.Title;
@@ -586,11 +593,9 @@ namespace pbPSCReAlpha
                     if (null == newGame)
                     {
                         newGame = new ClGameStructure("", true, true);
-                        newGame.PngMissing = false;
                     }
-                    Bitmap bmPicture = new Bitmap(pbCover.Image);
-                    newGame.setPicture(sFileName, (Image)(new Bitmap(bmPicture)));
-                    bmPicture.Dispose();
+                    newGame.PngMissing = false;
+                    newGame.setPicture(sFileName, (Image)(new Bitmap(pbCover.Image)));
                 }
                 catch (Exception ex)
                 {
@@ -644,11 +649,9 @@ namespace pbPSCReAlpha
                     if (null == newGame)
                     {
                         newGame = new ClGameStructure("", true, true);
-                        newGame.PngMissing = false;
                     }
-                    Bitmap bmPicture = new Bitmap(pbCover.Image);
-                    newGame.setPicture(sFileName, (Image)(new Bitmap(bmPicture)));
-                    bmPicture.Dispose();
+                    newGame.PngMissing = false;
+                    newGame.setPicture(sFileName, (Image)(new Bitmap(pbCover.Image)));
                 }
                 catch (Exception ex)
                 {
@@ -665,15 +668,15 @@ namespace pbPSCReAlpha
             slLogger.Trace(">> Scrape image Click");
             try
             {
-                ClGameScraper clgs = new ClGameScraper(wbViewer.DocumentText);
+                /*ClGameScraper clgs = new ClGameScraper(_docHtmlStr);
                 pbCover.Image = null;
-                if (pbTmp.Image != null)
+                if (pbTmp.Image == null)
+                {
+                    pbCover.ImageLocation = clgs.ImgUrl;
+                }
+                else*/
                 {
                     pbCover.Image = (Image)(new Bitmap(pbTmp.Image));
-                }
-                else
-                {
-                    pbCover.LoadAsync(clgs.ImgUrl);
                 }
                 //pbCover.ImageLocation = clgs.ImgUrl;
             }
@@ -728,6 +731,11 @@ namespace pbPSCReAlpha
         private void btIniReload_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Game.ini Reload Click");
+            if (newGame == null)
+            {
+                //
+            }
+            else
             if (!newGame.IniMissing)
             {
                 tbGeneTitle.Text = newGame.Title;
@@ -757,11 +765,19 @@ namespace pbPSCReAlpha
         private void btPictureReload_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Picture Reload Click");
+            if(newGame == null)
+            {
+                //
+            }
+            else
             if(!newGame.PngMissing)
             {
                 try
                 {
-                    pbCover.Image = (Image)(new Bitmap(newGame.PictureFile));
+                    Bitmap bm = new Bitmap(newGame.PictureFile);
+                    pbCover.Image = (Image)(new Bitmap(bm));
+                    bm = null;
+                    bm.Dispose();
                     _currentFilePathImg = newGame.PictureFileName;
                     lbCurrentPngFile.Text = _currentFilePathImg;
                     btSave.Enabled = true;
@@ -787,6 +803,8 @@ namespace pbPSCReAlpha
 
         private void pbTmp_LoadCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            //
+            btScrapeImg.Enabled = true;
         }
     }
 }

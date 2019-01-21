@@ -258,25 +258,32 @@ namespace pbPSCReAlpha
                         iNbCue++;
                         String cueName = fi.Name.Substring(0, fi.Name.IndexOf(fi.Extension));
                         List<String> lsBinParsed = new List<String>();
-                        using (StreamReader sr = new StreamReader(fi.FullName))
+                        try
                         {
-                            string s = String.Empty;
-                            while ((s = sr.ReadLine()) != null)
+                            using (StreamReader sr = new StreamReader(fi.FullName))
                             {
-                                s = s.Trim();
-                                if (s.ToUpper().StartsWith("FILE"))
+                                string s = String.Empty;
+                                while ((s = sr.ReadLine()) != null)
                                 {
-                                    int ipos1 = s.IndexOf("\"");
-                                    int ipos2 = s.LastIndexOf("\"");
-                                    if ((ipos1 > -1) && (ipos2 > -1) && (ipos1 != ipos2))
+                                    s = s.Trim();
+                                    if (s.ToUpper().StartsWith("FILE"))
                                     {
-                                        //
-                                        String sBin = s.Substring(ipos1 + 1, ipos2 - ipos1 - 1);
-                                        lsBinParsed.Add(sBin.ToLower());
+                                        int ipos1 = s.IndexOf("\"");
+                                        int ipos2 = s.LastIndexOf("\"");
+                                        if ((ipos1 > -1) && (ipos2 > -1) && (ipos1 != ipos2))
+                                        {
+                                            //
+                                            String sBin = s.Substring(ipos1 + 1, ipos2 - ipos1 - 1);
+                                            lsBinParsed.Add(sBin.ToLower());
+                                        }
                                     }
                                 }
+                                dcBinParsed.Add(cueName.ToLower(), lsBinParsed.ToArray());
                             }
-                            dcBinParsed.Add(cueName.ToLower(), lsBinParsed.ToArray());
+                        }
+                        catch(Exception ex)
+                        {
+                            slLogger.Fatal(ex.Message);
                         }
                     }
                     else
@@ -301,55 +308,62 @@ namespace pbPSCReAlpha
                     else
                     if (fi.Name.ToLower() == "game.ini") // (fi.Name == "Game.ini")
                     {
-                        bGameIniPresent = true;
-                        using (StreamReader sr = new StreamReader(fi.FullName))
+                        try
                         {
-                            string s = String.Empty;
-                            while ((s = sr.ReadLine()) != null)
+                            bGameIniPresent = true;
+                            using (StreamReader sr = new StreamReader(fi.FullName))
                             {
-                                if (s.StartsWith("Title="))
+                                string s = String.Empty;
+                                while ((s = sr.ReadLine()) != null)
                                 {
-                                    uiGameIni++;
-                                    sTitle = s.Substring(6).Trim();
-                                    sTitle = ClPbHelper.RemoveQuotes(sTitle);
-                                }
-                                else
-                                if (s.StartsWith("Publisher="))
-                                {
-                                    uiGameIni++;
-                                    sPublisher = s.Substring(10).Trim();
-                                    sPublisher = ClPbHelper.RemoveQuotes(sPublisher);
-                                }
-                                else
-                                if (s.StartsWith("Year="))
-                                {
-                                    uiGameIni++;
-                                    sYear = s.Substring(5).Trim();
-                                    sYear = ClPbHelper.RemoveQuotes(sYear);
-                                }
-                                else
-                                if (s.StartsWith("Players="))
-                                {
-                                    uiGameIni++;
-                                    sPlayers = s.Substring(8).Trim();
-                                    sPlayers = ClPbHelper.RemoveQuotes(sPlayers);
-                                }
-                                else
-                                if (s.StartsWith("Discs="))
-                                {
-                                    uiGameIni++;
-                                    sDiscs = s.Substring(6).Trim();
-                                    sDiscs = ClPbHelper.RemoveQuotes(sDiscs);
-                                }
-                                else
-                                if (s.StartsWith("AlphaTitle="))
-                                {
-                                    // facultative, doesn't count: uiGameIni++;
-                                    bAlphaTitlePresent = true;
-                                    sAlphaTitle = s.Substring(11).Trim();
-                                    sAlphaTitle = ClPbHelper.RemoveQuotes(sAlphaTitle);
+                                    if (s.StartsWith("Title="))
+                                    {
+                                        uiGameIni++;
+                                        sTitle = s.Substring(6).Trim();
+                                        sTitle = ClPbHelper.RemoveQuotes(sTitle);
+                                    }
+                                    else
+                                    if (s.StartsWith("Publisher="))
+                                    {
+                                        uiGameIni++;
+                                        sPublisher = s.Substring(10).Trim();
+                                        sPublisher = ClPbHelper.RemoveQuotes(sPublisher);
+                                    }
+                                    else
+                                    if (s.StartsWith("Year="))
+                                    {
+                                        uiGameIni++;
+                                        sYear = s.Substring(5).Trim();
+                                        sYear = ClPbHelper.RemoveQuotes(sYear);
+                                    }
+                                    else
+                                    if (s.StartsWith("Players="))
+                                    {
+                                        uiGameIni++;
+                                        sPlayers = s.Substring(8).Trim();
+                                        sPlayers = ClPbHelper.RemoveQuotes(sPlayers);
+                                    }
+                                    else
+                                    if (s.StartsWith("Discs="))
+                                    {
+                                        uiGameIni++;
+                                        sDiscs = s.Substring(6).Trim();
+                                        sDiscs = ClPbHelper.RemoveQuotes(sDiscs);
+                                    }
+                                    else
+                                    if (s.StartsWith("AlphaTitle="))
+                                    {
+                                        // facultative, doesn't count: uiGameIni++;
+                                        bAlphaTitlePresent = true;
+                                        sAlphaTitle = s.Substring(11).Trim();
+                                        sAlphaTitle = ClPbHelper.RemoveQuotes(sAlphaTitle);
+                                    }
                                 }
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            slLogger.Fatal(ex.Message);
                         }
                     }
                 }

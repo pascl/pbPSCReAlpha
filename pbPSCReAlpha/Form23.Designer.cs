@@ -63,6 +63,7 @@
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
             this.wbViewer = new System.Windows.Forms.WebBrowser();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.btPictureReload = new System.Windows.Forms.Button();
             this.lbCurrentPngFile = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
@@ -73,14 +74,13 @@
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
             this.btScrapeImg = new System.Windows.Forms.Button();
             this.btScraper = new System.Windows.Forms.Button();
-            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -446,7 +446,6 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.pbTmp);
             this.groupBox3.Controls.Add(this.btPictureReload);
             this.groupBox3.Controls.Add(this.lbCurrentPngFile);
             this.groupBox3.Controls.Add(this.btSave);
@@ -459,6 +458,17 @@
             this.groupBox3.TabIndex = 31;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Picture";
+            // 
+            // pbTmp
+            // 
+            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbTmp.Location = new System.Drawing.Point(411, 390);
+            this.pbTmp.Name = "pbTmp";
+            this.pbTmp.Size = new System.Drawing.Size(25, 25);
+            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbTmp.TabIndex = 39;
+            this.pbTmp.TabStop = false;
+            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
             // 
             // btPictureReload
             // 
@@ -548,7 +558,7 @@
             this.btScrapeImg.Image = global::pbPSCReAlpha.Properties.Resources.arrow_left_double;
             this.btScrapeImg.Location = new System.Drawing.Point(411, 231);
             this.btScrapeImg.Name = "btScrapeImg";
-            this.btScrapeImg.Size = new System.Drawing.Size(25, 184);
+            this.btScrapeImg.Size = new System.Drawing.Size(25, 161);
             this.btScrapeImg.TabIndex = 32;
             this.btScrapeImg.UseVisualStyleBackColor = true;
             this.btScrapeImg.Click += new System.EventHandler(this.btScrapeImg_Click);
@@ -564,23 +574,12 @@
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
             // 
-            // pbTmp
-            // 
-            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbTmp.Location = new System.Drawing.Point(298, 69);
-            this.pbTmp.Name = "pbTmp";
-            this.pbTmp.Size = new System.Drawing.Size(100, 100);
-            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbTmp.TabIndex = 39;
-            this.pbTmp.TabStop = false;
-            this.pbTmp.Visible = false;
-            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
-            // 
             // Form23
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 657);
+            this.Controls.Add(this.pbTmp);
             this.Controls.Add(this.btScrapeImg);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btScraper);
@@ -602,8 +601,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
             this.ResumeLayout(false);
 
         }
