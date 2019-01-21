@@ -539,6 +539,7 @@ namespace pbPSCReAlpha
         {
             btReSort.Enabled = false;
             btNewFolder.Enabled = false;
+            btLaunchPngquant.Enabled = false;
             int iSelected = -1;
             ClGameStructure cgs = null;
             if (lbGames.SelectedIndex > -1)
@@ -568,6 +569,7 @@ namespace pbPSCReAlpha
                 }
                 btReSort.Enabled = true;
                 btNewFolder.Enabled = true;
+                btLaunchPngquant.Enabled = true;
             }
         }
 
@@ -593,6 +595,7 @@ namespace pbPSCReAlpha
                 lbExploreYear.Text = cgs.Year;
                 lbExploreAlphaTitle.Text = cgs.Alphatitle;
                 lbFolderSize.Text = ClPbHelper.FormatBytes(cgs.FolderSize);
+                gbAutoRename.Visible = true;
                 try
                 {
                     /*pbExploreImage.ImageLocation = cgs.PictureFileName;
@@ -830,6 +833,8 @@ namespace pbPSCReAlpha
                 btOpenFolder.Visible = false;
 
                 pbExploreImage.AllowDrop = false;
+
+                gbAutoRename.Visible = false;
 
                 btBinRename.Enabled = false;
                 btCueRename.Enabled = false;
@@ -1956,19 +1961,13 @@ namespace pbPSCReAlpha
                                 {
                                     String[] sCommons = lsCommonstrings.ToArray();
                                     int iCommonSubstring = lsCommonstrings.Count;
-                                    int iCommonIndex1 = 0;
-                                    int iCommonIndex2 = 0;
                                     String sCommonStart = sPath;
                                     switch (iCommonSubstring)
                                     {
                                         case 2:
-                                            iCommonIndex1 = 0;
-                                            iCommonIndex2 = 1;
                                             sCommonStart = sPath;
                                             break;
                                         case 3:
-                                            iCommonIndex1 = 1;
-                                            iCommonIndex2 = 2;
                                             sCommonStart = sPath + sCommons[0];
                                             break;
                                         default:
@@ -2171,6 +2170,25 @@ namespace pbPSCReAlpha
                 }
             }
             slLogger.Trace("<< Sbi AutoRename Click");
+        }
+
+        private void btLaunchPngquant_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Compress all PNG Click");
+            String sList = String.Empty;
+            String sFolderPath = tbFolderPath.Text;
+            var fileList = new DirectoryInfo(sFolderPath).GetFiles("*.png", SearchOption.AllDirectories);
+            if (fileList.Length > 0)
+            {
+                foreach (FileInfo fi in fileList)
+                {
+                    sList += " \"" + fi.FullName + "\"";
+                }
+                // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
+                MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sList + " --force --ext .png --verbose");
+                pPngQuant.DoIt();
+            }
+            slLogger.Trace("<< Compress all PNG Click");
         }
     }
 }

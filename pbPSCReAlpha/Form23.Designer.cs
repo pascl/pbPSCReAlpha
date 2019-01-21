@@ -73,12 +73,14 @@
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
             this.btScrapeImg = new System.Windows.Forms.Button();
             this.btScraper = new System.Windows.Forms.Button();
+            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -444,6 +446,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.pbTmp);
             this.groupBox3.Controls.Add(this.btPictureReload);
             this.groupBox3.Controls.Add(this.lbCurrentPngFile);
             this.groupBox3.Controls.Add(this.btSave);
@@ -561,6 +564,18 @@
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
             // 
+            // pbTmp
+            // 
+            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbTmp.Location = new System.Drawing.Point(298, 69);
+            this.pbTmp.Name = "pbTmp";
+            this.pbTmp.Size = new System.Drawing.Size(100, 100);
+            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbTmp.TabIndex = 39;
+            this.pbTmp.TabStop = false;
+            this.pbTmp.Visible = false;
+            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
+            // 
             // Form23
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -588,6 +603,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -638,5 +654,6 @@
         private System.Windows.Forms.Button btScrapeImg;
         private System.Windows.Forms.Button btIniReload;
         private System.Windows.Forms.Button btPictureReload;
+        private System.Windows.Forms.PictureBox pbTmp;
     }
 }

@@ -484,7 +484,18 @@ namespace pbPSCReAlpha
 
         private void wbViewer_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            HtmlDocument htmlDocument = wbViewer.Document;
+            HtmlElementCollection htmlElementCollection = htmlDocument.Images;
+            this.pbTmp.Image = null;
             btScraper.Enabled = true;
+            foreach (HtmlElement htmlElement in htmlElementCollection)
+            {
+                string imgUrl = htmlElement.GetAttribute("src");
+                if (imgUrl.StartsWith("http://psxdatacenter.com/images/covers/"))
+                {
+                    this.pbTmp.ImageLocation = imgUrl;
+                }
+            }
             btScrapeImg.Enabled = true;
         }
 
@@ -656,8 +667,15 @@ namespace pbPSCReAlpha
             {
                 ClGameScraper clgs = new ClGameScraper(wbViewer.DocumentText);
                 pbCover.Image = null;
-                //pbCover.LoadAsync(clgs.ImgUrl);
-                pbCover.ImageLocation = clgs.ImgUrl;
+                if (pbTmp.Image != null)
+                {
+                    pbCover.Image = (Image)(new Bitmap(pbTmp.Image));
+                }
+                else
+                {
+                    pbCover.LoadAsync(clgs.ImgUrl);
+                }
+                //pbCover.ImageLocation = clgs.ImgUrl;
             }
             catch (Exception ex)
             {
@@ -765,6 +783,10 @@ namespace pbPSCReAlpha
         private void pbCover_LocationChanged(object sender, EventArgs e)
         {
             //MessageBox.Show("location changed");
+        }
+
+        private void pbTmp_LoadCompleted(object sender, AsyncCompletedEventArgs e)
+        {
         }
     }
 }
