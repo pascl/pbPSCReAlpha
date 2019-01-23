@@ -607,6 +607,7 @@
             this.lbGames.Size = new System.Drawing.Size(197, 485);
             this.lbGames.TabIndex = 1;
             this.lbGames.SelectedIndexChanged += new System.EventHandler(this.lbGames_SelectedIndexChanged);
+            this.lbGames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbGames_KeyDown);
             // 
             // btRefresh
             // 

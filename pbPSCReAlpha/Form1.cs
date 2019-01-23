@@ -2075,9 +2075,7 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    {
-                        slLogger.Fatal(ex.Message);
-                    }
+                    slLogger.Fatal(ex.Message);
                 }
                 slLogger.Trace("<< Bin AutoRename Click");
             }
@@ -2222,6 +2220,38 @@ namespace pbPSCReAlpha
                 pPngQuant.DoIt();
             }
             slLogger.Trace("<< Compress all PNG Click");
+        }
+
+        private void lbGames_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (lbGames.SelectedIndex > -1)
+            {
+                if (e.KeyCode == Keys.Delete)
+                {
+                    slLogger.Trace(">> Suppr folder Key");
+                    try
+                    {
+                        ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                        String sFolderPath = tbFolderPath.Text;
+                        String sPath = sFolderPath + "\\" + cgs.FolderIndex;
+                        if (Directory.Exists(sPath))
+                        {
+                            if ((e.Shift) || (DialogResult.Yes == FlexibleMessageBox.Show("Are you sure you want to delete this folder ?\n" + sPath, "Removing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question)))
+                            {
+                                slLogger.Debug("Removing folder " + sPath);
+                                Directory.Delete(sPath, true);
+                                //lbGames.SelectedIndex = -1;
+                                refreshGameListFolders();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        slLogger.Fatal(ex.Message);
+                    }
+                    slLogger.Trace("<< Suppr folder Key");
+                }
+            }
         }
     }
 }
