@@ -886,9 +886,9 @@ namespace pbPSCReAlpha
                             if (dcGames.ContainsKey(s))
                             {
                                 int index = int.Parse(s);
-                                if ((sFolderPath + "\\" + index.ToString()) != (sFolderPath + "\\" + (index + iDecalage).ToString()))
+                                if ((sFolderPath + "\\" + s) != (sFolderPath + "\\" + (index + iDecalage).ToString()))
                                 {
-                                    Directory.Move(sFolderPath + "\\" + index.ToString(), sFolderPath + "\\" + (index + iDecalage).ToString());
+                                    Directory.Move(sFolderPath + "\\" + s, sFolderPath + "\\" + (index + iDecalage).ToString());
                                 }
                                 //lbGames.Items.Add(dcGames[s]);
                             }
