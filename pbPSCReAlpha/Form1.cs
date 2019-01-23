@@ -585,6 +585,10 @@ namespace pbPSCReAlpha
                 btNewFolder.Enabled = true;
                 btLaunchPngquant.Enabled = true;
             }
+            else
+            {
+                btNewFolder.Enabled = true;
+            }
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
@@ -980,6 +984,21 @@ namespace pbPSCReAlpha
                 {
                     FlexibleMessageBox.Show("Correct the wrong folder names before doing this.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
+            }
+            else
+            {
+                try
+                {
+                    int iNext = 1;
+                    Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString());
+                    Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData");
+                    File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+                refreshGameListFolders();
             }
             slLogger.Trace("<< Create new folder Click");
         }
