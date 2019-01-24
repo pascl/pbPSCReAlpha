@@ -93,7 +93,7 @@ namespace pbPSCReAlpha
             {
                 try
                 {
-                    pbCover.Image = (Image)(new Bitmap(newGame.PictureFile));
+                    pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(newGame.PictureFile)), 226, 226);
                     _currentFilePathImg = newGame.PictureFileName;
                     lbCurrentPngFile.Text = _currentFilePathImg;
                     btSave.Enabled = true;
@@ -491,14 +491,14 @@ namespace pbPSCReAlpha
         {
             HtmlDocument htmlDocument = wbViewer.Document;
             HtmlElementCollection htmlElementCollection = htmlDocument.Images;
-            this.pbTmp.Image = null;
-            btScraper.Enabled = true;
+            this.pbTmp.Image = (Image)(new Bitmap(1, 1));
             _docHtmlStr = wbViewer.DocumentText.ToString();
             foreach (HtmlElement htmlElement in htmlElementCollection)
             {
                 string imgUrl = htmlElement.GetAttribute("src");
                 if (imgUrl.StartsWith("http://psxdatacenter.com/images/covers/"))
                 {
+                    btScraper.Enabled = true;
                     this.pbTmp.WaitOnLoad = false;
                     this.pbTmp.ImageLocation = imgUrl;
                     break;
@@ -555,9 +555,10 @@ namespace pbPSCReAlpha
                 String sFileName = ofdGeneLoadImage.FileName;
                 try
                 {
-                    Bitmap bmPicture = new Bitmap(sFileName);
-                    pbCover.Image = (Image)(new Bitmap(bmPicture));
-                    bmPicture.Dispose();
+                    using (Bitmap bmPicture = new Bitmap(sFileName))
+                    {
+                        pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                    }
                     _currentFilePathImg = sFileName;
                     lbCurrentPngFile.Text = _currentFilePathImg;
                     btSave.Enabled = true;
@@ -668,17 +669,10 @@ namespace pbPSCReAlpha
             slLogger.Trace(">> Scrape image Click");
             try
             {
-                /*ClGameScraper clgs = new ClGameScraper(_docHtmlStr);
-                pbCover.Image = null;
-                if (pbTmp.Image == null)
+                using(Bitmap bm = new Bitmap(pbTmp.Image))
                 {
-                    pbCover.ImageLocation = clgs.ImgUrl;
+                    pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm)), 226, 226);
                 }
-                else*/
-                {
-                    pbCover.Image = (Image)(new Bitmap(pbTmp.Image));
-                }
-                //pbCover.ImageLocation = clgs.ImgUrl;
             }
             catch (Exception ex)
             {
@@ -700,9 +694,10 @@ namespace pbPSCReAlpha
                     List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
                     if (lsAcceptedExt.IndexOf(sExt) > -1)
                     {
-                        Bitmap bmPicture = new Bitmap(sFileList[0]);
-                        pbCover.Image = (Image)(new Bitmap(bmPicture));
-                        bmPicture.Dispose();
+                        using (Bitmap bmPicture = new Bitmap(sFileList[0]))
+                        {
+                            pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                        }
                     }
                     else
                     {
@@ -774,10 +769,10 @@ namespace pbPSCReAlpha
             {
                 try
                 {
-                    Bitmap bm = new Bitmap(newGame.PictureFile);
-                    pbCover.Image = (Image)(new Bitmap(bm));
-                    bm = null;
-                    bm.Dispose();
+                    using (Bitmap bm = new Bitmap(newGame.PictureFile))
+                    {
+                        pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm)), 226, 226);
+                    }
                     _currentFilePathImg = newGame.PictureFileName;
                     lbCurrentPngFile.Text = _currentFilePathImg;
                     btSave.Enabled = true;

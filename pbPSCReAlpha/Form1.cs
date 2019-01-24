@@ -1345,9 +1345,10 @@ namespace pbPSCReAlpha
                     List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
                     if (lsAcceptedExt.IndexOf(sExt) > -1)
                     {
-                        Bitmap bmPicture = new Bitmap(sFileList[0]);
-                        pbExploreImage.Image = (Image)(new Bitmap(bmPicture));
-                        bmPicture.Dispose();
+                        using (Bitmap bmPicture = new Bitmap(sFileList[0]))
+                        {
+                            pbExploreImage.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                        }
                         if (lbGames.SelectedIndex > -1)
                         {
                             try
@@ -2213,6 +2214,19 @@ namespace pbPSCReAlpha
             {
                 foreach (FileInfo fi in fileList)
                 {
+                    try
+                    {
+                        using (FileStream fileStream = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read))
+                        {
+                            Image img = ClPbHelper.ResizeImage((Image)(new Bitmap(Image.FromStream(fileStream))), 226, 226);
+                            fileStream.Close();
+                            img.Save(fi.FullName, ImageFormat.Png);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        slLogger.Fatal(ex.Message);
+                    }
                     sList += " \"" + fi.FullName + "\"";
                 }
                 // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
