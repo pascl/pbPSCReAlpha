@@ -33,13 +33,14 @@ namespace pbPSCReAlpha
         private bool _badBinName;
         private bool _cueCountMisMatchDiscsCount;
         private bool _neededSbiMissing;
+        private bool _commaInFilename;
         private List<String> _errorString;
         private List<String> _filesBinOk;
         private List<String> _filesCueOk;
         private List<String> _filesSbiOk;
         private long _size;
 
-        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, bool bNeededSbiMissing)
+        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, bool bNeededSbiMissing, bool bNameWithComma)
         {
             _folderIndex = folderIndex;
             _gameDataMissing = false; // if i have all these variables, i have at least the folder...
@@ -54,6 +55,7 @@ namespace pbPSCReAlpha
             _badCueName = badCueName;
             _binMissing = binMissing;
             _badBinName = badBinName;
+            _commaInFilename = bNameWithComma;
             _cueCountMisMatchDiscsCount = cueCountMisMatchdiscsCount;
             _neededSbiMissing = bNeededSbiMissing;
             _errorString = new List<String>();
@@ -81,6 +83,10 @@ namespace pbPSCReAlpha
             if (_binMissing)
             {
                 this.ErrorString.Add("Bin files not found in the folder.");
+            }
+            if(_commaInFilename)
+            {
+                this.ErrorString.Add("Files cannot contain commas ','.");
             }
             if (_pngMultiple)
             {
@@ -182,12 +188,13 @@ namespace pbPSCReAlpha
         public bool CueCountMisMatchDiscsCount { get => _cueCountMisMatchDiscsCount; set => _cueCountMisMatchDiscsCount = value; }
         public bool GeneralError { get => _cueCountMisMatchDiscsCount || _badBinName || _badCueName || _pngMismatch
                 || _iniIncomplete || _pngMultiple || _pngMissing || _nanFolder || _binMissing
-                || _cueMissing || _cfgMissing || _iniMissing || _gameDataMissing || _neededSbiMissing; }
+                || _cueMissing || _cfgMissing || _iniMissing || _gameDataMissing || _neededSbiMissing || _commaInFilename; }
         public List<String> FilesBinOk { get => _filesBinOk; set => _filesBinOk = value; }
         public List<String> FilesCueOk { get => _filesCueOk; set => _filesCueOk = value; }
         public List<String> FilesSbiOk { get => _filesSbiOk; set => _filesSbiOk = value; }
         public string PictureFileName { get => _pictureFileName; set => _pictureFileName = value; }
         public bool NeededSbiMissing { get => _neededSbiMissing; set => _neededSbiMissing = value; }
         public long FolderSize { get => _size; }
+        public bool CommaInFilename { get => _commaInFilename; set => _commaInFilename = value; }
     }
 }

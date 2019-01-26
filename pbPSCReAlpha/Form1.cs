@@ -230,6 +230,7 @@ namespace pbPSCReAlpha
                 bool bDiscCountMatchCueCount = false;
                 bool bBadBinName = false;
                 bool bBadCueName = false;
+                bool bNameWithComma = false;
                 UInt16 uiGameIni = 0;
                 int iNbDiscs = 0;
                 int iNbCue = 0;
@@ -246,6 +247,10 @@ namespace pbPSCReAlpha
                     lSizeFolder += fi.Length;
                     sFiles.Add(fi.Name);
                     slLogger.Debug("**** File: " + fi.Name);
+                    if(fi.Name.Contains(","))
+                    {
+                        bNameWithComma = true;
+                    }
                     if (fi.Extension.ToLower() == ".png")
                     {
                         if (bPicturePresent)
@@ -471,7 +476,7 @@ namespace pbPSCReAlpha
                         }
                     }
                 }
-                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing);
+                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, bNameWithComma);
                 if (bGameIniPresent)
                 {
                     cgs.setIniInfos(sTitle, sDiscs, sPublisher, sYear, sPlayers, sAlphaTitle);
@@ -643,6 +648,11 @@ namespace pbPSCReAlpha
                         int iIndexImg = 0; // 0=?, 1=ok, 2=ko, 3=warn, 4=info
                         if (true == cgs.GeneralError)
                         {
+                            if ((cgs.CommaInFilename) && (s.Contains(",")))
+                            {
+                                iIndexImg = 3;
+                            }
+                            else
                             if ((s == "pcsx.cfg") && (!cgs.CfgMissing))
                             {
                                 iIndexImg = 1;
@@ -1486,11 +1496,12 @@ namespace pbPSCReAlpha
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     String sFolderPath = tbFolderPath.Text;
-                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex;
                     if (!cgs.GameDataMissing)
                     {
-                        sPath += currentUsedVersion.GameDataFolder + "\\";
+                        sPath += currentUsedVersion.GameDataFolder;
                     }
+                    sPath += "\\";
                     MyProcessHelper explo = new MyProcessHelper("explorer.exe", sPath);
                     explo.DoIt();
                 }
