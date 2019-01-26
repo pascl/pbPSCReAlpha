@@ -60,6 +60,8 @@
             this.btClearLog = new System.Windows.Forms.Button();
             this.btTest = new System.Windows.Forms.Button();
             this.tbLogDebug = new System.Windows.Forms.TextBox();
+            this.tabTransform = new System.Windows.Forms.TabPage();
+            this.gbTransform = new System.Windows.Forms.GroupBox();
             this.tabReadMe = new System.Windows.Forms.TabPage();
             this.wbReadme = new System.Windows.Forms.WebBrowser();
             this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
@@ -69,9 +71,6 @@
             this.tsmiBSVersionItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabTransform = new System.Windows.Forms.TabPage();
-            this.gbTransform = new System.Windows.Forms.GroupBox();
-            this.btUpgradeFolders = new System.Windows.Forms.Button();
             this.btLaunchPngquant = new System.Windows.Forms.Button();
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.btSbiRename = new System.Windows.Forms.Button();
@@ -90,6 +89,7 @@
             this.btCrowseGamesFolder = new System.Windows.Forms.Button();
             this.pbExploreImage = new System.Windows.Forms.PictureBox();
             this.btRefresh = new System.Windows.Forms.Button();
+            this.btUpgradeFolders = new System.Windows.Forms.Button();
             this.btDowngradeFolders = new System.Windows.Forms.Button();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
@@ -97,10 +97,10 @@
             this.gbAutoRename.SuspendLayout();
             this.gbExploreDetails.SuspendLayout();
             this.tabDebug.SuspendLayout();
-            this.tabReadMe.SuspendLayout();
-            this.msMainMenu.SuspendLayout();
             this.tabTransform.SuspendLayout();
             this.gbTransform.SuspendLayout();
+            this.tabReadMe.SuspendLayout();
+            this.msMainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -442,6 +442,28 @@
             this.tbLogDebug.Size = new System.Drawing.Size(601, 563);
             this.tbLogDebug.TabIndex = 3;
             // 
+            // tabTransform
+            // 
+            this.tabTransform.Controls.Add(this.gbTransform);
+            this.tabTransform.Location = new System.Drawing.Point(4, 22);
+            this.tabTransform.Name = "tabTransform";
+            this.tabTransform.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTransform.Size = new System.Drawing.Size(696, 577);
+            this.tabTransform.TabIndex = 5;
+            this.tabTransform.Text = "Transformer";
+            this.tabTransform.UseVisualStyleBackColor = true;
+            // 
+            // gbTransform
+            // 
+            this.gbTransform.Controls.Add(this.btUpgradeFolders);
+            this.gbTransform.Controls.Add(this.btDowngradeFolders);
+            this.gbTransform.Location = new System.Drawing.Point(8, 6);
+            this.gbTransform.Name = "gbTransform";
+            this.gbTransform.Size = new System.Drawing.Size(680, 142);
+            this.gbTransform.TabIndex = 0;
+            this.gbTransform.TabStop = false;
+            this.gbTransform.Text = "Folder modifications";
+            // 
             // tabReadMe
             // 
             this.tabReadMe.Controls.Add(this.wbReadme);
@@ -517,40 +539,6 @@
             this.tsmiBSv100.Text = "v1.0.0";
             this.tsmiBSv100.CheckedChanged += new System.EventHandler(this.tsmiBSv100_CheckedChanged);
             // 
-            // tabTransform
-            // 
-            this.tabTransform.Controls.Add(this.gbTransform);
-            this.tabTransform.Location = new System.Drawing.Point(4, 22);
-            this.tabTransform.Name = "tabTransform";
-            this.tabTransform.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTransform.Size = new System.Drawing.Size(696, 577);
-            this.tabTransform.TabIndex = 5;
-            this.tabTransform.Text = "Transformer";
-            this.tabTransform.UseVisualStyleBackColor = true;
-            // 
-            // gbTransform
-            // 
-            this.gbTransform.Controls.Add(this.btUpgradeFolders);
-            this.gbTransform.Controls.Add(this.btDowngradeFolders);
-            this.gbTransform.Location = new System.Drawing.Point(8, 6);
-            this.gbTransform.Name = "gbTransform";
-            this.gbTransform.Size = new System.Drawing.Size(680, 142);
-            this.gbTransform.TabIndex = 0;
-            this.gbTransform.TabStop = false;
-            this.gbTransform.Text = "Folder modifications";
-            // 
-            // btUpgradeFolders
-            // 
-            this.btUpgradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_up_double_3;
-            this.btUpgradeFolders.Location = new System.Drawing.Point(341, 19);
-            this.btUpgradeFolders.Name = "btUpgradeFolders";
-            this.btUpgradeFolders.Size = new System.Drawing.Size(333, 117);
-            this.btUpgradeFolders.TabIndex = 1;
-            this.btUpgradeFolders.Text = "Upgrade (1.0.0 compatible folders)";
-            this.btUpgradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btUpgradeFolders.UseVisualStyleBackColor = true;
-            this.btUpgradeFolders.Click += new System.EventHandler(this.btUpgradeFolders_Click);
-            // 
             // btLaunchPngquant
             // 
             this.btLaunchPngquant.Enabled = false;
@@ -566,11 +554,13 @@
             // 
             // btLaunchBleemsync
             // 
-            this.btLaunchBleemsync.Image = global::pbPSCReAlpha.Properties.Resources.bleem_logo48;
+            this.btLaunchBleemsync.Image = global::pbPSCReAlpha.Properties.Resources.inode_blockdevice;
+            this.btLaunchBleemsync.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btLaunchBleemsync.Location = new System.Drawing.Point(3, 522);
             this.btLaunchBleemsync.Name = "btLaunchBleemsync";
             this.btLaunchBleemsync.Size = new System.Drawing.Size(197, 48);
             this.btLaunchBleemsync.TabIndex = 10;
+            this.btLaunchBleemsync.Text = "Recreate DataBase";
             this.btLaunchBleemsync.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btLaunchBleemsync.UseVisualStyleBackColor = true;
             this.btLaunchBleemsync.Click += new System.EventHandler(this.btLaunchBleemsync_Click);
@@ -790,6 +780,18 @@
             this.btRefresh.UseVisualStyleBackColor = true;
             this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
             // 
+            // btUpgradeFolders
+            // 
+            this.btUpgradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_up_double_3;
+            this.btUpgradeFolders.Location = new System.Drawing.Point(341, 19);
+            this.btUpgradeFolders.Name = "btUpgradeFolders";
+            this.btUpgradeFolders.Size = new System.Drawing.Size(333, 117);
+            this.btUpgradeFolders.TabIndex = 1;
+            this.btUpgradeFolders.Text = "Upgrade (1.0.0 compatible folders)";
+            this.btUpgradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btUpgradeFolders.UseVisualStyleBackColor = true;
+            this.btUpgradeFolders.Click += new System.EventHandler(this.btUpgradeFolders_Click);
+            // 
             // btDowngradeFolders
             // 
             this.btDowngradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_down_double;
@@ -824,11 +826,11 @@
             this.gbExploreDetails.PerformLayout();
             this.tabDebug.ResumeLayout(false);
             this.tabDebug.PerformLayout();
+            this.tabTransform.ResumeLayout(false);
+            this.gbTransform.ResumeLayout(false);
             this.tabReadMe.ResumeLayout(false);
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
-            this.tabTransform.ResumeLayout(false);
-            this.gbTransform.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

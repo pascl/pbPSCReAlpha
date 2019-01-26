@@ -16,19 +16,21 @@ namespace pbPSCReAlpha
         String _folderPath;
         SimpleLogger slLogger;
         ClGameStructure newGame;
-        
+        ClVersionHelper _versionBS;
+
         public Form4()
         {
             InitializeComponent();
         }
         
-        public Form4(String sFolderPath, SimpleLogger sl, ClGameStructure myGame)
+        public Form4(String sFolderPath, SimpleLogger sl, ClGameStructure myGame, ClVersionHelper cvh)
         {
             InitializeComponent();
             slLogger = sl;
             newGame = myGame;
+            _versionBS = cvh;
 
-            _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
+            _folderPath = sFolderPath + "\\" + newGame.FolderIndex + cvh.GameDataFolder;
 
             if (!newGame.CueMissing)
             {

@@ -203,6 +203,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap inode_blockdevice {
+            get {
+                object obj = ResourceManager.GetObject("inode-blockdevice", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap picture_edit {
             get {
                 object obj = ResourceManager.GetObject("picture-edit", resourceCulture);

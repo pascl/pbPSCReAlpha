@@ -21,13 +21,15 @@ namespace pbPSCReAlpha
         String _currentFilePathIni;
         String _currentFilePathImg;
         String _docHtmlStr;
+        ClVersionHelper _versionBS;
 
-        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClVersionHelper cvh)
         {
             InitializeComponent();
             _folderPath = sFolderPath;
             slLogger = sl;
             dcPs1Games = dcClPS1Games;
+            _versionBS = cvh;
             newGame = null;
             _currentFilePathIni = String.Empty;
             _docHtmlStr = String.Empty;
@@ -43,13 +45,14 @@ namespace pbPSCReAlpha
             btPictureReload.Enabled = false;
         }
 
-        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClGameStructure myGame)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClVersionHelper cvh, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
             dcPs1Games = dcClPS1Games;
+            _versionBS = cvh;
             newGame = myGame;
-            _folderPath = sFolderPath + "\\" + newGame.FolderIndex + "\\GameData";
+            _folderPath = sFolderPath + "\\" + newGame.FolderIndex + _versionBS.GameDataFolder;
             _currentFilePathIni = String.Empty;
             _docHtmlStr = String.Empty;
             btSaveIni.Enabled = false;

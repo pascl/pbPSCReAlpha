@@ -961,6 +961,7 @@ namespace pbPSCReAlpha
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
+            Properties.Settings.Default.iVersionBleemSync = iBleemsyncVersion;
             Properties.Settings.Default.Save();
             //slLogger.Trace("Saving parameters for next time. Bye.");
         }
@@ -1030,7 +1031,32 @@ namespace pbPSCReAlpha
 
         private void btLaunchBleemsync_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Launch BleemSync Click");
+            slLogger.Trace(">> Synchro Click");
+            String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            if (Directory.Exists(sFolderPath))
+            {
+                //
+                List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                foreach(ClGameStructure cgs in lbGames.Items)
+                {
+                    lcgs.Add(cgs);
+                }
+                ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                if(!cdbm.BDone)
+                {
+                    FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            slLogger.Trace("<< Synchro Click");
+            /*slLogger.Trace(">> Launch BleemSync Click");
             String sFolderPath = tbFolderPath.Text;
             if (sFolderPath.EndsWith("\\"))
             {
@@ -1071,6 +1097,7 @@ namespace pbPSCReAlpha
                 FlexibleMessageBox.Show("Folder " + sFolderPath + " not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             slLogger.Trace("<< Launch BleemSync Click");
+            */
         }
 
         private void btClearLog_Click(object sender, EventArgs e)
@@ -1112,11 +1139,11 @@ namespace pbPSCReAlpha
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, cgs);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion, cgs);
             }
             else
             {
-                f = new Form23(sFolderPath, slLogger, dcPs1Games);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion);
             }
             f.ShowDialog();
             refreshOneFolder();
@@ -1131,11 +1158,11 @@ namespace pbPSCReAlpha
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, cgs);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion, cgs);
             }
             else
             {
-                f = new Form23(sFolderPath, slLogger, dcPs1Games);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion);
             }
             f.ShowDialog();
             refreshOneFolder();
@@ -1170,7 +1197,7 @@ namespace pbPSCReAlpha
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form4(sFolderPath, slLogger, cgs);
+                f = new Form4(sFolderPath, slLogger, cgs, currentUsedVersion);
                 f.ShowDialog();
                 refreshOneFolder();
             }
