@@ -43,7 +43,7 @@ namespace pbPSCReAlpha
             bleemsyncVersions[1] = new ClVersionHelper("1.0.0", "", "\\.pcsx", "\\bleemsync\\etc\\bleemsync\\SYS\\databases", String.Empty);
             iBleemsyncVersion = Properties.Settings.Default.iVersionBleemSync;
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
-            tsmiBSVersionItem.Text = "BleemSync v" + currentUsedVersion.Versionstring;
+            tsmiBSVersionItem.Text = "Currently use BleemSync v" + currentUsedVersion.Versionstring;
 
             slLogger = new SimpleLogger(tbLogDebug);
             try
@@ -2308,7 +2308,8 @@ namespace pbPSCReAlpha
                 iBleemsyncVersion = 1;
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
-            tsmiBSVersionItem.Text = "BleemSync v" + currentUsedVersion.Versionstring;
+            tsmiBSVersionItem.Text = "Currently use BleemSync v" + currentUsedVersion.Versionstring;
+            refreshGameListFolders();
         }
 
         private void tsmiBSv100_CheckedChanged(object sender, EventArgs e)
@@ -2325,7 +2326,8 @@ namespace pbPSCReAlpha
                 iBleemsyncVersion = 0;
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
-            tsmiBSVersionItem.Text = "BleemSync v" + currentUsedVersion.Versionstring;
+            tsmiBSVersionItem.Text = "Currently use BleemSync v" + currentUsedVersion.Versionstring;
+            refreshGameListFolders();
         }
 
         private void btDowngradeFolders_Click(object sender, EventArgs e)
