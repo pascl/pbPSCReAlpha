@@ -70,6 +70,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ClPS1Game.cs" />
+    <Compile Include="ClVersionHelper.cs" />
     <Compile Include="FlexibleMessageBox.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -180,6 +181,8 @@
     <None Include="Resources\arrow-undo.png" />
     <None Include="Resources\arrow-left-double.png" />
     <None Include="Resources\pictures.png" />
+    <None Include="Resources\arrow-down-double.png" />
+    <None Include="Resources\arrow-up-double-3.png" />
     <Content Include="sbigames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

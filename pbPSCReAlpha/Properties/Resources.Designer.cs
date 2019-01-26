@@ -73,6 +73,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap arrow_down_double {
+            get {
+                object obj = ResourceManager.GetObject("arrow-down-double", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap arrow_left_double {
             get {
                 object obj = ResourceManager.GetObject("arrow-left-double", resourceCulture);
@@ -86,6 +96,16 @@ namespace pbPSCReAlpha.Properties {
         internal static System.Drawing.Bitmap arrow_undo {
             get {
                 object obj = ResourceManager.GetObject("arrow-undo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap arrow_up_double_3 {
+            get {
+                object obj = ResourceManager.GetObject("arrow-up-double-3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

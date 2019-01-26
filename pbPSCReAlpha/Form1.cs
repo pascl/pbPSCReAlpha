@@ -24,6 +24,9 @@ namespace pbPSCReAlpha
         SimpleLogger slLogger;
         bool bAccessingDebugTab = false;
         Form5 frmCopy = null;
+        ClVersionHelper currentUsedVersion;
+        int iBleemsyncVersion;
+        ClVersionHelper[] bleemsyncVersions;
 
         public Form1()
         {
@@ -35,6 +38,12 @@ namespace pbPSCReAlpha
             lsSbiNeeds = new List<string>();
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
+            bleemsyncVersions = new ClVersionHelper[2];
+            bleemsyncVersions[0] = new ClVersionHelper("0.4.1", "\\GameData", "\\.pcsx", "\\System\\Databases", "\\BleemSync");
+            bleemsyncVersions[1] = new ClVersionHelper("1.0.0", "", "\\.pcsx", "\\bleemsync\\etc\\bleemsync\\SYS\\databases", String.Empty);
+            iBleemsyncVersion = Properties.Settings.Default.iVersionBleemSync;
+            currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
+            tsmiBSVersionItem.Text = "BleemSync v" + currentUsedVersion.Versionstring;
 
             slLogger = new SimpleLogger(tbLogDebug);
             try
@@ -196,7 +205,7 @@ namespace pbPSCReAlpha
             int index = -1;
             bool bIsNumericFolderName = int.TryParse(sFolderIndex, out index);
 
-            if (Directory.Exists(di.FullName + "\\GameData"))
+            if (Directory.Exists(di.FullName + currentUsedVersion.GameDataFolder))
             {
                 String sTitle = String.Empty;
                 String sAlphaTitle = String.Empty;
@@ -230,7 +239,7 @@ namespace pbPSCReAlpha
                 List<String> lsBinPresent = new List<string>();
                 List<String> lsSbiPresent = new List<string>();
                 List<string> sFiles = new List<string>();
-                FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + "\\GameData").GetFiles("*.*", SearchOption.AllDirectories);
+                FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + currentUsedVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
                 long lSizeFolder = 0;
                 foreach (FileInfo fi in inDirfileList)
                 {
@@ -971,8 +980,11 @@ namespace pbPSCReAlpha
                             iNext++;
                         }
                         Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString());
-                        Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData");
-                        File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
+                        if (!Directory.Exists(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder))
+                        {
+                            Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder);
+                        }
+                        File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
                     }
                     catch (Exception ex)
                     {
@@ -991,8 +1003,11 @@ namespace pbPSCReAlpha
                 {
                     int iNext = 1;
                     Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString());
-                    Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData");
-                    File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
+                    if (!Directory.Exists(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder))
+                    {
+                        Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder);
+                    }
+                    File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
                 }
                 catch (Exception ex)
                 {
@@ -1126,7 +1141,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + cgs.FolderIndex.ToString() + "\\" + "GameData" + "\\" + "pcsx.cfg");
+                    File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + cgs.FolderIndex.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
                 }
                 catch (Exception ex)
                 {
@@ -1195,7 +1210,7 @@ namespace pbPSCReAlpha
                     {
                         String sFolderPath = tbFolderPath.Text;
                         String[] sFileList = (String[])e.Data.GetData(DataFormats.FileDrop, false);
-                        String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData";
+                        String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder;
                         pbCopyFiles(sFileList, sPath);
                     }
                 }
@@ -1223,7 +1238,7 @@ namespace pbPSCReAlpha
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     String sFolderPath = tbFolderPath.Text;
-                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData";
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder;
                     if (Directory.Exists(sFolderPath))
                     {
                         ofdAddFiles.InitialDirectory = sFolderPath;
@@ -1256,7 +1271,7 @@ namespace pbPSCReAlpha
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     String sFolderPath = tbFolderPath.Text;
-                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData" + "\\";
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                     char[] invalidFileChars = Path.GetInvalidFileNameChars();
                     if (cgs.Filenames[e.Item] != e.Label)
                     {
@@ -1312,7 +1327,7 @@ namespace pbPSCReAlpha
                         {
                             ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                             String sFolderPath = tbFolderPath.Text;
-                            String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData" + "\\";
+                            String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                             int iFound = cgs.Filenames.IndexOf(lvFiles.SelectedItems[0].Text);
                             if (iFound > -1)
                             {
@@ -1355,7 +1370,7 @@ namespace pbPSCReAlpha
                             {
                                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                                 String sFolderPath = tbFolderPath.Text;
-                                String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData" + "\\";
+                                String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                                 if (!String.IsNullOrEmpty(cgs.PictureFileName))
                                 {
                                     String sFileName = cgs.PictureFileName;
@@ -1474,7 +1489,7 @@ namespace pbPSCReAlpha
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if (!cgs.GameDataMissing)
                     {
-                        sPath += "GameData" + "\\";
+                        sPath += currentUsedVersion.GameDataFolder + "\\";
                     }
                     MyProcessHelper explo = new MyProcessHelper("explorer.exe", sPath);
                     explo.DoIt();
@@ -1566,9 +1581,9 @@ namespace pbPSCReAlpha
                                 {
                                     if (iIndex < sFileToRename.Length)
                                     {
-                                        if (File.Exists(sPath + "GameData" + "\\" + sFileToRename[iIndex]))
+                                        if (File.Exists(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex]))
                                         {
-                                            sQuestion = sQuestion + Environment.NewLine + sPath + "GameData" + "\\" + sFileToRename[iIndex] + " >> " + sPath + "GameData" + "\\" + s + ".cue";
+                                            sQuestion = sQuestion + Environment.NewLine + sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex] + " >> " + sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".cue";
                                         }
                                         iIndex++;
                                     }
@@ -1588,9 +1603,9 @@ namespace pbPSCReAlpha
                                     {
                                         if (iIndex < sFileToRename.Length)
                                         {
-                                            if (File.Exists(sPath + "GameData" + "\\" + sFileToRename[iIndex]))
+                                            if (File.Exists(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex]))
                                             {
-                                                File.Move(sPath + "GameData" + "\\" + sFileToRename[iIndex], sPath + "GameData" + "\\" + s + ".cue");
+                                                File.Move(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex], sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".cue");
                                                 slLogger.Debug("Renaming file " + sFileToRename[iIndex] + " -> " + s + ".cue");
                                             }
                                             iIndex++;
@@ -1628,7 +1643,7 @@ namespace pbPSCReAlpha
                     {
                         String sSrcName = cgs.PictureFileName;
                         String sDiscFirst = cgs.Discs.Split(',')[0];
-                        String sDstName = sPath + "GameData" + "\\" + sDiscFirst + ".png";
+                        String sDstName = sPath + currentUsedVersion.GameDataFolder + "\\" + sDiscFirst + ".png";
                         if (sSrcName.ToLower() != sDstName.ToLower())
                         {
                             if (File.Exists(sSrcName))
@@ -1672,7 +1687,7 @@ namespace pbPSCReAlpha
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     String sFolderPath = tbFolderPath.Text;
-                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\" + "GameData" + "\\";
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                     String[] sDisc = cgs.Discs.Split(',');
                     List<String> sFilesOrigine = new List<string>();
                     foreach (String s in cgs.Filenames)
@@ -2146,8 +2161,8 @@ namespace pbPSCReAlpha
                                 {
                                     if (iIndex < sFileToRename.Length)
                                     {
-                                        String sSrcName = sPath + "GameData" + "\\" + sFileToRename[iIndex];
-                                        String sDstName = sPath + "GameData" + "\\" + s + ".sbi";
+                                        String sSrcName = sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex];
+                                        String sDstName = sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".sbi";
                                         if (sSrcName.ToLower() != sDstName.ToLower())
                                         {
                                             if (File.Exists(sSrcName))
@@ -2173,8 +2188,8 @@ namespace pbPSCReAlpha
                                     {
                                         if (iIndex < sFileToRename.Length)
                                         {
-                                            String sSrcName = sPath + "GameData" + "\\" + sFileToRename[iIndex];
-                                            String sDstName = sPath + "GameData" + "\\" + s + ".sbi";
+                                            String sSrcName = sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex];
+                                            String sDstName = sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".sbi";
                                             if (sSrcName.ToLower() != sDstName.ToLower())
                                             {
                                                 if (File.Exists(sSrcName))
@@ -2265,6 +2280,166 @@ namespace pbPSCReAlpha
                     }
                     slLogger.Trace("<< Suppr folder Key");
                 }
+            }
+        }
+
+        private void tsmiBSv041_CheckedChanged(object sender, EventArgs e)
+        {
+            //
+            //MessageBox.Show(tsmiBSv041.Checked.ToString() + " -- " + tsmiBSv100.Checked.ToString());
+            tsmiBSv100.Checked = !tsmiBSv041.Checked;
+            if (tsmiBSv041.Checked)
+            {
+                iBleemsyncVersion = 0;
+            }
+            else
+            {
+                iBleemsyncVersion = 1;
+            }
+            currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
+            tsmiBSVersionItem.Text = "BleemSync v" + currentUsedVersion.Versionstring;
+        }
+
+        private void tsmiBSv100_CheckedChanged(object sender, EventArgs e)
+        {
+            //
+            //MessageBox.Show(tsmiBSv041.Checked.ToString() + " -- " + tsmiBSv100.Checked.ToString());
+            tsmiBSv041.Checked = !tsmiBSv100.Checked;
+            if (tsmiBSv100.Checked)
+            {
+                iBleemsyncVersion = 1;
+            }
+            else
+            {
+                iBleemsyncVersion = 0;
+            }
+            currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
+            tsmiBSVersionItem.Text = "BleemSync v" + currentUsedVersion.Versionstring;
+        }
+
+        private void btDowngradeFolders_Click(object sender, EventArgs e)
+        {
+            String sFolderPath = tbFolderPath.Text;
+            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want downgrade your folders to 0.4.1 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                ClVersionHelper srcVersion = bleemsyncVersions[1];
+                ClVersionHelper dstVersion = bleemsyncVersions[0];
+                foreach (DirectoryInfo di in dirList)
+                {
+                    try
+                    { 
+                        slLogger.Debug("** Directory: " + di.FullName);
+                        String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                        if (sFolderIndex.StartsWith("\\"))
+                        {
+                            sFolderIndex = sFolderIndex.Substring(1);
+                        }
+                        String[] s2 = sFolderIndex.Split('\\');
+                        sFolderIndex = s2[0];
+                        if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
+                        {
+                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
+                            {
+                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                            }
+                            FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                            foreach (FileInfo fi in inDirfileList)
+                            {
+                                String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
+                                String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
+                                if (sSubFolders.Length > 1)
+                                {
+                                    for (int i = 0; i < sSubFolders.Length - 1; i++)
+                                    {
+                                        String sSubs = String.Empty;
+                                        int j = 0;
+                                        while (j < i)
+                                        {
+                                            sSubs += "\\" + sSubFolders[j];
+                                            j++;
+                                        }
+                                        if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
+                                        {
+                                            Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                        }
+                                    }
+                                }
+                                slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
+                                File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        slLogger.Fatal(ex.Message);
+                    }
+                } // foreach
+            }
+        }
+
+        private void btUpgradeFolders_Click(object sender, EventArgs e)
+        {
+            String sFolderPath = tbFolderPath.Text;
+            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want upgrade your folders to 1.0.O ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                ClVersionHelper srcVersion = bleemsyncVersions[0];
+                ClVersionHelper dstVersion = bleemsyncVersions[1];
+                foreach (DirectoryInfo di in dirList)
+                {
+                    try
+                    {
+                        slLogger.Debug("** Directory: " + di.FullName);
+                        String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                        if (sFolderIndex.StartsWith("\\"))
+                        {
+                            sFolderIndex = sFolderIndex.Substring(1);
+                        }
+                        String[] s2 = sFolderIndex.Split('\\');
+                        sFolderIndex = s2[0];
+                        if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
+                        {
+                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
+                            {
+                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                            }
+                            FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                            foreach (FileInfo fi in inDirfileList)
+                            {
+                                String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
+                                String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
+                                if (sSubFolders.Length > 1)
+                                {
+                                    for (int i = 0; i < sSubFolders.Length - 1; i++)
+                                    {
+                                        String sSubs = String.Empty;
+                                        int j = 0;
+                                        while (j < i)
+                                        {
+                                            sSubs += "\\" + sSubFolders[j];
+                                            j++;
+                                        }
+                                        if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
+                                        {
+                                            Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                        }
+                                    }
+                                }
+                                slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
+                                File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
+                            }
+                            if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                            {
+                                Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                            }
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        slLogger.Fatal(ex.Message);
+                    }
+                } // foreach
             }
         }
     }
