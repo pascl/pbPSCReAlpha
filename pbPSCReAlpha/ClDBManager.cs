@@ -317,81 +317,83 @@ namespace pbPSCReAlpha
                     Thread.Sleep(200);
                 }
                 SQLiteConnection.CreateFile(sFilename);
-                SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename + ";Version=3;");
-                SQLiteCommand command;
-                m_dbConnection.Open();
-
-                String sql = String.Empty;
-                using (var tran = m_dbConnection.BeginTransaction())
+                using (SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename + ";Version=3;"))
                 {
-                    sql = "CREATE TABLE \"GameGenre\" ( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameGenre\" PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NULL, \"GameManagerNodeId\" INTEGER NULL, CONSTRAINT \"FK_GameGenre_GameManagerNodes_GameManagerNodeId\" FOREIGN KEY (\"GameManagerNodeId\") REFERENCES \"GameManagerNodes\" (\"Id\") ON DELETE RESTRICT )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE TABLE \"GameManagerFiles\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameManagerFiles\" PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NULL, \"Path\" TEXT NULL, \"NodeId\" INTEGER NOT NULL, CONSTRAINT \"FK_GameManagerFiles_GameManagerNodes_NodeId\" FOREIGN KEY (\"NodeId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE CASCADE )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE TABLE \"GameManagerNodes\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameManagerNodes\" PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NULL, \"SortName\" TEXT NULL, \"Description\" TEXT NULL, \"ReleaseDate\" TEXT NULL, \"Players\" INTEGER NULL, \"Developer\" TEXT NULL, \"Publisher\" TEXT NULL, \"Type\" INTEGER NOT NULL, \"SystemId\" INTEGER NULL, \"ParentId\" INTEGER NULL, \"Position\" INTEGER NOT NULL DEFAULT 0, CONSTRAINT \"FK_GameManagerNodes_GameManagerNodes_ParentId\" FOREIGN KEY (\"ParentId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE RESTRICT, CONSTRAINT \"FK_GameManagerNodes_GameSystem_SystemId\" FOREIGN KEY (\"SystemId\") REFERENCES \"GameSystem\"(\"Id\") ON DELETE RESTRICT )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE TABLE \"GameMeta\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameMeta\" PRIMARY KEY AUTOINCREMENT, \"Key\" TEXT NULL, \"Value\" TEXT NULL, \"Type\" TEXT NULL, \"GameId\" INTEGER NULL, CONSTRAINT \"FK_GameMeta_GameManagerNodes_GameId\" FOREIGN KEY (\"GameId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE RESTRICT )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE TABLE \"GameSystem\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameSystem\" PRIMARY KEY AUTOINCREMENT, \"Name\" INTEGER NOT NULL )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE TABLE \"__EFMigrationsHistory\"( \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE INDEX \"IX_GameGenre_GameManagerNodeId\" ON \"GameGenre\" (\"GameManagerNodeId\")";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE INDEX \"IX_GameManagerFiles_NodeId\" ON \"GameManagerFiles\" (\"NodeId\")";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE INDEX \"IX_GameManagerNodes_ParentId\" ON \"GameManagerNodes\" (\"ParentId\")";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE INDEX \"IX_GameManagerNodes_SystemId\" ON \"GameManagerNodes\" (\"SystemId\")";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "CREATE INDEX \"IX_GameMeta_GameId\" ON \"GameMeta\" (\"GameId\")";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
+                    SQLiteCommand command;
+                    m_dbConnection.Open();
 
-                    tran.Commit();
-                }
-                using (var tran = m_dbConnection.BeginTransaction())
-                {
-                    // INSERT INTO GameManagerFiles Name Game.ini Path /media/games/1/Game.ini NodeId 1
-                    // INSERT INTO GameManagerNodes Name Chrono Cross SortName Chrono Cross ReleaseDate 2000-01-01 00:00:00 Players 1 Publisher Squaresoft Type 1 Position 0
-
-                    int iGame = 0;
-                    foreach (ClGameStructure cgs in lcgs)
+                    String sql = String.Empty;
+                    using (var tran = m_dbConnection.BeginTransaction())
                     {
-                        int iNode = int.Parse(cgs.FolderIndex);
-                        foreach (String s in cgs.Filenames)
+                        sql = "CREATE TABLE \"GameGenre\" ( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameGenre\" PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NULL, \"GameManagerNodeId\" INTEGER NULL, CONSTRAINT \"FK_GameGenre_GameManagerNodes_GameManagerNodeId\" FOREIGN KEY (\"GameManagerNodeId\") REFERENCES \"GameManagerNodes\" (\"Id\") ON DELETE RESTRICT )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE TABLE \"GameManagerFiles\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameManagerFiles\" PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NULL, \"Path\" TEXT NULL, \"NodeId\" INTEGER NOT NULL, CONSTRAINT \"FK_GameManagerFiles_GameManagerNodes_NodeId\" FOREIGN KEY (\"NodeId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE CASCADE )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE TABLE \"GameManagerNodes\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameManagerNodes\" PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NULL, \"SortName\" TEXT NULL, \"Description\" TEXT NULL, \"ReleaseDate\" TEXT NULL, \"Players\" INTEGER NULL, \"Developer\" TEXT NULL, \"Publisher\" TEXT NULL, \"Type\" INTEGER NOT NULL, \"SystemId\" INTEGER NULL, \"ParentId\" INTEGER NULL, \"Position\" INTEGER NOT NULL DEFAULT 0, CONSTRAINT \"FK_GameManagerNodes_GameManagerNodes_ParentId\" FOREIGN KEY (\"ParentId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE RESTRICT, CONSTRAINT \"FK_GameManagerNodes_GameSystem_SystemId\" FOREIGN KEY (\"SystemId\") REFERENCES \"GameSystem\"(\"Id\") ON DELETE RESTRICT )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE TABLE \"GameMeta\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameMeta\" PRIMARY KEY AUTOINCREMENT, \"Key\" TEXT NULL, \"Value\" TEXT NULL, \"Type\" TEXT NULL, \"GameId\" INTEGER NULL, CONSTRAINT \"FK_GameMeta_GameManagerNodes_GameId\" FOREIGN KEY (\"GameId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE RESTRICT )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE TABLE \"GameSystem\"( \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_GameSystem\" PRIMARY KEY AUTOINCREMENT, \"Name\" INTEGER NOT NULL )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE TABLE \"__EFMigrationsHistory\"( \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE INDEX \"IX_GameGenre_GameManagerNodeId\" ON \"GameGenre\" (\"GameManagerNodeId\")";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE INDEX \"IX_GameManagerFiles_NodeId\" ON \"GameManagerFiles\" (\"NodeId\")";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE INDEX \"IX_GameManagerNodes_ParentId\" ON \"GameManagerNodes\" (\"ParentId\")";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE INDEX \"IX_GameManagerNodes_SystemId\" ON \"GameManagerNodes\" (\"SystemId\")";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "CREATE INDEX \"IX_GameMeta_GameId\" ON \"GameMeta\" (\"GameId\")";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+
+                        tran.Commit();
+                    }
+                    using (var tran = m_dbConnection.BeginTransaction())
+                    {
+                        // INSERT INTO GameManagerFiles Name Game.ini Path /media/games/1/Game.ini NodeId 1
+                        // INSERT INTO GameManagerNodes Name Chrono Cross SortName Chrono Cross ReleaseDate 2000-01-01 00:00:00 Players 1 Publisher Squaresoft Type 1 Position 0
+
+                        int iGame = 0;
+                        foreach (ClGameStructure cgs in lcgs)
                         {
-                            ClGameManagerFiles cgmf = new ClGameManagerFiles(s, "/media/games/" + iNode.ToString() + "/" + s, iNode);
-                            command = cgmf.generateInsertCommand(m_dbConnection);
+                            int iNode = int.Parse(cgs.FolderIndex);
+                            foreach (String s in cgs.Filenames)
+                            {
+                                ClGameManagerFiles cgmf = new ClGameManagerFiles(s, "/media/games/" + iNode.ToString() + "/" + s, iNode);
+                                command = cgmf.generateInsertCommand(m_dbConnection);
+                                command.ExecuteNonQuery();
+                            }
+                            iGame++;
+                            ClGameManagerNodes cgmn = new ClGameManagerNodes(cgs);
+                            cgmn.Position = iGame;
+                            command = cgmn.generateInsertCommand(m_dbConnection);
                             command.ExecuteNonQuery();
                         }
-                        iGame++;
-                        ClGameManagerNodes cgmn = new ClGameManagerNodes(cgs);
-                        cgmn.Position = iGame;
-                        command = cgmn.generateInsertCommand(m_dbConnection);
-                        command.ExecuteNonQuery();
-                    }
-                    
-                    sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116023850_Seed', '2.1.1-rtm-30846')";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116024555_AddOrderingPosition', '2.1.1-rtm-30846')";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
 
-                    tran.Commit();
+                        sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116023850_Seed', '2.1.1-rtm-30846')";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116024555_AddOrderingPosition', '2.1.1-rtm-30846')";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+
+                        tran.Commit();
+                    }
+                    m_dbConnection.Close();
                 }
-                m_dbConnection.Close();
                 slLogger.Debug("Creating DB2 ok");
                 _bDone = true;
             }
@@ -437,94 +439,96 @@ namespace pbPSCReAlpha
             {
                 String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
                 String sFilename = sFolderBase + cvh.DbFolder + "\\" + "regional.db";
-                if(!Directory.Exists(sFolderBase + cvh.DbFolder))
+                if (!Directory.Exists(sFolderBase + cvh.DbFolder))
                 {
                     Directory.CreateDirectory(sFolderBase + cvh.DbFolder);
                 }
-                if(File.Exists(sFilename))
+                if (File.Exists(sFilename))
                 {
                     File.Delete(sFilename);
                     Thread.Sleep(200);
                 }
                 SQLiteConnection.CreateFile(sFilename);
-                SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename  + ";Version=3;");
-                SQLiteCommand command;
-                m_dbConnection.Open();
+                using (SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename + ";Version=3;"))
+                { 
+                    SQLiteCommand command;
+                    m_dbConnection.Open();
 
-                String sql = String.Empty;
+                    String sql = String.Empty;
 
-                using (var tran = m_dbConnection.BeginTransaction())
-                {
-                    switch (bleemsyncVersion)
+                    using (var tran = m_dbConnection.BeginTransaction())
                     {
-                        case 0:
-                            sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"GAME\" (\"GAME_ID\") ON DELETE CASCADE )";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            sql = "CREATE TABLE \"GAME\" ( \"GAME_ID\" INTEGER NOT NULL CONSTRAINT \"PK_GAME\" PRIMARY KEY AUTOINCREMENT, \"GAME_TITLE_STRING\" TEXT NULL, \"PUBLISHER_NAME\" TEXT NULL, \"RELEASE_YEAR\" INTEGER NOT NULL, \"PLAYERS\" INTEGER NOT NULL, \"RATING_IMAGE\" TEXT NULL, \"GAME_MANUAL_QR_IMAGE\" TEXT NULL, \"LINK_GAME_ID\" TEXT NULL )";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            break;
-                        case 1:
-                            sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"MENU_ENTRIES\" (\"GAME_ID\") ON DELETE CASCADE )";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            sql = "CREATE TABLE \"MENU_ENTRIES\" ( \"GAME_ID\" INTEGER NOT NULL CONSTRAINT \"PK_GAME\" PRIMARY KEY AUTOINCREMENT, \"GAME_TITLE_STRING\" TEXT NULL, \"PUBLISHER_NAME\" TEXT NULL, \"RELEASE_YEAR\" INTEGER NOT NULL, \"PLAYERS\" INTEGER NOT NULL, \"RATING_IMAGE\" TEXT NULL, \"GAME_MANUAL_QR_IMAGE\" TEXT NULL, \"LINK_GAME_ID\" TEXT NULL , \"POSITION\" INTEGER NULL)";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            sql = "CREATE TABLE \"__EFMigrationsHistory\" ( \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL )";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            sql = "CREATE VIEW GAME AS SELECT * FROM MENU_ENTRIES ORDER BY POSITION, GAME_TITLE_STRING";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            break;
-                    }
-                    sql = "CREATE TABLE \"LANGUAGE_SPECIFIC\"( \"LANGUAGE_ID\" TEXT NOT NULL CONSTRAINT \"PK_LANGUAGE_SPECIFIC\" PRIMARY KEY, \"DEFAULT_VALUE\" TEXT NULL, \"VALUE\" TEXT NULL )";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-                    /*sql = "CREATE TABLE sqlite_sequence(name,seq)";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();*/
-                    sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
-                    command = new SQLiteCommand(sql, m_dbConnection);
-                    command.ExecuteNonQuery();
-
-                    tran.Commit();
-                }
-                using (var tran = m_dbConnection.BeginTransaction())
-                {
-                    String sTableUsedForGames = String.Empty;
-                    switch (bleemsyncVersion)
-                    {
-                        case 0:
-                            break;
-                        case 1:
-                            sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            break;
-                    }
-                    int iGame = 0;
-                    foreach (ClGameStructure cgs in lcgs)
-                    {
-                        iGame++;
-                        ClGameTable cgt = new ClGameTable(cgs);
-                        //cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
-                        command = cgt.generateInsertCommand(m_dbConnection, bleemsyncVersion);
-                        command.ExecuteNonQuery();
-                        String[] sDiscSplit = cgs.Discs.Split(',');
-                        int iDiscCount = sDiscSplit.Length;
-                        foreach (String disc in sDiscSplit)
+                        switch (bleemsyncVersion)
                         {
-                            ClDiscTable cdt = new ClDiscTable(iGame, iDiscCount, disc);
-                            command = cdt.generateInsertCommand(m_dbConnection);
-                            command.ExecuteNonQuery();
+                            case 0:
+                                sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"GAME\" (\"GAME_ID\") ON DELETE CASCADE )";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                sql = "CREATE TABLE \"GAME\" ( \"GAME_ID\" INTEGER NOT NULL CONSTRAINT \"PK_GAME\" PRIMARY KEY AUTOINCREMENT, \"GAME_TITLE_STRING\" TEXT NULL, \"PUBLISHER_NAME\" TEXT NULL, \"RELEASE_YEAR\" INTEGER NOT NULL, \"PLAYERS\" INTEGER NOT NULL, \"RATING_IMAGE\" TEXT NULL, \"GAME_MANUAL_QR_IMAGE\" TEXT NULL, \"LINK_GAME_ID\" TEXT NULL )";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                break;
+                            case 1:
+                                sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"MENU_ENTRIES\" (\"GAME_ID\") ON DELETE CASCADE )";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                sql = "CREATE TABLE \"MENU_ENTRIES\" ( \"GAME_ID\" INTEGER NOT NULL CONSTRAINT \"PK_GAME\" PRIMARY KEY AUTOINCREMENT, \"GAME_TITLE_STRING\" TEXT NULL, \"PUBLISHER_NAME\" TEXT NULL, \"RELEASE_YEAR\" INTEGER NOT NULL, \"PLAYERS\" INTEGER NOT NULL, \"RATING_IMAGE\" TEXT NULL, \"GAME_MANUAL_QR_IMAGE\" TEXT NULL, \"LINK_GAME_ID\" TEXT NULL , \"POSITION\" INTEGER NULL)";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                sql = "CREATE TABLE \"__EFMigrationsHistory\" ( \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL )";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                sql = "CREATE VIEW GAME AS SELECT * FROM MENU_ENTRIES ORDER BY POSITION, GAME_TITLE_STRING";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                break;
                         }
+                        sql = "CREATE TABLE \"LANGUAGE_SPECIFIC\"( \"LANGUAGE_ID\" TEXT NOT NULL CONSTRAINT \"PK_LANGUAGE_SPECIFIC\" PRIMARY KEY, \"DEFAULT_VALUE\" TEXT NULL, \"VALUE\" TEXT NULL )";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+                        /*sql = "CREATE TABLE sqlite_sequence(name,seq)";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();*/
+                        sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
+                        command = new SQLiteCommand(sql, m_dbConnection);
+                        command.ExecuteNonQuery();
+
+                        tran.Commit();
                     }
-                    tran.Commit();
+                    using (var tran = m_dbConnection.BeginTransaction())
+                    {
+                        String sTableUsedForGames = String.Empty;
+                        switch (bleemsyncVersion)
+                        {
+                            case 0:
+                                break;
+                            case 1:
+                                sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+                                break;
+                        }
+                        int iGame = 0;
+                        foreach (ClGameStructure cgs in lcgs)
+                        {
+                            iGame++;
+                            ClGameTable cgt = new ClGameTable(cgs);
+                            //cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
+                            command = cgt.generateInsertCommand(m_dbConnection, bleemsyncVersion);
+                            command.ExecuteNonQuery();
+                            String[] sDiscSplit = cgs.Discs.Split(',');
+                            int iDiscCount = sDiscSplit.Length;
+                            foreach (String disc in sDiscSplit)
+                            {
+                                ClDiscTable cdt = new ClDiscTable(iGame, iDiscCount, disc);
+                                command = cdt.generateInsertCommand(m_dbConnection);
+                                command.ExecuteNonQuery();
+                            }
+                        }
+                        tran.Commit();
+                    }
+                    m_dbConnection.Close();
                 }
-                m_dbConnection.Close();
                 slLogger.Debug("Creating DB ok");
                 _bDone = true;
                 if (1 == bleemsyncVersion)
@@ -533,7 +537,7 @@ namespace pbPSCReAlpha
                     BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 slLogger.Fatal(ex.Message);
                 _bDone = false;
