@@ -14,14 +14,14 @@ namespace pbPSCReAlpha
     {
         public static String RemoveQuotes(String s)
         {
-            String sR = s;
+            String sR = s.Trim();
             if (s.StartsWith("\"") && s.EndsWith("\""))
             {
-                sR = s.Substring(1, s.Length - 2);
+                sR = s.Substring(1, s.Length - 2).Trim();
             }
             else if (s.StartsWith("'") && s.EndsWith("'"))
             {
-                sR = s.Substring(1, s.Length - 2);
+                sR = s.Substring(1, s.Length - 2).Trim();
             }
             return sR;
         }
@@ -131,6 +131,30 @@ namespace pbPSCReAlpha
             }
             sequence = sequenceBuilder.ToString();
             return maxlen;
+        }
+
+        public static void SaveGameIni(String sfilename, Dictionary<String, String> dcInfos, SimpleLogger sl)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(sfilename))
+                {
+                    sw.WriteLine("[Game]");
+                    sw.WriteLine("Discs=" + dcInfos["discs"].Trim());
+                    sw.WriteLine("Title=" + dcInfos["title"].Trim());
+                    sw.WriteLine("Publisher=" + dcInfos["publisher"].Trim());
+                    sw.WriteLine("Players=" + dcInfos["players"].Trim());
+                    sw.WriteLine("Year=" + dcInfos["year"].Trim());
+                    if (!String.IsNullOrEmpty(dcInfos["alphatitle"].Trim()))
+                    {
+                        sw.WriteLine("AlphaTitle=" + dcInfos["alphatitle"].Trim());
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                sl.Fatal(ex.Message);
+            }
         }
     }
 }

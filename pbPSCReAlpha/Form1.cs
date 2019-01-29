@@ -1,6 +1,7 @@
 ﻿using Markdig;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -333,35 +334,35 @@ namespace pbPSCReAlpha
                                     if (s.StartsWith("Title="))
                                     {
                                         uiGameIni++;
-                                        sTitle = s.Substring(6).Trim();
+                                        sTitle = s.Substring(6);
                                         sTitle = ClPbHelper.RemoveQuotes(sTitle);
                                     }
                                     else
                                     if (s.StartsWith("Publisher="))
                                     {
                                         uiGameIni++;
-                                        sPublisher = s.Substring(10).Trim();
+                                        sPublisher = s.Substring(10);
                                         sPublisher = ClPbHelper.RemoveQuotes(sPublisher);
                                     }
                                     else
                                     if (s.StartsWith("Year="))
                                     {
                                         uiGameIni++;
-                                        sYear = s.Substring(5).Trim();
+                                        sYear = s.Substring(5);
                                         sYear = ClPbHelper.RemoveQuotes(sYear);
                                     }
                                     else
                                     if (s.StartsWith("Players="))
                                     {
                                         uiGameIni++;
-                                        sPlayers = s.Substring(8).Trim();
+                                        sPlayers = s.Substring(8);
                                         sPlayers = ClPbHelper.RemoveQuotes(sPlayers);
                                     }
                                     else
                                     if (s.StartsWith("Discs="))
                                     {
                                         uiGameIni++;
-                                        sDiscs = s.Substring(6).Trim();
+                                        sDiscs = s.Substring(6);
                                         sDiscs = ClPbHelper.RemoveQuotes(sDiscs);
                                     }
                                     else
@@ -369,7 +370,7 @@ namespace pbPSCReAlpha
                                     {
                                         // facultative, doesn't count: uiGameIni++;
                                         bAlphaTitlePresent = true;
-                                        sAlphaTitle = s.Substring(11).Trim();
+                                        sAlphaTitle = s.Substring(11);
                                         sAlphaTitle = ClPbHelper.RemoveQuotes(sAlphaTitle);
                                     }
                                 }
@@ -475,6 +476,11 @@ namespace pbPSCReAlpha
                             }
                         }
                     }
+                }
+                if(1 == iBleemsyncVersion)
+                {
+                    // facultative for 1.0.0
+                    bPcsxFilePresent = true;
                 }
                 cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, bNameWithComma);
                 if (bGameIniPresent)
@@ -1031,7 +1037,7 @@ namespace pbPSCReAlpha
 
         private void btLaunchBleemsync_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Synchro Click");
+            slLogger.Trace(">> Recreate database Click");
             String sFolderPath = tbFolderPath.Text;
             if (sFolderPath.EndsWith("\\"))
             {
@@ -1046,6 +1052,7 @@ namespace pbPSCReAlpha
                     lcgs.Add(cgs);
                 }
                 ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                // TODO creer aussi le second fichier db
                 if(!cdbm.BDone)
                 {
                     FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1055,7 +1062,7 @@ namespace pbPSCReAlpha
                     FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
-            slLogger.Trace("<< Synchro Click");
+            slLogger.Trace("<< Recreate database Click");
             /*slLogger.Trace(">> Launch BleemSync Click");
             String sFolderPath = tbFolderPath.Text;
             if (sFolderPath.EndsWith("\\"))
@@ -1224,6 +1231,7 @@ namespace pbPSCReAlpha
                         this.frmCopy.Visible = true;
                     }
                     ClPbProgessBarLabeled pbl = this.frmCopy.addNewLine(sFile.Substring(sFile.LastIndexOf('\\')));
+                    // TODO deporter la suite ailleurs pour en mettre qu'un ou deux simultanement et le reste en file d'attente...
                     ClPbWebClient wc = new ClPbWebClient(pbl, slLogger);
                     wc.DownloadFileAsync(new Uri(sFile), dstFolder + "\\" + sFile.Substring(sFile.LastIndexOf('\\')));
                 }
@@ -2359,6 +2367,8 @@ namespace pbPSCReAlpha
 
         private void btDowngradeFolders_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Downgrade folder Click");
+            // TODO si les game.ini n'existent pas, allez fouiller le fichier db
             String sFolderPath = tbFolderPath.Text;
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want downgrade your folders to 0.4.1 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
@@ -2416,10 +2426,12 @@ namespace pbPSCReAlpha
                     }
                 } // foreach
             }
+            slLogger.Trace("<< Downgrade folder Click");
         }
 
         private void btUpgradeFolders_Click(object sender, EventArgs e)
         {
+            slLogger.Trace(">> Upgrade folder Click");
             String sFolderPath = tbFolderPath.Text;
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want upgrade your folders to 1.0.O ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
@@ -2481,6 +2493,270 @@ namespace pbPSCReAlpha
                     }
                 } // foreach
             }
+            slLogger.Trace("<< Upgrade folder Click");
+        }
+
+        private Dictionary<String, Dictionary<String, String>> ReadDB(String sFilename, int bleemsyncVersion)
+        {
+            Dictionary<String, Dictionary<String, String>> dcListFromDB = new Dictionary<String, Dictionary<string, string>>();
+            Dictionary<String, List<String>> dcListDiscsFromDB = new Dictionary<String, List<string>>();
+
+            String cs = "URI=file:" + sFilename;
+            using (SQLiteConnection con = new SQLiteConnection(cs))
+            {
+                con.Open();
+
+                string stm = "SELECT * FROM DISC ORDER BY GAME_ID ASC, DISC_NUMBER ASC";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                {
+                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            String sId = rdr["GAME_ID"].ToString().Trim();
+                            if (!dcListDiscsFromDB.ContainsKey(sId))
+                            {
+                                dcListDiscsFromDB.Add(sId, new List<String>());
+                            }
+                            dcListDiscsFromDB[sId].Add(rdr["BASENAME"].ToString().Trim());
+                        }
+                    }
+                }
+                switch(bleemsyncVersion)
+                {
+                    case 0:
+                        stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
+                        break;
+                    case 1:
+                        stm = "SELECT * FROM MENU_ENTRIES ORDER BY GAME_ID ASC";
+                        break;
+                    default:
+                        stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
+                        break;
+                }
+
+                using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                {
+                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            String sId = rdr["GAME_ID"].ToString().Trim();
+                            Dictionary<String, String> dcLineFromDB = new Dictionary<string, string>();
+                            dcLineFromDB.Add("title", rdr["GAME_TITLE_STRING"].ToString().Trim());
+                            dcLineFromDB.Add("publisher", rdr["PUBLISHER_NAME"].ToString().Trim());
+                            dcLineFromDB.Add("year", rdr["RELEASE_YEAR"].ToString().Trim());
+                            dcLineFromDB.Add("players", rdr["PLAYERS"].ToString().Trim());
+                            dcLineFromDB.Add("alphatitle", String.Empty);
+                            if (dcListDiscsFromDB.ContainsKey(sId))
+                            {
+                                dcLineFromDB.Add("discs", String.Join(",", (dcListDiscsFromDB[sId].ToArray())));
+                            }
+                            else
+                            {
+                                dcLineFromDB.Add("discs", String.Empty); // not found in the other table
+                            }
+                            dcListFromDB.Add(sId, dcLineFromDB);
+                        }
+                    }
+                }
+                con.Close();
+            }
+            return dcListFromDB;
+        }
+    
+        private Dictionary<String, String> ReadFromGameIni(String sFilename)
+        {
+            Dictionary<String, String> dcFromGameIni = new Dictionary<string, string>();
+            using (StreamReader sr = new StreamReader(sFilename))
+            {
+                string s = String.Empty;
+                while ((s = sr.ReadLine()) != null)
+                {
+                    s = s.Trim();
+                    if (s.StartsWith("Discs="))
+                    {
+                        dcFromGameIni.Add("discs", ClPbHelper.RemoveQuotes(s.Substring(6)));
+                    }
+                    else
+                    if (s.StartsWith("Title="))
+                    {
+                        dcFromGameIni.Add("title", ClPbHelper.RemoveQuotes(s.Substring(6)));
+                    }
+                    else
+                    if (s.StartsWith("Publisher="))
+                    {
+                        dcFromGameIni.Add("publisher", ClPbHelper.RemoveQuotes(s.Substring(10)));
+                    }
+                    else
+                    if (s.StartsWith("Players="))
+                    {
+                        dcFromGameIni.Add("players", ClPbHelper.RemoveQuotes(s.Substring(8)));
+                    }
+                    else
+                    if (s.StartsWith("Year="))
+                    {
+                        dcFromGameIni.Add("year", ClPbHelper.RemoveQuotes(s.Substring(5)));
+                    }
+                    else
+                    if (s.StartsWith("AlphaTitle="))
+                    {
+                        dcFromGameIni.Add("alphatitle", ClPbHelper.RemoveQuotes(s.Substring(11)));
+                    }
+                }
+            }
+            if (!dcFromGameIni.ContainsKey("discs")) dcFromGameIni.Add("discs", String.Empty);
+            if (!dcFromGameIni.ContainsKey("title")) dcFromGameIni.Add("title", String.Empty);
+            if (!dcFromGameIni.ContainsKey("publisher")) dcFromGameIni.Add("publisher", String.Empty);
+            if (!dcFromGameIni.ContainsKey("players")) dcFromGameIni.Add("players", String.Empty);
+            if (!dcFromGameIni.ContainsKey("year")) dcFromGameIni.Add("year", String.Empty);
+            if (!dcFromGameIni.ContainsKey("alphatitle")) dcFromGameIni.Add("alphatitle", String.Empty);
+
+            return dcFromGameIni;
+        }
+
+        private void btReadBS041Database_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Read BS0.4.1 database Click");
+            String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            ClVersionHelper srcVersion = bleemsyncVersions[0];
+
+            String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
+            String sFilePath = sFolderBase + srcVersion.DbFolder;
+            String sFileName = "regional.db";
+            ofdLoadDatabaseFile.FileName = sFileName;
+            if (Directory.Exists(sFilePath))
+            {
+                ofdLoadDatabaseFile.InitialDirectory = sFilePath;
+            }
+
+            if (DialogResult.OK == ofdLoadDatabaseFile.ShowDialog())
+            {
+                // read db file
+                // search in folders if there is a game.ini file
+                // if not, create it
+                // if yes, (and different if can be detected) ask user (choose left, right or keep 2 (one with .bak)
+                // if yes (and identical), leave the existing
+                Dictionary<String, Dictionary<String, String>> dcListFromDB = ReadDB(ofdLoadDatabaseFile.FileName, 0);
+                if (Directory.Exists(sFolderPath))
+                {
+                    DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                    foreach (DirectoryInfo di in dirList)
+                    {
+                        String sDir = di.Name;
+                        String sMyIniFile = di.FullName + currentUsedVersion.GameDataFolder + "\\" + "Game.ini";
+                        if (File.Exists(sMyIniFile))
+                        {
+                            Dictionary<String, String> dcFromGameIni = ReadFromGameIni(sMyIniFile);
+
+                            if (dcListFromDB.ContainsKey(sDir))
+                            {
+                                if ((dcFromGameIni["discs"] != dcListFromDB[sDir]["discs"])
+                                    || (dcFromGameIni["title"] != dcListFromDB[sDir]["title"])
+                                    || (dcFromGameIni["publisher"] != dcListFromDB[sDir]["publisher"])
+                                    || (dcFromGameIni["players"] != dcListFromDB[sDir]["players"])
+                                    || (dcFromGameIni["year"] != dcListFromDB[sDir]["year"])
+                                    || (dcFromGameIni["alphatitle"] != dcListFromDB[sDir]["alphatitle"]))
+                                {
+                                    Form6 frm = new Form6(sMyIniFile, dcFromGameIni, dcListFromDB[sDir], slLogger);
+                                    frm.ShowDialog();
+                                }
+                            }
+                            else
+                            {
+                                // equal, do nothing
+                            }
+                        }
+                        else
+                        {
+                            // game.ini doesn't exist, create it without asking user
+                            if (dcListFromDB.ContainsKey(sDir))
+                            {
+                                slLogger.Debug("Creating Game.ini file in folder " + sDir);
+                                ClPbHelper.SaveGameIni(sMyIniFile, dcListFromDB[sDir], slLogger);
+                            }
+                        }
+                    }
+                }
+            }
+            slLogger.Trace("<< Read BS0.4.1 database Click");
+        }
+
+        private void btReadBS100Database_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Read BS1.0.0 database Click");
+            String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            ClVersionHelper srcVersion = bleemsyncVersions[1];
+
+            String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
+            String sFilePath = sFolderBase + srcVersion.DbFolder;
+            String sFileName = "regional.db";
+            ofdLoadDatabaseFile.FileName = sFileName;
+            if (Directory.Exists(sFilePath))
+            {
+                ofdLoadDatabaseFile.InitialDirectory = sFilePath;
+            }
+            
+            if (DialogResult.OK == ofdLoadDatabaseFile.ShowDialog())
+            {
+                // read db file
+                // search in folders if there is a game.ini file
+                // if not, create it
+                // if yes, (and different if can be detected) ask user (choose left, right or keep 2 (one with .bak)
+                // if yes (and identical), leave the existing
+                Dictionary<String, Dictionary<String, String>> dcListFromDB = ReadDB(ofdLoadDatabaseFile.FileName, 1);
+
+                if (Directory.Exists(sFolderPath))
+                {
+                    DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                    foreach (DirectoryInfo di in dirList)
+                    {
+                        String sDir = di.Name;
+                        String sMyIniFile = di.FullName + currentUsedVersion.GameDataFolder + "\\" + "Game.ini";
+                        if (File.Exists(sMyIniFile))
+                        {
+                            Dictionary<String, String> dcFromGameIni = ReadFromGameIni(sMyIniFile);
+                            
+                            if (dcListFromDB.ContainsKey(sDir))
+                            {
+                                if ((dcFromGameIni["discs"] != dcListFromDB[sDir]["discs"])
+                                    || (dcFromGameIni["title"] != dcListFromDB[sDir]["title"])
+                                    || (dcFromGameIni["publisher"] != dcListFromDB[sDir]["publisher"])
+                                    || (dcFromGameIni["players"] != dcListFromDB[sDir]["players"])
+                                    || (dcFromGameIni["year"] != dcListFromDB[sDir]["year"])
+                                    || (dcFromGameIni["alphatitle"] != dcListFromDB[sDir]["alphatitle"]))
+                                {
+                                    Form6 frm = new Form6(sMyIniFile, dcFromGameIni, dcListFromDB[sDir], slLogger);
+                                    frm.ShowDialog();
+                                }
+                            }
+                            else
+                            {
+                                // equal, do nothing
+                            }
+                        }
+                        else
+                        {
+                            // game.ini doesn't exist, create it without asking user
+                            if (dcListFromDB.ContainsKey(sDir))
+                            {
+                                slLogger.Debug("Creating Game.ini file in folder " + sDir);
+                                ClPbHelper.SaveGameIni(sMyIniFile, dcListFromDB[sDir], slLogger);
+                            }
+                        }
+                    }
+                }
+            }
+            slLogger.Trace("<< Read BS1.0.0 database Click");
         }
     }
 }

@@ -225,12 +225,12 @@ namespace pbPSCReAlpha
         private void btGenerateIni_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Save as Game.ini Click");
-            String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text.Trim()); // have to be not empty
-            String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text.Trim()); // have to be not empty
+            String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text); // have to be not empty
+            String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text); // have to be not empty
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
             {
-                String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text.Trim());
-                String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text.Trim());
+                String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text);
+                String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text);
                 int i1 = (int)(nuGenePlayers.Value);
                 int i2 = (int)(nuGeneYear.Value);
                 if(!String.IsNullOrEmpty(_currentFilePathIni))
@@ -247,19 +247,15 @@ namespace pbPSCReAlpha
                     String sFileName = sfdGeneSaveIni.FileName;
                     try
                     {
-                        using (StreamWriter sw = new StreamWriter(sFileName))
-                        {
-                            sw.WriteLine("[Game]");
-                            sw.WriteLine("Discs=" + s2);
-                            sw.WriteLine("Title=" + s1);
-                            sw.WriteLine("Publisher=" + s3);
-                            sw.WriteLine("Players=" + i1.ToString());
-                            sw.WriteLine("Year=" + i2.ToString());
-                            if (!String.IsNullOrEmpty(s4))
-                            {
-                                sw.WriteLine("AlphaTitle=" + s4);
-                            }
-                        }
+                        Dictionary<String, String> dcTosave = new Dictionary<string, string>();
+                        dcTosave.Add("title", s1);
+                        dcTosave.Add("discs", s2);
+                        dcTosave.Add("publisher", s3);
+                        dcTosave.Add("alphatitle", s4);
+                        dcTosave.Add("players", i1.ToString());
+                        dcTosave.Add("year", i2.ToString());
+                        ClPbHelper.SaveGameIni(sFileName, dcTosave, slLogger);
+                        
                         _currentFilePathIni = sFileName;
                         lbCurrentGameIniFile.Text = _currentFilePathIni;
                         btSaveIni.Enabled = true;
@@ -382,12 +378,12 @@ namespace pbPSCReAlpha
         private void btSaveIni_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Save Game.ini Click");
-            String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text.Trim()); // have to be not empty
-            String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text.Trim()); // have to be not empty
+            String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text); // have to be not empty
+            String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text); // have to be not empty
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
             {
-                String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text.Trim());
-                String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text.Trim());
+                String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text);
+                String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text);
                 int i1 = (int)(nuGenePlayers.Value);
                 int i2 = (int)(nuGeneYear.Value);
                 if (!String.IsNullOrEmpty(_currentFilePathIni))
@@ -395,19 +391,15 @@ namespace pbPSCReAlpha
                     String sFileName = _currentFilePathIni;
                     try
                     {
-                        using (StreamWriter sw = new StreamWriter(sFileName))
-                        {
-                            sw.WriteLine("[Game]");
-                            sw.WriteLine("Discs=" + s2);
-                            sw.WriteLine("Title=" + s1);
-                            sw.WriteLine("Publisher=" + s3);
-                            sw.WriteLine("Players=" + i1.ToString());
-                            sw.WriteLine("Year=" + i2.ToString());
-                            if (!String.IsNullOrEmpty(s4))
-                            {
-                                sw.WriteLine("AlphaTitle=" + s4);
-                            }
-                        }
+                        Dictionary<String, String> dcTosave = new Dictionary<string, string>();
+                        dcTosave.Add("title", s1);
+                        dcTosave.Add("discs", s2);
+                        dcTosave.Add("publisher", s3);
+                        dcTosave.Add("alphatitle", s4);
+                        dcTosave.Add("players", i1.ToString());
+                        dcTosave.Add("year", i2.ToString());
+                        ClPbHelper.SaveGameIni(sFileName, dcTosave, slLogger);
+                        
                         _currentFilePathIni = sFileName;
                         lbCurrentGameIniFile.Text = _currentFilePathIni;
                         btSaveIni.Enabled = true;
