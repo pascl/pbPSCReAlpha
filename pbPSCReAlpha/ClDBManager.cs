@@ -313,8 +313,13 @@ namespace pbPSCReAlpha
                 }
                 if (File.Exists(sFilename))
                 {
-                    File.Delete(sFilename);
-                    Thread.Sleep(200);
+                    if (File.Exists(sFilename + ".bak"))
+                    {
+                        File.Delete(sFilename + ".bak");
+                        Thread.Sleep(100);
+                    }
+                    File.Move(sFilename, sFilename + ".bak");
+                    Thread.Sleep(400);
                 }
                 SQLiteConnection.CreateFile(sFilename);
                 using (SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename + ";Version=3;"))
@@ -406,6 +411,7 @@ namespace pbPSCReAlpha
                     finally
                     {
                         m_dbConnection.Dispose();
+                        SQLiteConnection.ClearAllPools();
                     }
                 }
             }
@@ -457,8 +463,13 @@ namespace pbPSCReAlpha
                 }
                 if (File.Exists(sFilename))
                 {
-                    File.Delete(sFilename);
-                    Thread.Sleep(200);
+                    if (File.Exists(sFilename + ".bak"))
+                    {
+                        File.Delete(sFilename + ".bak");
+                        Thread.Sleep(100);
+                    }
+                    File.Move(sFilename, sFilename + ".bak");
+                    Thread.Sleep(400);
                 }
                 SQLiteConnection.CreateFile(sFilename);
                 using (SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename + ";Version=3;"))
@@ -553,6 +564,7 @@ namespace pbPSCReAlpha
                     finally
                     {
                         m_dbConnection.Dispose();
+                        SQLiteConnection.ClearAllPools();
                     }
                 }
                 if ((true == _bDone) && (1 == bleemsyncVersion))

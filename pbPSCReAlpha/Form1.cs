@@ -901,18 +901,17 @@ namespace pbPSCReAlpha
                     btOpenFolder.Enabled = true;
                     btOpenFolder.Visible = true;
 
-                    if (!cgs.BinMissing)
+                    if (cgs.FilesPbpOk.Count == 0)
+                    {
+                        btBinRename.Enabled = true;
+                    }
+                    else
                     {
                         btBinRename.Enabled = false;
                     }
-                    if (!cgs.CueMissing)
-                    {
-                        btCueRename.Enabled = false;
-                    }
-                    if (!cgs.PbpMissing)
-                    {
-                        btPbpRename.Enabled = false;
-                    }
+                    btCueRename.Enabled = false;
+                    btPbpRename.Enabled = false;
+
                     btPngRename.Enabled = false;
                     btSbiRename.Enabled = false;
                 }
@@ -941,6 +940,7 @@ namespace pbPSCReAlpha
 
                 gbAutoRename.Visible = false;
 
+                
                 btPbpRename.Enabled = false;
                 btBinRename.Enabled = false;
                 btCueRename.Enabled = false;
@@ -2551,64 +2551,76 @@ namespace pbPSCReAlpha
             String cs = "URI=file:" + sFilename;
             using (SQLiteConnection con = new SQLiteConnection(cs))
             {
-                con.Open();
-
-                string stm = "SELECT * FROM DISC ORDER BY GAME_ID ASC, DISC_NUMBER ASC";
-
-                using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                try
                 {
-                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                    con.Open();
+
+                    string stm = "SELECT * FROM DISC ORDER BY GAME_ID ASC, DISC_NUMBER ASC";
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
                     {
-                        while (rdr.Read())
+                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
                         {
-                            String sId = rdr["GAME_ID"].ToString().Trim();
-                            if (!dcListDiscsFromDB.ContainsKey(sId))
+                            while (rdr.Read())
                             {
-                                dcListDiscsFromDB.Add(sId, new List<String>());
+                                String sId = rdr["GAME_ID"].ToString().Trim();
+                                if (!dcListDiscsFromDB.ContainsKey(sId))
+                                {
+                                    dcListDiscsFromDB.Add(sId, new List<String>());
+                                }
+                                dcListDiscsFromDB[sId].Add(rdr["BASENAME"].ToString().Trim());
                             }
-                            dcListDiscsFromDB[sId].Add(rdr["BASENAME"].ToString().Trim());
+                        }
+                    }
+                    switch (bleemsyncVersion)
+                    {
+                        case 0:
+                            stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
+                            break;
+                        case 1:
+                            stm = "SELECT * FROM MENU_ENTRIES ORDER BY GAME_ID ASC";
+                            break;
+                        default:
+                            stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
+                            break;
+                    }
+
+                    using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                    {
+                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                String sId = rdr["GAME_ID"].ToString().Trim();
+                                Dictionary<String, String> dcLineFromDB = new Dictionary<string, string>();
+                                dcLineFromDB.Add("title", rdr["GAME_TITLE_STRING"].ToString().Trim());
+                                dcLineFromDB.Add("publisher", rdr["PUBLISHER_NAME"].ToString().Trim());
+                                dcLineFromDB.Add("year", rdr["RELEASE_YEAR"].ToString().Trim());
+                                dcLineFromDB.Add("players", rdr["PLAYERS"].ToString().Trim());
+                                dcLineFromDB.Add("alphatitle", String.Empty);
+                                if (dcListDiscsFromDB.ContainsKey(sId))
+                                {
+                                    dcLineFromDB.Add("discs", String.Join(",", (dcListDiscsFromDB[sId].ToArray())));
+                                }
+                                else
+                                {
+                                    dcLineFromDB.Add("discs", String.Empty); // not found in the other table
+                                }
+                                dcListFromDB.Add(sId, dcLineFromDB);
+                            }
                         }
                     }
                 }
-                switch(bleemsyncVersion)
+                catch (Exception ex)
                 {
-                    case 0:
-                        stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
-                        break;
-                    case 1:
-                        stm = "SELECT * FROM MENU_ENTRIES ORDER BY GAME_ID ASC";
-                        break;
-                    default:
-                        stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
-                        break;
+                    slLogger.Fatal(ex.Message);
                 }
-
-                using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                finally
                 {
-                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            String sId = rdr["GAME_ID"].ToString().Trim();
-                            Dictionary<String, String> dcLineFromDB = new Dictionary<string, string>();
-                            dcLineFromDB.Add("title", rdr["GAME_TITLE_STRING"].ToString().Trim());
-                            dcLineFromDB.Add("publisher", rdr["PUBLISHER_NAME"].ToString().Trim());
-                            dcLineFromDB.Add("year", rdr["RELEASE_YEAR"].ToString().Trim());
-                            dcLineFromDB.Add("players", rdr["PLAYERS"].ToString().Trim());
-                            dcLineFromDB.Add("alphatitle", String.Empty);
-                            if (dcListDiscsFromDB.ContainsKey(sId))
-                            {
-                                dcLineFromDB.Add("discs", String.Join(",", (dcListDiscsFromDB[sId].ToArray())));
-                            }
-                            else
-                            {
-                                dcLineFromDB.Add("discs", String.Empty); // not found in the other table
-                            }
-                            dcListFromDB.Add(sId, dcLineFromDB);
-                        }
-                    }
+                    con.Close();
+                    con.Dispose();
+                    SQLiteConnection.ClearAllPools();
                 }
-                con.Close();
             }
             return dcListFromDB;
         }
@@ -2729,6 +2741,7 @@ namespace pbPSCReAlpha
                             }
                         }
                     }
+                    dirList = null;
                 }
             }
             slLogger.Trace("<< Read BS0.4.1 database Click");
@@ -2801,6 +2814,7 @@ namespace pbPSCReAlpha
                             }
                         }
                     }
+                    dirList = null;
                 }
             }
             slLogger.Trace("<< Read BS1.0.0 database Click");
