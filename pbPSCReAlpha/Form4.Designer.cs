@@ -36,10 +36,6 @@
             this.lbBinFiles = new System.Windows.Forms.ListBox();
             this.btClipboardCopy = new System.Windows.Forms.Button();
             this.btBack = new System.Windows.Forms.Button();
-            this.scBinCueFiles = new System.Windows.Forms.SplitContainer();
-            this.lbBinFiles = new System.Windows.Forms.ListBox();
-            this.scBinFiles = new System.Windows.Forms.SplitContainer();
-            this.btClipboardCopy = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scCueSplitter)).BeginInit();
             this.scCueSplitter.Panel1.SuspendLayout();
             this.scCueSplitter.Panel2.SuspendLayout();
@@ -148,6 +144,7 @@
             // btBack
             // 
             this.btBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btBack.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btBack.Location = new System.Drawing.Point(506, 3);
             this.btBack.Name = "btBack";
             this.btBack.Size = new System.Drawing.Size(75, 23);
@@ -156,71 +153,11 @@
             this.btBack.UseVisualStyleBackColor = true;
             this.btBack.Click += new System.EventHandler(this.btBack_Click);
             // 
-            // scBinCueFiles
-            // 
-            this.scBinCueFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scBinCueFiles.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.scBinCueFiles.IsSplitterFixed = true;
-            this.scBinCueFiles.Location = new System.Drawing.Point(0, 0);
-            this.scBinCueFiles.Name = "scBinCueFiles";
-            // 
-            // scBinCueFiles.Panel1
-            // 
-            this.scBinCueFiles.Panel1.Controls.Add(this.scBinFiles);
-            // 
-            // scBinCueFiles.Panel2
-            // 
-            this.scBinCueFiles.Panel2.Controls.Add(this.flpCueFiles);
-            this.scBinCueFiles.Size = new System.Drawing.Size(584, 514);
-            this.scBinCueFiles.SplitterDistance = 160;
-            this.scBinCueFiles.TabIndex = 1;
-            // 
-            // lbBinFiles
-            // 
-            this.lbBinFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbBinFiles.FormattingEnabled = true;
-            this.lbBinFiles.Location = new System.Drawing.Point(0, 0);
-            this.lbBinFiles.Name = "lbBinFiles";
-            this.lbBinFiles.ScrollAlwaysVisible = true;
-            this.lbBinFiles.Size = new System.Drawing.Size(160, 481);
-            this.lbBinFiles.TabIndex = 0;
-            // 
-            // scBinFiles
-            // 
-            this.scBinFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scBinFiles.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.scBinFiles.IsSplitterFixed = true;
-            this.scBinFiles.Location = new System.Drawing.Point(0, 0);
-            this.scBinFiles.Name = "scBinFiles";
-            this.scBinFiles.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // scBinFiles.Panel1
-            // 
-            this.scBinFiles.Panel1.Controls.Add(this.lbBinFiles);
-            // 
-            // scBinFiles.Panel2
-            // 
-            this.scBinFiles.Panel2.Controls.Add(this.btClipboardCopy);
-            this.scBinFiles.Size = new System.Drawing.Size(160, 514);
-            this.scBinFiles.SplitterDistance = 481;
-            this.scBinFiles.TabIndex = 1;
-            // 
-            // btClipboardCopy
-            // 
-            this.btClipboardCopy.Image = global::pbPSCReAlpha.Properties.Resources.file_clipboard;
-            this.btClipboardCopy.Location = new System.Drawing.Point(3, 3);
-            this.btClipboardCopy.Name = "btClipboardCopy";
-            this.btClipboardCopy.Size = new System.Drawing.Size(154, 23);
-            this.btClipboardCopy.TabIndex = 0;
-            this.btClipboardCopy.Text = "Copy bin filename";
-            this.btClipboardCopy.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btClipboardCopy.UseVisualStyleBackColor = true;
-            this.btClipboardCopy.Click += new System.EventHandler(this.btClipboardCopy_Click);
-            // 
             // Form4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btBack;
             this.ClientSize = new System.Drawing.Size(584, 547);
             this.Controls.Add(this.scCueSplitter);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

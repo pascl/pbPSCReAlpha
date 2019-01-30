@@ -63,13 +63,13 @@
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
             this.wbViewer = new System.Windows.Forms.WebBrowser();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.btPictureReload = new System.Windows.Forms.Button();
             this.lbCurrentPngFile = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
             this.btSaveAs = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
             this.pbCover = new System.Windows.Forms.PictureBox();
+            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
             this.btScrapeImg = new System.Windows.Forms.Button();
@@ -79,8 +79,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -407,6 +407,7 @@
             // 
             // btBack
             // 
+            this.btBack.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btBack.Location = new System.Drawing.Point(330, 627);
             this.btBack.Name = "btBack";
             this.btBack.Size = new System.Drawing.Size(75, 23);
@@ -458,17 +459,6 @@
             this.groupBox3.TabIndex = 31;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Picture";
-            // 
-            // pbTmp
-            // 
-            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbTmp.Location = new System.Drawing.Point(411, 390);
-            this.pbTmp.Name = "pbTmp";
-            this.pbTmp.Size = new System.Drawing.Size(25, 25);
-            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbTmp.TabIndex = 39;
-            this.pbTmp.TabStop = false;
-            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
             // 
             // btPictureReload
             // 
@@ -534,6 +524,17 @@
             this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
             this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
             // 
+            // pbTmp
+            // 
+            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbTmp.Location = new System.Drawing.Point(411, 390);
+            this.pbTmp.Name = "pbTmp";
+            this.pbTmp.Size = new System.Drawing.Size(25, 25);
+            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbTmp.TabIndex = 39;
+            this.pbTmp.TabStop = false;
+            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
+            // 
             // sfdGeneSaveImage
             // 
             this.sfdGeneSaveImage.DefaultExt = "png";
@@ -578,6 +579,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btBack;
             this.ClientSize = new System.Drawing.Size(1264, 657);
             this.Controls.Add(this.pbTmp);
             this.Controls.Add(this.btScrapeImg);
@@ -601,8 +603,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
             this.ResumeLayout(false);
 
         }

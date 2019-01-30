@@ -47,7 +47,6 @@
             this.btAddFiles = new System.Windows.Forms.Button();
             this.btEditCue = new System.Windows.Forms.Button();
             this.btAddPcsxCfg = new System.Windows.Forms.Button();
-            this.btEditPng = new System.Windows.Forms.Button();
             this.btEditGameIni = new System.Windows.Forms.Button();
             this.btNewFolder = new System.Windows.Forms.Button();
             this.btReSort = new System.Windows.Forms.Button();
@@ -94,6 +93,7 @@
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadDatabaseFile = new System.Windows.Forms.OpenFileDialog();
+            this.btPbpRename = new System.Windows.Forms.Button();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -185,7 +185,6 @@
             this.gbExploreEdit.Controls.Add(this.btAddFiles);
             this.gbExploreEdit.Controls.Add(this.btEditCue);
             this.gbExploreEdit.Controls.Add(this.btAddPcsxCfg);
-            this.gbExploreEdit.Controls.Add(this.btEditPng);
             this.gbExploreEdit.Controls.Add(this.btEditGameIni);
             this.gbExploreEdit.Location = new System.Drawing.Point(206, 415);
             this.gbExploreEdit.Name = "gbExploreEdit";
@@ -196,13 +195,14 @@
             // 
             // gbAutoRename
             // 
+            this.gbAutoRename.Controls.Add(this.btPbpRename);
             this.gbAutoRename.Controls.Add(this.btSbiRename);
             this.gbAutoRename.Controls.Add(this.btPngRename);
             this.gbAutoRename.Controls.Add(this.btBinRename);
             this.gbAutoRename.Controls.Add(this.btCueRename);
-            this.gbAutoRename.Location = new System.Drawing.Point(127, 95);
+            this.gbAutoRename.Location = new System.Drawing.Point(40, 95);
             this.gbAutoRename.Name = "gbAutoRename";
-            this.gbAutoRename.Size = new System.Drawing.Size(351, 54);
+            this.gbAutoRename.Size = new System.Drawing.Size(438, 54);
             this.gbAutoRename.TabIndex = 11;
             this.gbAutoRename.TabStop = false;
             this.gbAutoRename.Text = "Auto-Rename";
@@ -212,7 +212,7 @@
             // 
             this.btSbiRename.Enabled = false;
             this.btSbiRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btSbiRename.Location = new System.Drawing.Point(264, 19);
+            this.btSbiRename.Location = new System.Drawing.Point(354, 19);
             this.btSbiRename.Name = "btSbiRename";
             this.btSbiRename.Size = new System.Drawing.Size(82, 25);
             this.btSbiRename.TabIndex = 12;
@@ -225,7 +225,7 @@
             // 
             this.btPngRename.Enabled = false;
             this.btPngRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btPngRename.Location = new System.Drawing.Point(178, 19);
+            this.btPngRename.Location = new System.Drawing.Point(266, 19);
             this.btPngRename.Name = "btPngRename";
             this.btPngRename.Size = new System.Drawing.Size(82, 25);
             this.btPngRename.TabIndex = 11;
@@ -238,7 +238,7 @@
             // 
             this.btBinRename.Enabled = false;
             this.btBinRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btBinRename.Location = new System.Drawing.Point(6, 19);
+            this.btBinRename.Location = new System.Drawing.Point(4, 19);
             this.btBinRename.Name = "btBinRename";
             this.btBinRename.Size = new System.Drawing.Size(82, 25);
             this.btBinRename.TabIndex = 9;
@@ -251,7 +251,7 @@
             // 
             this.btCueRename.Enabled = false;
             this.btCueRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btCueRename.Location = new System.Drawing.Point(92, 19);
+            this.btCueRename.Location = new System.Drawing.Point(90, 19);
             this.btCueRename.Name = "btCueRename";
             this.btCueRename.Size = new System.Drawing.Size(82, 25);
             this.btCueRename.TabIndex = 10;
@@ -292,7 +292,7 @@
             // 
             this.btAddFiles.Enabled = false;
             this.btAddFiles.Image = global::pbPSCReAlpha.Properties.Resources.brick_add;
-            this.btAddFiles.Location = new System.Drawing.Point(127, 19);
+            this.btAddFiles.Location = new System.Drawing.Point(104, 19);
             this.btAddFiles.Name = "btAddFiles";
             this.btAddFiles.Size = new System.Drawing.Size(115, 25);
             this.btAddFiles.TabIndex = 6;
@@ -307,7 +307,7 @@
             this.btEditCue.Enabled = false;
             this.btEditCue.Image = global::pbPSCReAlpha.Properties.Resources.accessories_text_editor_3;
             this.btEditCue.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditCue.Location = new System.Drawing.Point(6, 81);
+            this.btEditCue.Location = new System.Drawing.Point(104, 50);
             this.btEditCue.Name = "btEditCue";
             this.btEditCue.Size = new System.Drawing.Size(115, 25);
             this.btEditCue.TabIndex = 3;
@@ -321,7 +321,7 @@
             // 
             this.btAddPcsxCfg.Enabled = false;
             this.btAddPcsxCfg.Image = global::pbPSCReAlpha.Properties.Resources.cog_add;
-            this.btAddPcsxCfg.Location = new System.Drawing.Point(6, 112);
+            this.btAddPcsxCfg.Location = new System.Drawing.Point(220, 19);
             this.btAddPcsxCfg.Name = "btAddPcsxCfg";
             this.btAddPcsxCfg.Size = new System.Drawing.Size(115, 25);
             this.btAddPcsxCfg.TabIndex = 2;
@@ -331,28 +331,15 @@
             this.btAddPcsxCfg.Visible = false;
             this.btAddPcsxCfg.Click += new System.EventHandler(this.btAddPcsxCfg_Click);
             // 
-            // btEditPng
-            // 
-            this.btEditPng.Image = global::pbPSCReAlpha.Properties.Resources.picture_edit;
-            this.btEditPng.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditPng.Location = new System.Drawing.Point(6, 50);
-            this.btEditPng.Name = "btEditPng";
-            this.btEditPng.Size = new System.Drawing.Size(115, 25);
-            this.btEditPng.TabIndex = 1;
-            this.btEditPng.Text = "Edit Image";
-            this.btEditPng.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btEditPng.UseVisualStyleBackColor = true;
-            this.btEditPng.Click += new System.EventHandler(this.btEditPng_Click);
-            // 
             // btEditGameIni
             // 
             this.btEditGameIni.Image = global::pbPSCReAlpha.Properties.Resources.edit_3;
             this.btEditGameIni.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btEditGameIni.Location = new System.Drawing.Point(6, 19);
             this.btEditGameIni.Name = "btEditGameIni";
-            this.btEditGameIni.Size = new System.Drawing.Size(115, 25);
+            this.btEditGameIni.Size = new System.Drawing.Size(97, 56);
             this.btEditGameIni.TabIndex = 0;
-            this.btEditGameIni.Text = "Edit Game.ini";
+            this.btEditGameIni.Text = "Edit Game.ini + picture";
             this.btEditGameIni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btEditGameIni.UseVisualStyleBackColor = true;
             this.btEditGameIni.Click += new System.EventHandler(this.btEditGameIni_Click);
@@ -717,7 +704,7 @@
             this.btReadBS100Database.Name = "btReadBS100Database";
             this.btReadBS100Database.Size = new System.Drawing.Size(333, 117);
             this.btReadBS100Database.TabIndex = 3;
-            this.btReadBS100Database.Text = "Read a 1.0.0 database";
+            this.btReadBS100Database.Text = "Read a BS1.0.0 database";
             this.btReadBS100Database.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btReadBS100Database.UseVisualStyleBackColor = true;
             this.btReadBS100Database.Click += new System.EventHandler(this.btReadBS100Database_Click);
@@ -729,7 +716,7 @@
             this.btReadBS041Database.Name = "btReadBS041Database";
             this.btReadBS041Database.Size = new System.Drawing.Size(333, 117);
             this.btReadBS041Database.TabIndex = 2;
-            this.btReadBS041Database.Text = "Read a 0.4.1 database";
+            this.btReadBS041Database.Text = "Read a BS0.4.1 database";
             this.btReadBS041Database.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btReadBS041Database.UseVisualStyleBackColor = true;
             this.btReadBS041Database.Click += new System.EventHandler(this.btReadBS041Database_Click);
@@ -741,7 +728,7 @@
             this.btUpgradeFolders.Name = "btUpgradeFolders";
             this.btUpgradeFolders.Size = new System.Drawing.Size(333, 117);
             this.btUpgradeFolders.TabIndex = 1;
-            this.btUpgradeFolders.Text = "Upgrade (1.0.0 compatible folders)";
+            this.btUpgradeFolders.Text = "Upgrade (BS1.0.0 compatible folders)";
             this.btUpgradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpgradeFolders.UseVisualStyleBackColor = true;
             this.btUpgradeFolders.Click += new System.EventHandler(this.btUpgradeFolders_Click);
@@ -753,7 +740,7 @@
             this.btDowngradeFolders.Name = "btDowngradeFolders";
             this.btDowngradeFolders.Size = new System.Drawing.Size(333, 117);
             this.btDowngradeFolders.TabIndex = 0;
-            this.btDowngradeFolders.Text = "Downgrade (0.4.1 compatible folders)";
+            this.btDowngradeFolders.Text = "Downgrade (BS0.4.1 compatible folders)";
             this.btDowngradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btDowngradeFolders.UseVisualStyleBackColor = true;
             this.btDowngradeFolders.Click += new System.EventHandler(this.btDowngradeFolders_Click);
@@ -839,6 +826,19 @@
             this.ofdLoadDatabaseFile.Filter = "DB file|*.db";
             this.ofdLoadDatabaseFile.ShowHelp = true;
             // 
+            // btPbpRename
+            // 
+            this.btPbpRename.Enabled = false;
+            this.btPbpRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btPbpRename.Location = new System.Drawing.Point(178, 19);
+            this.btPbpRename.Name = "btPbpRename";
+            this.btPbpRename.Size = new System.Drawing.Size(82, 25);
+            this.btPbpRename.TabIndex = 13;
+            this.btPbpRename.Text = "pbp file(s)";
+            this.btPbpRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btPbpRename.UseVisualStyleBackColor = true;
+            this.btPbpRename.Click += new System.EventHandler(this.btPbpRename_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -906,7 +906,6 @@
         private System.Windows.Forms.TextBox tbLogDebug;
         private System.Windows.Forms.Button btTest;
         private System.Windows.Forms.Button btClearLog;
-        private System.Windows.Forms.Button btEditPng;
         private System.Windows.Forms.Button btEditGameIni;
         private System.Windows.Forms.Button btEditCue;
         private System.Windows.Forms.Button btAddPcsxCfg;
@@ -938,6 +937,7 @@
         private System.Windows.Forms.Button btReadBS041Database;
         private System.Windows.Forms.Button btReadBS100Database;
         private System.Windows.Forms.OpenFileDialog ofdLoadDatabaseFile;
+        private System.Windows.Forms.Button btPbpRename;
     }
 }
 

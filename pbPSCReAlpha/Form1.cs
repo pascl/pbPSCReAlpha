@@ -226,20 +226,26 @@ namespace pbPSCReAlpha
                 bool bMultiPictures = false;
                 bool bCuePresent = false;
                 bool bBinPresent = false;
+                bool bPbpPresent = false;
                 bool bSbiPresent = false;
                 bool bNeededSbiMissing = false;
                 bool bDiscCountMatchCueCount = false;
+                bool bDiscCountMatchPbpCount = false;
                 bool bBadBinName = false;
                 bool bBadCueName = false;
+                bool bBadPbpName = false;
                 bool bNameWithComma = false;
+                bool bBadDiscsName = false;
                 UInt16 uiGameIni = 0;
                 int iNbDiscs = 0;
                 int iNbCue = 0;
                 int iNbBin = 0;
                 int iNbSbi = 0;
+                int iNbPbp = 0;
                 Dictionary<String, String[]> dcBinParsed = new Dictionary<String, String[]>();
                 List<String> lsBinPresent = new List<string>();
                 List<String> lsSbiPresent = new List<string>();
+                List<String> lsPbpPresent = new List<string>();
                 List<string> sFiles = new List<string>();
                 FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + currentUsedVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
                 long lSizeFolder = 0;
@@ -265,6 +271,13 @@ namespace pbPSCReAlpha
                             bmPicture = new Bitmap(bmPictureString);
                             sPicture = fi.Name.Substring(0, fi.Name.IndexOf(fi.Extension)).ToLower();
                         }
+                    }
+                    else
+                    if (fi.Extension.ToLower() == ".pbp")
+                    {
+                        bPbpPresent = true;
+                        iNbPbp++;
+                        lsPbpPresent.Add(fi.Name.ToLower());
                     }
                     else
                     if (fi.Extension.ToLower() == ".cue")
@@ -385,6 +398,7 @@ namespace pbPSCReAlpha
                 List<String> lsVerboseError = new List<String>();
                 List<String> lsBinFilesOk = new List<String>();
                 List<String> lsCueFilesOk = new List<String>();
+                List<String> lsPbpFilesOk = new List<String>();
                 List<String> lsSbiFilesOk = new List<String>();
                 if ((bGameIniPresent) && (5 == uiGameIni))
                 {
@@ -398,6 +412,32 @@ namespace pbPSCReAlpha
                             bPngMatchDisc = true;
                         }
                     }
+                    if(bPbpPresent)
+                    {
+                        if (iNbPbp == iNbDiscs)
+                        {
+                            bDiscCountMatchPbpCount = true;
+                            foreach (String sDisc in sDiscMulti)
+                            {
+                                String s = sDisc.ToLower() + ".pbp";
+                                if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
+                                {
+                                    lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
+                                    bBadDiscsName = true;
+                                }
+                                if (lsPbpPresent.IndexOf(s) == -1)
+                                {
+                                    lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching pbp file.");
+                                    bBadPbpName = true;
+                                }
+                                else
+                                {
+                                    lsPbpFilesOk.Add(s);
+                                }
+                            }
+                        }
+                    }
+                    else
                     if (bCuePresent)
                     {
                         if (iNbCue == iNbDiscs)
@@ -405,7 +445,12 @@ namespace pbPSCReAlpha
                             bDiscCountMatchCueCount = true;
                             foreach (String sDisc in sDiscMulti)
                             {
-                                String s = sDisc.ToLower(); // now useless
+                                String s = sDisc.ToLower();
+                                if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
+                                {
+                                    lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
+                                    bBadDiscsName = true;
+                                }
                                 if (false == dcBinParsed.ContainsKey(s))
                                 {
                                     lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching cue file.");
@@ -477,12 +522,12 @@ namespace pbPSCReAlpha
                         }
                     }
                 }
-                if(1 == iBleemsyncVersion)
+                /*if(1 == iBleemsyncVersion)
                 {
                     // facultative for 1.0.0
                     bPcsxFilePresent = true;
-                }
-                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, bNameWithComma);
+                }*/
+                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, bNameWithComma, !bPbpPresent, bBadPbpName, !bDiscCountMatchPbpCount, bBadDiscsName, iBleemsyncVersion);
                 if (bGameIniPresent)
                 {
                     cgs.setIniInfos(sTitle, sDiscs, sPublisher, sYear, sPlayers, sAlphaTitle);
@@ -510,6 +555,7 @@ namespace pbPSCReAlpha
                 cgs.FilesBinOk = lsBinFilesOk;
                 cgs.FilesCueOk = lsCueFilesOk;
                 cgs.FilesSbiOk = lsSbiFilesOk;
+                cgs.FilesPbpOk = lsPbpFilesOk;
             }
             else
             {
@@ -623,6 +669,7 @@ namespace pbPSCReAlpha
             //slLogger.Trace(">> Game Selection changed in gamelist");
             if (lbGames.SelectedIndex > -1)
             {
+                refreshOneFolder(false);
                 lbFolderSize.Visible = true;
                 lbFolderSizeLabel.Visible = true;
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
@@ -683,6 +730,18 @@ namespace pbPSCReAlpha
                                 }
                             }
                             else
+                            if (s.EndsWith(".pbp"))
+                            {
+                                if (cgs.FilesPbpOk.IndexOf(s) > -1)
+                                {
+                                    iIndexImg = 1;
+                                }
+                                else
+                                {
+                                    iIndexImg = 3;
+                                }
+                            }
+                            else
                             if (s.EndsWith(".bin"))
                             {
                                 if (cgs.FilesBinOk.IndexOf(s) > -1)
@@ -736,7 +795,7 @@ namespace pbPSCReAlpha
                         }
                         else
                         //if ((s == "pcsx.cfg") || (s == "Game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png")))
-                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png"))
+                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".pbp")) || (s.EndsWith(".png"))
                             || ((s.EndsWith(".sbi")) && (cgs.Discs.ToLower().Contains(s.Substring(0, s.Length - 4)))))
                         {
                             iIndexImg = 1;
@@ -755,6 +814,7 @@ namespace pbPSCReAlpha
                 if (true == cgs.GeneralError)
                 {
                     bool bPng = false;
+                    bool bPbp = false;
                     bool bCue = false;
                     bool bBin = false;
                     bool bSbi = false;
@@ -767,9 +827,16 @@ namespace pbPSCReAlpha
                                 bPng = true;
                             }
                         }
+                        if (!cgs.PbpMissing) // pbp exist
+                        {
+                            if ((!cgs.PbpCountMisMatchDiscsCount) && (cgs.BadPbpName)) // numbers pbp and discs ok and bad pbp filename
+                            {
+                                bPbp = true;
+                            }
+                        }
                         if (!cgs.CueMissing) // cue exist
                         {
-                            if ((!cgs.CueCountMisMatchDiscsCount) && (cgs.BadCueName)) // numbers cue an discs ok and bad cue filename
+                            if ((!cgs.CueCountMisMatchDiscsCount) && (cgs.BadCueName)) // numbers cue and discs ok and bad cue filename
                             {
                                 bCue = true;
                             }
@@ -783,27 +850,12 @@ namespace pbPSCReAlpha
                             bBin = true;
                         }
                     }
+                    btPbpRename.Enabled = bPbp;
                     btCueRename.Enabled = bCue;
                     btPngRename.Enabled = bPng;
                     btSbiRename.Enabled = bSbi;
                     btBinRename.Enabled = bBin;
-
-                    /*if(cgs.IniIncomplete || cgs.IniMissing)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }*/
-                    /*if(cgs.PngMissing)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }*/
+                    
                     if (cgs.CueMissing)
                     {
                         btEditCue.Visible = false;
@@ -849,8 +901,18 @@ namespace pbPSCReAlpha
                     btOpenFolder.Enabled = true;
                     btOpenFolder.Visible = true;
 
-                    btBinRename.Enabled = true;
-                    btCueRename.Enabled = false;
+                    if (!cgs.BinMissing)
+                    {
+                        btBinRename.Enabled = false;
+                    }
+                    if (!cgs.CueMissing)
+                    {
+                        btCueRename.Enabled = false;
+                    }
+                    if (!cgs.PbpMissing)
+                    {
+                        btPbpRename.Enabled = false;
+                    }
                     btPngRename.Enabled = false;
                     btSbiRename.Enabled = false;
                 }
@@ -879,6 +941,7 @@ namespace pbPSCReAlpha
 
                 gbAutoRename.Visible = false;
 
+                btPbpRename.Enabled = false;
                 btBinRename.Enabled = false;
                 btCueRename.Enabled = false;
                 btPngRename.Enabled = false;
@@ -1155,25 +1218,6 @@ namespace pbPSCReAlpha
             f.ShowDialog();
             refreshOneFolder();
             slLogger.Trace("<< Edit Game.ini Click");
-        }
-
-        private void btEditPng_Click(object sender, EventArgs e)
-        {
-            slLogger.Trace(">> Edit image Click");
-            String sFolderPath = tbFolderPath.Text;
-            Form23 f = null;
-            if (lbGames.SelectedIndex > -1)
-            {
-                ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion, cgs);
-            }
-            else
-            {
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion);
-            }
-            f.ShowDialog();
-            refreshOneFolder();
-            slLogger.Trace("<< Edit image Click");
         }
 
         private void btAddPcsxCfg_Click(object sender, EventArgs e)
@@ -1479,7 +1523,7 @@ namespace pbPSCReAlpha
                 e.Effect = DragDropEffects.Copy;
         }
 
-        private void refreshOneFolder()
+        private void refreshOneFolder(bool bRefreshListBox = true)
         {
             ClGameStructure cgsSave = null;
             int iIndex = lbGames.SelectedIndex;
@@ -1499,19 +1543,22 @@ namespace pbPSCReAlpha
                 DirectoryInfo directoryInfo = new DirectoryInfo(sFolder);
                 slLogger.Debug("Refreshing " + sFolder);
                 ClGameStructure cgs = manageFolder(cgsSave.FolderIndex, directoryInfo, ref lsFolders, ref lsTitles, false);
-                if (cgs != null)
+                if (true == bRefreshListBox)
                 {
-                    lbGames.Items.RemoveAt(iIndex);
-                    lbGames.Items.Insert(iIndex, cgs);
-                    lbGames.SelectedIndex = iIndex;
-                    if ((iFileIndex > -1) && (iFileIndex < lvFiles.Items.Count))
+                    if (cgs != null)
                     {
-                        lvFiles.Items[iFileIndex].Selected = true;
-                        lvFiles.Select();
-                        lvFiles.EnsureVisible(iFileIndex);
+                        lbGames.Items.RemoveAt(iIndex);
+                        lbGames.Items.Insert(iIndex, cgs);
+                        lbGames.SelectedIndex = iIndex;
+                        if ((iFileIndex > -1) && (iFileIndex < lvFiles.Items.Count))
+                        {
+                            lvFiles.Items[iFileIndex].Selected = true;
+                            lvFiles.Select();
+                            lvFiles.EnsureVisible(iFileIndex);
+                        }
                     }
-                    ReCalcFreeSpace(sFolderPath);
                 }
+                ReCalcFreeSpace(sFolderPath);
             }
         }
 
@@ -2433,7 +2480,7 @@ namespace pbPSCReAlpha
         {
             slLogger.Trace(">> Upgrade folder Click");
             String sFolderPath = tbFolderPath.Text;
-            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want upgrade your folders to 1.0.O ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to upgrade your folders to 1.0.0 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
                 ClVersionHelper srcVersion = bleemsyncVersions[0];
@@ -2757,6 +2804,108 @@ namespace pbPSCReAlpha
                 }
             }
             slLogger.Trace("<< Read BS1.0.0 database Click");
+        }
+
+        private void btPbpRename_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Pbp AutoRename Click");
+            if (lbGames.SelectedIndex > -1)
+            {
+                try
+                {
+                    ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                    String sFolderPath = tbFolderPath.Text;
+                    String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.PbpMissing) && (!cgs.PbpCountMisMatchDiscsCount) && (cgs.BadPbpName))
+                    {
+                        String[] sDiscs = cgs.Discs.Split(',');
+                        List<String> lsFilenamesOk = cgs.FilesPbpOk;
+                        List<String> lsFileNamesPbpLower = new List<string>();
+                        List<String> lsFileToRename = new List<string>();
+                        foreach (String s in cgs.Filenames)
+                        {
+                            if (s.ToLower().EndsWith(".pbp"))
+                            {
+                                lsFileNamesPbpLower.Add(s.ToLower());
+                            }
+                        }
+                        if (lsFileNamesPbpLower.Count > 0)
+                        {
+                            using (NaturalComparer comparer = new NaturalComparer())
+                            {
+                                lsFileNamesPbpLower.Sort(comparer);
+                            }
+                            foreach (String sOneFile in lsFileNamesPbpLower)
+                            {
+                                if (lsFilenamesOk.IndexOf(sOneFile) > -1)
+                                {
+                                    //
+                                }
+                                else
+                                {
+                                    lsFileToRename.Add(sOneFile);
+                                }
+                            }
+                            String[] sFileToRename = lsFileToRename.ToArray();
+                            int iIndex = 0;
+                            String sQuestion = String.Empty;
+                            foreach (String s in sDiscs)
+                            {
+                                String sDisc = s.ToLower();
+                                if (lsFilenamesOk.IndexOf(sDisc + ".pbp") > -1)
+                                {
+                                    iIndex++;
+                                }
+                                else
+                                {
+                                    if (iIndex < sFileToRename.Length)
+                                    {
+                                        if (File.Exists(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex]))
+                                        {
+                                            sQuestion = sQuestion + Environment.NewLine + sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex] + " >> " + sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".pbp";
+                                        }
+                                        iIndex++;
+                                    }
+                                }
+                            }
+                            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                            {
+                                iIndex = 0;
+                                foreach (String s in sDiscs)
+                                {
+                                    String sDisc = s.ToLower();
+                                    if (lsFilenamesOk.IndexOf(sDisc + ".pbp") > -1)
+                                    {
+                                        iIndex++;
+                                    }
+                                    else
+                                    {
+                                        if (iIndex < sFileToRename.Length)
+                                        {
+                                            if (File.Exists(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex]))
+                                            {
+                                                File.Move(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex], sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".pbp");
+                                                slLogger.Debug("Renaming file " + sFileToRename[iIndex] + " -> " + s + ".pbp");
+                                            }
+                                            iIndex++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        refreshOneFolder();
+                    }
+                    else
+                    {
+                        //
+                    }
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+            slLogger.Trace("<< Pbp AutoRename Click");
         }
     }
 }
