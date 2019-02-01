@@ -866,7 +866,7 @@ namespace pbPSCReAlpha
                         btEditCue.Enabled = true;
                         btEditCue.Visible = true;
                     }
-                    if (cgs.CfgMissing)
+                    if ((iBleemsyncVersion == 0) && (cgs.CfgMissing))
                     {
                         btAddPcsxCfg.Enabled = true;
                         btAddPcsxCfg.Visible = true;
