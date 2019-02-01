@@ -540,7 +540,7 @@ namespace pbPSCReAlpha
                             {
                                 iGame++;
                                 ClGameTable cgt = new ClGameTable(cgs);
-                                //cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now // TODO
+                                cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
                                 command = cgt.generateInsertCommand(m_dbConnection, bleemsyncVersion);
                                 command.ExecuteNonQuery();
                                 String[] sDiscSplit = cgs.Discs.Split(',');
