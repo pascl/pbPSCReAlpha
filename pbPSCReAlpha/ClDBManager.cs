@@ -412,6 +412,8 @@ namespace pbPSCReAlpha
                     {
                         m_dbConnection.Dispose();
                         SQLiteConnection.ClearAllPools();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
                 }
             }
@@ -538,7 +540,7 @@ namespace pbPSCReAlpha
                             {
                                 iGame++;
                                 ClGameTable cgt = new ClGameTable(cgs);
-                                //cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
+                                //cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now // TODO
                                 command = cgt.generateInsertCommand(m_dbConnection, bleemsyncVersion);
                                 command.ExecuteNonQuery();
                                 String[] sDiscSplit = cgs.Discs.Split(',');
@@ -565,6 +567,8 @@ namespace pbPSCReAlpha
                     {
                         m_dbConnection.Dispose();
                         SQLiteConnection.ClearAllPools();
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
                 }
                 if ((true == _bDone) && (1 == bleemsyncVersion))
