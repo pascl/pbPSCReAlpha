@@ -97,6 +97,10 @@ namespace pbPSCReAlpha
             {
                 this.ErrorString.Add("Cue or Pbp files not found in the folder.");
             }
+            if((_bleemSyncVersion == 0) && (!_pbpMissing))
+            {
+                this.ErrorString.Add("Pbp files won't start with BS0.4.1.");
+            }
             if ((_pbpMissing) && (_cueMissing) && (_binMissing)) // if a cue, need bin in the folder
             {
                 this.ErrorString.Add("Bin files not found in the folder.");
@@ -119,25 +123,25 @@ namespace pbPSCReAlpha
                 // no need display this error if ini missing
                 this.ErrorString.Add("Game.ini is incomplete, needs 5 parameters.");
             }
-            if ((!_pbpMissing) && (!_iniMissing) && (!_iniIncomplete) && (_pbpCountMisMatchDiscsCount))
+            if ((_bleemSyncVersion == 1) && (!_pbpMissing) && (!_iniMissing) && (!_iniIncomplete) && (_pbpCountMisMatchDiscsCount))
             {
                 this.ErrorString.Add("Count of pbp files doesn't match discs parameter in Game.ini.");
             }
-            if ((_pbpMissing) && (!_cueMissing) && (!_iniMissing) && (!_iniIncomplete) && (_cueCountMisMatchDiscsCount)) // if pbp present, no need cue
+            if ((((_bleemSyncVersion == 1) && (_pbpMissing)) || (_bleemSyncVersion == 0)) && (!_cueMissing) && (!_iniMissing) && (!_iniIncomplete) && (_cueCountMisMatchDiscsCount)) // if pbp present, no need cue
             {
                 this.ErrorString.Add("Count of cue files doesn't match discs parameter in Game.ini.");
             }
-            if ((!_pbpMissing) && (_badPbpName))
+            if ((_bleemSyncVersion == 1) && (!_pbpMissing) && (_badPbpName))
             {
                 // no need display this error if pbp missing
                 this.ErrorString.Add("At least one pbp file doesn't match discs parameter in Game.ini.");
             }
-            if ((_pbpMissing) && (!_cueMissing) && (_badCueName)) // if pbp present, no need cue
+            if ((((_bleemSyncVersion == 1) && (_pbpMissing)) || (_bleemSyncVersion == 0)) && (!_cueMissing) && (_badCueName)) // if pbp present, no need cue
             {
                 // no need display this error if cue missing
                 this.ErrorString.Add("At least one cue file doesn't match discs parameter in Game.ini.");
             }
-            if ((_pbpMissing) && (!_cueMissing) && (!_binMissing) && (_badBinName)) // if pbp present, no need bin
+            if ((((_bleemSyncVersion == 1) && (_pbpMissing)) || (_bleemSyncVersion == 0)) && (!_cueMissing) && (!_binMissing) && (_badBinName)) // if pbp present, no need bin
             {
                 // no need display this error if bin missing
                 this.ErrorString.Add("At least one bin file doesn't match entries in cue files.");
@@ -225,9 +229,9 @@ namespace pbPSCReAlpha
         public bool PbpCountMisMatchDiscsCount { get => _pbpCountMisMatchDiscsCount; set => _pbpCountMisMatchDiscsCount = value; }
         public bool BadDiscsName { get => _badDiscsName; set => _badDiscsName = value; }
 
-        public bool PbpErrors { get => _cueMissing && (_pbpMissing || _badPbpName || _pbpCountMisMatchDiscsCount); }
-        public bool CueErrors { get => _pbpMissing && (_cueMissing || _badCueName || _cueCountMisMatchDiscsCount); }
-        public bool BinErrors { get => _pbpMissing && (!_cueMissing) && (_binMissing || _badBinName); }
+        public bool PbpErrors { get => ((_bleemSyncVersion == 0) && (!_pbpMissing)) || (_cueMissing && (_bleemSyncVersion == 1) && (_pbpMissing || _badPbpName || _pbpCountMisMatchDiscsCount)); }
+        public bool CueErrors { get => (((_bleemSyncVersion == 1) && _pbpMissing) || (_bleemSyncVersion == 0)) && (_cueMissing || _badCueName || _cueCountMisMatchDiscsCount); }
+        public bool BinErrors { get => (((_bleemSyncVersion == 1) && _pbpMissing) || (_bleemSyncVersion == 0)) && (!_cueMissing) && (_binMissing || _badBinName); }
         public bool SbiErrors { get => _neededSbiMissing; }
         public bool PngErrors { get => _pngMissing || _pngMismatch || _pngMultiple; }
         public bool IniErrors { get => _iniMissing || _iniIncomplete; }

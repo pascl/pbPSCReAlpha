@@ -412,7 +412,7 @@ namespace pbPSCReAlpha
                             bPngMatchDisc = true;
                         }
                     }
-                    if(bPbpPresent)
+                    if((iBleemsyncVersion == 1) && (bPbpPresent))
                     {
                         if (iNbPbp == iNbDiscs)
                         {
@@ -914,6 +914,9 @@ namespace pbPSCReAlpha
 
                     btPngRename.Enabled = false;
                     btSbiRename.Enabled = false;
+
+                    btAddPcsxCfg.Visible = false;
+                    btAddPcsxCfg.Enabled = false;
                 }
             }
             else
