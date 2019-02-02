@@ -15,7 +15,7 @@ namespace pbPSCReAlpha
         {
             private int _disc_id;
             private int _game_id;
-            private int _disc_number;
+            private int _disc_number; // not the total count, the current number of this disc !
             private String _basename;
 
             public int Disc_id { get => _disc_id; set => _disc_id = value; }
@@ -545,11 +545,13 @@ namespace pbPSCReAlpha
                                 command.ExecuteNonQuery();
                                 String[] sDiscSplit = cgs.Discs.Split(',');
                                 int iDiscCount = sDiscSplit.Length;
+                                int iDisc = 1;
                                 foreach (String disc in sDiscSplit)
                                 {
-                                    ClDiscTable cdt = new ClDiscTable(iGame, iDiscCount, disc);
+                                    ClDiscTable cdt = new ClDiscTable(iGame, iDisc, disc);
                                     command = cdt.generateInsertCommand(m_dbConnection);
                                     command.ExecuteNonQuery();
+                                    iDisc++;
                                 }
                             }
                             tran.Commit();
