@@ -38,6 +38,7 @@
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
             this.gbAutoRename = new System.Windows.Forms.GroupBox();
+            this.btPbpRename = new System.Windows.Forms.Button();
             this.btSbiRename = new System.Windows.Forms.Button();
             this.btPngRename = new System.Windows.Forms.Button();
             this.btBinRename = new System.Windows.Forms.Button();
@@ -73,16 +74,25 @@
             this.pbExploreImage = new System.Windows.Forms.PictureBox();
             this.lbGames = new System.Windows.Forms.ListBox();
             this.btRefresh = new System.Windows.Forms.Button();
-            this.tabDebug = new System.Windows.Forms.TabPage();
-            this.btClearLog = new System.Windows.Forms.Button();
-            this.btTest = new System.Windows.Forms.Button();
-            this.tbLogDebug = new System.Windows.Forms.TextBox();
             this.tabTransform = new System.Windows.Forms.TabPage();
             this.gbTransform = new System.Windows.Forms.GroupBox();
             this.btReadBS100Database = new System.Windows.Forms.Button();
             this.btReadBS041Database = new System.Windows.Forms.Button();
             this.btUpgradeFolders = new System.Windows.Forms.Button();
             this.btDowngradeFolders = new System.Windows.Forms.Button();
+            this.tabConfig = new System.Windows.Forms.TabPage();
+            this.lbCurrentSimultaneousCopiedFiles = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btValidateCfg = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbSimultaneousCopiedFiles = new System.Windows.Forms.ComboBox();
+            this.btCheckMemCard = new System.Windows.Forms.Button();
+            this.btCheckBin = new System.Windows.Forms.Button();
+            this.tabDebug = new System.Windows.Forms.TabPage();
+            this.btClearLog = new System.Windows.Forms.Button();
+            this.btTest = new System.Windows.Forms.Button();
+            this.tbLogDebug = new System.Windows.Forms.TextBox();
             this.tabReadMe = new System.Windows.Forms.TabPage();
             this.wbReadme = new System.Windows.Forms.WebBrowser();
             this.ofdAddFiles = new System.Windows.Forms.OpenFileDialog();
@@ -93,16 +103,22 @@
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadDatabaseFile = new System.Windows.Forms.OpenFileDialog();
-            this.btPbpRename = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btIniFileCopy = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
             this.gbAutoRename.SuspendLayout();
             this.gbExploreDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
-            this.tabDebug.SuspendLayout();
             this.tabTransform.SuspendLayout();
             this.gbTransform.SuspendLayout();
+            this.tabConfig.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tabDebug.SuspendLayout();
             this.tabReadMe.SuspendLayout();
             this.msMainMenu.SuspendLayout();
             this.SuspendLayout();
@@ -110,8 +126,9 @@
             // tabControlAll
             // 
             this.tabControlAll.Controls.Add(this.tabExplorer);
-            this.tabControlAll.Controls.Add(this.tabDebug);
             this.tabControlAll.Controls.Add(this.tabTransform);
+            this.tabControlAll.Controls.Add(this.tabConfig);
+            this.tabControlAll.Controls.Add(this.tabDebug);
             this.tabControlAll.Controls.Add(this.tabReadMe);
             this.tabControlAll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlAll.Location = new System.Drawing.Point(0, 24);
@@ -207,6 +224,19 @@
             this.gbAutoRename.TabStop = false;
             this.gbAutoRename.Text = "Auto-Rename";
             this.gbAutoRename.Visible = false;
+            // 
+            // btPbpRename
+            // 
+            this.btPbpRename.Enabled = false;
+            this.btPbpRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btPbpRename.Location = new System.Drawing.Point(178, 19);
+            this.btPbpRename.Name = "btPbpRename";
+            this.btPbpRename.Size = new System.Drawing.Size(82, 25);
+            this.btPbpRename.TabIndex = 13;
+            this.btPbpRename.Text = "pbp file(s)";
+            this.btPbpRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btPbpRename.UseVisualStyleBackColor = true;
+            this.btPbpRename.Click += new System.EventHandler(this.btPbpRename_Click);
             // 
             // btSbiRename
             // 
@@ -626,53 +656,6 @@
             this.btRefresh.UseVisualStyleBackColor = true;
             this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
             // 
-            // tabDebug
-            // 
-            this.tabDebug.Controls.Add(this.btClearLog);
-            this.tabDebug.Controls.Add(this.btTest);
-            this.tabDebug.Controls.Add(this.tbLogDebug);
-            this.tabDebug.Location = new System.Drawing.Point(4, 22);
-            this.tabDebug.Name = "tabDebug";
-            this.tabDebug.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDebug.Size = new System.Drawing.Size(696, 577);
-            this.tabDebug.TabIndex = 3;
-            this.tabDebug.Text = "Debug";
-            this.tabDebug.UseVisualStyleBackColor = true;
-            this.tabDebug.Paint += new System.Windows.Forms.PaintEventHandler(this.tabDebug_Paint);
-            // 
-            // btClearLog
-            // 
-            this.btClearLog.Location = new System.Drawing.Point(613, 544);
-            this.btClearLog.Name = "btClearLog";
-            this.btClearLog.Size = new System.Drawing.Size(75, 23);
-            this.btClearLog.TabIndex = 7;
-            this.btClearLog.Text = "Clear";
-            this.btClearLog.UseVisualStyleBackColor = true;
-            this.btClearLog.Click += new System.EventHandler(this.btClearLog_Click);
-            // 
-            // btTest
-            // 
-            this.btTest.Enabled = false;
-            this.btTest.Location = new System.Drawing.Point(613, 6);
-            this.btTest.Name = "btTest";
-            this.btTest.Size = new System.Drawing.Size(75, 23);
-            this.btTest.TabIndex = 6;
-            this.btTest.Text = "Test Sort";
-            this.btTest.UseVisualStyleBackColor = true;
-            this.btTest.Visible = false;
-            this.btTest.Click += new System.EventHandler(this.btTest_Click);
-            // 
-            // tbLogDebug
-            // 
-            this.tbLogDebug.Location = new System.Drawing.Point(6, 6);
-            this.tbLogDebug.MaxLength = 0;
-            this.tbLogDebug.Multiline = true;
-            this.tbLogDebug.Name = "tbLogDebug";
-            this.tbLogDebug.ReadOnly = true;
-            this.tbLogDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbLogDebug.Size = new System.Drawing.Size(601, 563);
-            this.tbLogDebug.TabIndex = 3;
-            // 
             // tabTransform
             // 
             this.tabTransform.Controls.Add(this.gbTransform);
@@ -744,6 +727,158 @@
             this.btDowngradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
             this.btDowngradeFolders.UseVisualStyleBackColor = true;
             this.btDowngradeFolders.Click += new System.EventHandler(this.btDowngradeFolders_Click);
+            // 
+            // tabConfig
+            // 
+            this.tabConfig.Controls.Add(this.label6);
+            this.tabConfig.Controls.Add(this.label5);
+            this.tabConfig.Controls.Add(this.btIniFileCopy);
+            this.tabConfig.Controls.Add(this.label4);
+            this.tabConfig.Controls.Add(this.label3);
+            this.tabConfig.Controls.Add(this.lbCurrentSimultaneousCopiedFiles);
+            this.tabConfig.Controls.Add(this.label2);
+            this.tabConfig.Controls.Add(this.groupBox1);
+            this.tabConfig.Controls.Add(this.btCheckMemCard);
+            this.tabConfig.Controls.Add(this.btCheckBin);
+            this.tabConfig.Location = new System.Drawing.Point(4, 22);
+            this.tabConfig.Name = "tabConfig";
+            this.tabConfig.Padding = new System.Windows.Forms.Padding(3);
+            this.tabConfig.Size = new System.Drawing.Size(696, 577);
+            this.tabConfig.TabIndex = 6;
+            this.tabConfig.Text = "Configuration";
+            this.tabConfig.UseVisualStyleBackColor = true;
+            // 
+            // lbCurrentSimultaneousCopiedFiles
+            // 
+            this.lbCurrentSimultaneousCopiedFiles.Location = new System.Drawing.Point(458, 43);
+            this.lbCurrentSimultaneousCopiedFiles.Name = "lbCurrentSimultaneousCopiedFiles";
+            this.lbCurrentSimultaneousCopiedFiles.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSimultaneousCopiedFiles.TabIndex = 2;
+            this.lbCurrentSimultaneousCopiedFiles.Text = "---";
+            this.lbCurrentSimultaneousCopiedFiles.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(458, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(230, 18);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Current value";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btValidateCfg);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.cbSimultaneousCopiedFiles);
+            this.groupBox1.Location = new System.Drawing.Point(8, 27);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(444, 100);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Files";
+            // 
+            // btValidateCfg
+            // 
+            this.btValidateCfg.Location = new System.Drawing.Point(362, 71);
+            this.btValidateCfg.Name = "btValidateCfg";
+            this.btValidateCfg.Size = new System.Drawing.Size(75, 23);
+            this.btValidateCfg.TabIndex = 2;
+            this.btValidateCfg.Text = "OK";
+            this.btValidateCfg.UseVisualStyleBackColor = true;
+            this.btValidateCfg.Click += new System.EventHandler(this.btValidateCfg_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(208, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Maximum files to be copied simultaneously:";
+            // 
+            // cbSimultaneousCopiedFiles
+            // 
+            this.cbSimultaneousCopiedFiles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSimultaneousCopiedFiles.FormattingEnabled = true;
+            this.cbSimultaneousCopiedFiles.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"});
+            this.cbSimultaneousCopiedFiles.Location = new System.Drawing.Point(242, 13);
+            this.cbSimultaneousCopiedFiles.Name = "cbSimultaneousCopiedFiles";
+            this.cbSimultaneousCopiedFiles.Size = new System.Drawing.Size(121, 21);
+            this.cbSimultaneousCopiedFiles.TabIndex = 0;
+            // 
+            // btCheckMemCard
+            // 
+            this.btCheckMemCard.Location = new System.Drawing.Point(8, 188);
+            this.btCheckMemCard.Name = "btCheckMemCard";
+            this.btCheckMemCard.Size = new System.Drawing.Size(150, 46);
+            this.btCheckMemCard.TabIndex = 9;
+            this.btCheckMemCard.Text = "MemCard";
+            this.btCheckMemCard.UseVisualStyleBackColor = true;
+            this.btCheckMemCard.Click += new System.EventHandler(this.btCheckMemCard_Click);
+            // 
+            // btCheckBin
+            // 
+            this.btCheckBin.Location = new System.Drawing.Point(8, 136);
+            this.btCheckBin.Name = "btCheckBin";
+            this.btCheckBin.Size = new System.Drawing.Size(150, 46);
+            this.btCheckBin.TabIndex = 8;
+            this.btCheckBin.Text = "Check Bin";
+            this.btCheckBin.UseVisualStyleBackColor = true;
+            this.btCheckBin.Click += new System.EventHandler(this.btCheckBin_Click);
+            // 
+            // tabDebug
+            // 
+            this.tabDebug.Controls.Add(this.btClearLog);
+            this.tabDebug.Controls.Add(this.btTest);
+            this.tabDebug.Controls.Add(this.tbLogDebug);
+            this.tabDebug.Location = new System.Drawing.Point(4, 22);
+            this.tabDebug.Name = "tabDebug";
+            this.tabDebug.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDebug.Size = new System.Drawing.Size(696, 577);
+            this.tabDebug.TabIndex = 3;
+            this.tabDebug.Text = "Debug";
+            this.tabDebug.UseVisualStyleBackColor = true;
+            this.tabDebug.Paint += new System.Windows.Forms.PaintEventHandler(this.tabDebug_Paint);
+            // 
+            // btClearLog
+            // 
+            this.btClearLog.Location = new System.Drawing.Point(613, 544);
+            this.btClearLog.Name = "btClearLog";
+            this.btClearLog.Size = new System.Drawing.Size(75, 23);
+            this.btClearLog.TabIndex = 7;
+            this.btClearLog.Text = "Clear";
+            this.btClearLog.UseVisualStyleBackColor = true;
+            this.btClearLog.Click += new System.EventHandler(this.btClearLog_Click);
+            // 
+            // btTest
+            // 
+            this.btTest.Enabled = false;
+            this.btTest.Location = new System.Drawing.Point(613, 6);
+            this.btTest.Name = "btTest";
+            this.btTest.Size = new System.Drawing.Size(75, 23);
+            this.btTest.TabIndex = 6;
+            this.btTest.Text = "Test Sort";
+            this.btTest.UseVisualStyleBackColor = true;
+            this.btTest.Visible = false;
+            this.btTest.Click += new System.EventHandler(this.btTest_Click);
+            // 
+            // tbLogDebug
+            // 
+            this.tbLogDebug.Location = new System.Drawing.Point(6, 6);
+            this.tbLogDebug.MaxLength = 0;
+            this.tbLogDebug.Multiline = true;
+            this.tbLogDebug.Name = "tbLogDebug";
+            this.tbLogDebug.ReadOnly = true;
+            this.tbLogDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbLogDebug.Size = new System.Drawing.Size(601, 563);
+            this.tbLogDebug.TabIndex = 3;
             // 
             // tabReadMe
             // 
@@ -826,18 +961,54 @@
             this.ofdLoadDatabaseFile.Filter = "DB file|*.db";
             this.ofdLoadDatabaseFile.ShowHelp = true;
             // 
-            // btPbpRename
+            // label3
             // 
-            this.btPbpRename.Enabled = false;
-            this.btPbpRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btPbpRename.Location = new System.Drawing.Point(178, 19);
-            this.btPbpRename.Name = "btPbpRename";
-            this.btPbpRename.Size = new System.Drawing.Size(82, 25);
-            this.btPbpRename.TabIndex = 13;
-            this.btPbpRename.Text = "pbp file(s)";
-            this.btPbpRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btPbpRename.UseVisualStyleBackColor = true;
-            this.btPbpRename.Click += new System.EventHandler(this.btPbpRename_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(170, 153);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(275, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Display another window. Find a serial number in a bin file.";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(170, 205);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(402, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Display another window. Manage memory card files and merge slots between 2 files." +
+    "";
+            // 
+            // btIniFileCopy
+            // 
+            this.btIniFileCopy.Location = new System.Drawing.Point(8, 240);
+            this.btIniFileCopy.Name = "btIniFileCopy";
+            this.btIniFileCopy.Size = new System.Drawing.Size(150, 46);
+            this.btIniFileCopy.TabIndex = 12;
+            this.btIniFileCopy.Text = "Copy bleemsync_cfg.INI file";
+            this.btIniFileCopy.UseVisualStyleBackColor = true;
+            this.btIniFileCopy.Click += new System.EventHandler(this.btIniFileCopy_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(170, 257);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(476, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "For BS1.0.0, copy the bleemsync_cfg.INI file from the exe path to your usb drive " +
+    "(overwrite existing).";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(187, 273);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(503, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "The ini has parameters to be the nearest to the stock UI (no boot menu and splash" +
+    "screen, default theme).";
             // 
             // Form1
             // 
@@ -860,10 +1031,14 @@
             this.gbExploreDetails.ResumeLayout(false);
             this.gbExploreDetails.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
-            this.tabDebug.ResumeLayout(false);
-            this.tabDebug.PerformLayout();
             this.tabTransform.ResumeLayout(false);
             this.gbTransform.ResumeLayout(false);
+            this.tabConfig.ResumeLayout(false);
+            this.tabConfig.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabDebug.ResumeLayout(false);
+            this.tabDebug.PerformLayout();
             this.tabReadMe.ResumeLayout(false);
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
@@ -938,6 +1113,20 @@
         private System.Windows.Forms.Button btReadBS100Database;
         private System.Windows.Forms.OpenFileDialog ofdLoadDatabaseFile;
         private System.Windows.Forms.Button btPbpRename;
+        private System.Windows.Forms.TabPage tabConfig;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btValidateCfg;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbSimultaneousCopiedFiles;
+        private System.Windows.Forms.Label lbCurrentSimultaneousCopiedFiles;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btCheckBin;
+        private System.Windows.Forms.Button btCheckMemCard;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btIniFileCopy;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }
 

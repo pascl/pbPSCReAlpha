@@ -32,14 +32,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form5));
             this.tlpFilesCopying = new System.Windows.Forms.TableLayoutPanel();
             this.tmAutoHide = new System.Windows.Forms.Timer(this.components);
+            this.tmStartFiles = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // tlpFilesCopying
             // 
             this.tlpFilesCopying.AutoScroll = true;
-            this.tlpFilesCopying.ColumnCount = 2;
+            this.tlpFilesCopying.ColumnCount = 1;
             this.tlpFilesCopying.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpFilesCopying.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpFilesCopying.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpFilesCopying.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpFilesCopying.Location = new System.Drawing.Point(0, 0);
             this.tlpFilesCopying.Name = "tlpFilesCopying";
@@ -83,6 +84,11 @@
             this.tmAutoHide.Interval = 10000;
             this.tmAutoHide.Tick += new System.EventHandler(this.tmAutoHide_Tick);
             // 
+            // tmStartFiles
+            // 
+            this.tmStartFiles.Interval = 500;
+            this.tmStartFiles.Tick += new System.EventHandler(this.tmStartFiles_Tick);
+            // 
             // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -105,5 +111,6 @@
 
         private System.Windows.Forms.TableLayoutPanel tlpFilesCopying;
         private System.Windows.Forms.Timer tmAutoHide;
+        private System.Windows.Forms.Timer tmStartFiles;
     }
 }

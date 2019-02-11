@@ -27,15 +27,26 @@ namespace pbPSCReAlpha
         Form5 frmCopy = null;
         ClVersionHelper currentUsedVersion;
         int iBleemsyncVersion;
+        int iSimultaneous = 2;
         ClVersionHelper[] bleemsyncVersions;
 
-        public Form1()
+        public Form1(Dictionary<string, ClPS1Game> ps1games)
         {
             InitializeComponent();
-            this.frmCopy = new Form5();
-            this.frmCopy.Visible = false;
             this.Text = "pbPSCReAlpha v" + Assembly.GetExecutingAssembly().GetName().Version;
-            dcPs1Games = new Dictionary<string, ClPS1Game>();
+
+            iSimultaneous = Properties.Settings.Default.iSimultaneous;
+            if (iSimultaneous <= 0)
+            {
+                iSimultaneous = 1;
+            }
+            cbSimultaneousCopiedFiles.SelectedIndex = iSimultaneous - 1;
+            lbCurrentSimultaneousCopiedFiles.Text = iSimultaneous.ToString();
+
+            this.frmCopy = new Form5(iSimultaneous);
+            this.frmCopy.Visible = false;
+
+            dcPs1Games = ps1games;
             lsSbiNeeds = new List<string>();
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
@@ -47,58 +58,7 @@ namespace pbPSCReAlpha
             tsmiBSVersionItem.Text = "Currently use BleemSync v" + currentUsedVersion.Versionstring;
 
             slLogger = new SimpleLogger(tbLogDebug);
-            try
-            {
-                using (XmlTextReader xmlreader = new XmlTextReader(Application.StartupPath + "\\" + "ps1games.xml"))
-                {
-                    String mykey = String.Empty;
-                    String mylink = String.Empty;
-                    String myvalue = String.Empty;
-                    while (xmlreader.Read())
-                    {
-                        switch (xmlreader.NodeType)
-                        {
-                            case XmlNodeType.Element:
-                                // Console.WriteLine(xmlreader.Name);
-                                if ("game" == xmlreader.Name)
-                                {
-                                    while (xmlreader.MoveToNextAttribute())
-                                    {
-                                        // Console.Write(" " + xmlreader.Name + "='" + xmlreader.Value + "'");
-                                        if ("serial" == xmlreader.Name)
-                                        {
-                                            mykey = xmlreader.Value;
-                                        }
-                                        else if ("link" == xmlreader.Name)
-                                        {
-                                            mylink = xmlreader.Value;
-                                        }
-                                    }
-                                }
-                                break;
-                            case XmlNodeType.Text:
-                                // Console.WriteLine(xmlreader.Value);
-                                myvalue = xmlreader.Value;
-                                if (!dcPs1Games.ContainsKey(mykey))
-                                {
-                                    dcPs1Games.Add(mykey, new ClPS1Game(myvalue, mykey, mylink));
-                                    myvalue = String.Empty;
-                                    mykey = String.Empty;
-                                    mylink = String.Empty;
-                                }
-                                break;
-                            case XmlNodeType.EndElement:
-                                //
-                                break;
-                        }
-                    }
-                    slLogger.Debug("Found games in xml for search function: " + dcPs1Games.Count.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                slLogger.Fatal(ex.Message);
-            }
+            
             try
             {
                 using (XmlTextReader xmlreader = new XmlTextReader(Application.StartupPath + "\\" + "sbigames.xml"))
@@ -958,6 +918,12 @@ namespace pbPSCReAlpha
             slLogger.Trace(">> Resort gamelist Click");
             int iDecalage = 3000;
             String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            //String sFolderSavePath = sFolderPath.Substring(0,sFolderPath.LastIndexOf("\\")) + "saves";
+
             // refresh without updating display, reupdate at the end
             Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
             if (lsFolders.Count > 0)
@@ -981,7 +947,13 @@ namespace pbPSCReAlpha
                                 {
                                     Directory.Move(sFolderPath + "\\" + s, sFolderPath + "\\" + (index + iDecalage).ToString());
                                 }
-                                //lbGames.Items.Add(dcGames[s]);
+                                /*if (Directory.Exists(sFolderSavePath + "\\" + s))
+                                {
+                                    if ((sFolderSavePath + "\\" + s) != (sFolderSavePath + "\\" + (index + iDecalage).ToString()))
+                                    {
+                                        Directory.Move(sFolderSavePath + "\\" + s, sFolderSavePath + "\\" + (index + iDecalage).ToString());
+                                    }
+                                }*/
                             }
                         }
                         int iNewIndex = 1;
@@ -1002,6 +974,13 @@ namespace pbPSCReAlpha
                                         {
                                             Directory.Move(sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderPath + "\\" + (iNewIndex).ToString());
                                         }
+                                        /*if (Directory.Exists(sFolderSavePath + "\\" + (iIndexFolder + iDecalage).ToString()))
+                                        {
+                                            if ((sFolderSavePath + "\\" + (iIndexFolder + iDecalage).ToString()) != (sFolderSavePath + "\\" + (iNewIndex).ToString()))
+                                            {
+                                                Directory.Move(sFolderSavePath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderSavePath + "\\" + (iNewIndex).ToString());
+                                            }
+                                        }*/
                                         liFoldersDone.Add(iIndexFolder);
                                         iNewIndex++;
                                         break;
@@ -1034,6 +1013,7 @@ namespace pbPSCReAlpha
         {
             Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
             Properties.Settings.Default.iVersionBleemSync = iBleemsyncVersion;
+            Properties.Settings.Default.iSimultaneous = iSimultaneous;
             Properties.Settings.Default.Save();
             //slLogger.Trace("Saving parameters for next time. Bye.");
         }
@@ -1067,7 +1047,10 @@ namespace pbPSCReAlpha
                         {
                             Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder);
                         }
-                        File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
+                        if (iBleemsyncVersion == 0)
+                        {
+                            File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -1273,14 +1256,15 @@ namespace pbPSCReAlpha
                     }
                     else
                     {
-                        this.frmCopy = new Form5();
+                        this.frmCopy = new Form5(iSimultaneous);
                         this.frmCopy.Location = new Point(this.Location.X + this.Width, this.Location.Y);
                         this.frmCopy.Visible = true;
                     }
                     ClPbProgessBarLabeled pbl = this.frmCopy.addNewLine(sFile.Substring(sFile.LastIndexOf('\\')));
                     // TODO deporter la suite ailleurs pour en mettre qu'un ou deux simultanement et le reste en file d'attente...
-                    ClPbWebClient wc = new ClPbWebClient(pbl, slLogger);
-                    wc.DownloadFileAsync(new Uri(sFile), dstFolder + "\\" + sFile.Substring(sFile.LastIndexOf('\\')));
+                    ClPbWebClient wc = new ClPbWebClient(pbl, slLogger, sFile, dstFolder + "\\" + sFile.Substring(sFile.LastIndexOf('\\')));
+                    pbl.PbPanel.Tag = wc;
+                    //wc.DownloadFileAsync(new Uri(sFile), );
                 }
             }
             else
@@ -1448,7 +1432,7 @@ namespace pbPSCReAlpha
                 String[] sFileList = (String[])e.Data.GetData(DataFormats.FileDrop, false);
                 if (sFileList.Length == 1)
                 {
-                    String sExt = Path.GetExtension(sFileList[0]);
+                    String sExt = Path.GetExtension(sFileList[0]).ToLower();
                     List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
                     if (lsAcceptedExt.IndexOf(sExt) > -1)
                     {
@@ -1546,9 +1530,9 @@ namespace pbPSCReAlpha
                 DirectoryInfo directoryInfo = new DirectoryInfo(sFolder);
                 slLogger.Debug("Refreshing " + sFolder);
                 ClGameStructure cgs = manageFolder(cgsSave.FolderIndex, directoryInfo, ref lsFolders, ref lsTitles, false);
-                if (true == bRefreshListBox)
+                //if (true == bRefreshListBox)
                 {
-                    if (cgs != null)
+                    if (!cgs.IsSame(cgsSave))
                     {
                         lbGames.Items.RemoveAt(iIndex);
                         lbGames.Items.Insert(iIndex, cgs);
@@ -2358,6 +2342,11 @@ namespace pbPSCReAlpha
                     {
                         ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                         String sFolderPath = tbFolderPath.Text;
+                        if (sFolderPath.EndsWith("\\"))
+                        {
+                            sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+                        }
+                        //String sFolderSavePath = sFolderPath.Substring(0, sFolderPath.LastIndexOf("\\")) + "saves";
                         String sPath = sFolderPath + "\\" + cgs.FolderIndex;
                         if (Directory.Exists(sPath))
                         {
@@ -2365,7 +2354,17 @@ namespace pbPSCReAlpha
                             {
                                 slLogger.Debug("Removing folder " + sPath);
                                 Directory.Delete(sPath, true);
-                                //lbGames.SelectedIndex = -1;
+                                /*if(Directory.Exists(sFolderSavePath + "\\" + cgs.FolderIndex))
+                                {
+                                    // don't remove, just move in case out of sync
+                                    int index = 0;
+                                    while (Directory.Exists(sFolderSavePath + "\\" + "bak" + index + "_" + cgs.FolderIndex))
+                                    {
+                                        index++;
+                                    }
+                                    Directory.Move(sFolderSavePath + "\\" + cgs.FolderIndex, sFolderSavePath + "\\" + "bak" + index + "_" + cgs.FolderIndex);
+                                }
+                                */
                                 refreshGameListFolders();
                             }
                         }
@@ -2923,6 +2922,72 @@ namespace pbPSCReAlpha
                 }
             }
             slLogger.Trace("<< Pbp AutoRename Click");
+        }
+
+        private void btValidateCfg_Click(object sender, EventArgs e)
+        {
+            //
+            if (cbSimultaneousCopiedFiles.SelectedIndex > -1)
+            {
+                iSimultaneous = cbSimultaneousCopiedFiles.SelectedIndex + 1;
+                lbCurrentSimultaneousCopiedFiles.Text = iSimultaneous.ToString();
+
+                Properties.Settings.Default.iSimultaneous = iSimultaneous;
+                frmCopy.SimultaneousCopiedFiles = iSimultaneous;
+            }
+        }
+
+        private void btCheckBin_Click(object sender, EventArgs e)
+        {
+            Form7 f = new Form7(dcPs1Games);
+            f.ShowDialog();
+        }
+
+        private void btCheckMemCard_Click(object sender, EventArgs e)
+        {
+            String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            //String sFolderSavePath = sFolderPath.Substring(0, sFolderPath.LastIndexOf("\\")) + "saves";
+            Form8 f = new Form8(sFolderPath);
+            f.ShowDialog();
+        }
+
+        private void btIniFileCopy_Click(object sender, EventArgs e)
+        {
+            if(1 == iBleemsyncVersion)
+            {
+                String sFolderPath = tbFolderPath.Text;
+                if (sFolderPath.EndsWith("\\"))
+                {
+                    sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+                }
+                String sInicfgPath = String.Empty;
+                int ipos = sFolderPath.LastIndexOf("\\");
+                if(ipos > -1)
+                {
+                    sInicfgPath = sFolderPath.Substring(0, ipos);
+                }
+                else
+                {
+                    sInicfgPath = sFolderPath;
+                }
+                try
+                {
+                    sInicfgPath += "\\bleemsync\\etc\\bleemsync\\CFG\\";
+                    if (Directory.Exists(sInicfgPath))
+                    {
+                        File.Copy(Application.StartupPath + "\\" + "bleemsync_cfg.INI", sInicfgPath + "\\" + "bleemsync_cfg.INI");
+                        FlexibleMessageBox.Show("File Copied to " + sInicfgPath);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
         }
     }
 }

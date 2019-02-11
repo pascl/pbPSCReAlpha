@@ -404,6 +404,7 @@
             this.lbGeneBigData.Size = new System.Drawing.Size(392, 121);
             this.lbGeneBigData.TabIndex = 25;
             this.lbGeneBigData.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigData_SelectedIndexChanged);
+            this.lbGeneBigData.DoubleClick += new System.EventHandler(this.lbGeneBigData_DoubleClick);
             // 
             // btBack
             // 

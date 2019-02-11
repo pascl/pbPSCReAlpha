@@ -192,6 +192,56 @@ namespace pbPSCReAlpha
             _size = lSize;
         }
 
+        public bool IsSame(ClGameStructure cgs)
+        {
+            bool b = true;
+            if (b) { b &= (Title == cgs.Title); }
+            if (b) { b &= (FolderIndex == cgs.FolderIndex); }
+            if (b) { b &= (IndexAndTitle == cgs.IndexAndTitle); }
+            if (b) { b &= (Alphatitle == cgs.Alphatitle); }
+            if (b) { b &= (Discs == cgs.Discs); }
+            if (b) { b &= (Publisher == cgs.Publisher); }
+            if (b) { b &= (Year == cgs.Year); }
+            if (b) { b &= (Players == cgs.Players); }
+            if (b) { b &= (GameDataMissing == cgs.GameDataMissing); }
+            if (b) { b &= (IniMissing == cgs.IniMissing); }
+            if (b) { b &= (CfgMissing == cgs.CfgMissing); }
+            if (b) { b &= (CueMissing == cgs.CueMissing); }
+            if (b) { b &= (BinMissing == cgs.BinMissing); }
+            if (b) { b &= (NanFolder == cgs.NanFolder); }
+            if (b) { b &= (PngMissing == cgs.PngMissing); }
+            if (b) { b &= (PngMultiple == cgs.PngMultiple); }
+            if (b) { b &= (IniIncomplete == cgs.IniIncomplete); }
+            if (b) { b &= (PngMismatch == cgs.PngMismatch); }
+            if (b) { b &= (BadCueName == cgs.BadCueName); }
+            if (b) { b &= (BadBinName == cgs.BadBinName); }
+            if (b) { b &= (CueCountMisMatchDiscsCount == cgs.CueCountMisMatchDiscsCount); }
+            if (b) { b &= (PictureFileName == cgs.PictureFileName); }
+            if (b) { b &= (NeededSbiMissing == cgs.NeededSbiMissing); }
+            if (b) { b &= (CommaInFilename == cgs.CommaInFilename); }
+            if (b) { b &= (PbpMissing == cgs.PbpMissing); }
+            if (b) { b &= (BadPbpName == cgs.BadPbpName); }
+            if (b) { b &= (PbpCountMisMatchDiscsCount == cgs.PbpCountMisMatchDiscsCount); }
+            if (b) { b &= (BadDiscsName == cgs.BadDiscsName); }
+            if (b) { b &= (PbpErrors == cgs.PbpErrors); }
+            if (b) { b &= (CueErrors == cgs.CueErrors); }
+            if (b) { b &= (BinErrors == cgs.BinErrors); }
+            if (b) { b &= (SbiErrors == cgs.SbiErrors); }
+            if (b) { b &= (PngErrors == cgs.PngErrors); }
+            if (b) { b &= (IniErrors == cgs.IniErrors); }
+            if (b) { b &= (FileErrors == cgs.FileErrors); }
+            if (b) { b &= (GeneralError == cgs.GeneralError); }
+            if (b) { b &= (GeneralWarning == cgs.GeneralWarning); }
+            if (b) { b &= (ErrorString.Count == cgs.ErrorString.Count); }
+            if (b) { b &= (FilesBinOk.Count == cgs.FilesBinOk.Count); }
+            if (b) { b &= (FilesCueOk.Count == cgs.FilesCueOk.Count); }
+            if (b) { b &= (FilesSbiOk.Count == cgs.FilesSbiOk.Count); }
+            if (b) { b &= (FilesPbpOk.Count == cgs.FilesPbpOk.Count); }
+            if (b) { b &= (Filenames.Count == cgs.Filenames.Count); }
+
+            return b;
+        }
+
         public String Title { get => _title; set => _title = value; }
         public String FolderIndex { get => _folderIndex; set => _folderIndex = value; }
         public String IndexAndTitle { get => (GeneralError ? "* " : (GeneralWarning ? "! " : "")) + _folderIndex + " - " + _title; }

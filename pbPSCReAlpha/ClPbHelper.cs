@@ -153,7 +153,8 @@ namespace pbPSCReAlpha
             }
             catch(Exception ex)
             {
-                sl.Fatal(ex.Message);
+                if (null != sl)
+                    sl.Fatal(ex.Message);
             }
         }
     }

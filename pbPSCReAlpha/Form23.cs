@@ -104,7 +104,8 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if(null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
             pbCover.AllowDrop = true;
@@ -112,7 +113,8 @@ namespace pbPSCReAlpha
 
         private void btLoadIni_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Load Game.ini Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Load Game.ini Click");
             if (!String.IsNullOrEmpty(_currentFilePathIni))
             {
                 ofdGeneLoadIni.InitialDirectory = _currentFilePathIni.Substring(0, _currentFilePathIni.LastIndexOf("\\"));
@@ -216,15 +218,18 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
-            slLogger.Trace("<< Load Game.ini Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Load Game.ini Click");
         }
 
         private void btGenerateIni_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Save as Game.ini Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Save as Game.ini Click");
             String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text); // have to be not empty
             String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text); // have to be not empty
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
@@ -290,7 +295,8 @@ namespace pbPSCReAlpha
                     }
                     catch (Exception ex)
                     {
-                        slLogger.Fatal(ex.Message);
+                        if (null != slLogger)
+                            slLogger.Fatal(ex.Message);
                     }
                 }
             }
@@ -298,7 +304,8 @@ namespace pbPSCReAlpha
             {
                 FlexibleMessageBox.Show("You have to enter at least Title and Discs to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            slLogger.Trace("<< Save as Game.ini Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Save as Game.ini Click");
         }
 
         private void btBack_Click(object sender, EventArgs e)
@@ -308,7 +315,8 @@ namespace pbPSCReAlpha
 
         private void btGeneSearch_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Search Game Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Search Game Click");
             String s = tbGeneSearchText.Text.Trim().ToUpper();
             lbGeneBigData.Items.Clear();
             lbGeneBigData.DisplayMember = "DisplayTitle";
@@ -320,7 +328,7 @@ namespace pbPSCReAlpha
             _docHtmlStr = String.Empty;
             if (dcPs1Games.Count > 0)
             {
-                if (s.Length > 2)
+                if (s.Length >= 2)
                 {
                     foreach (KeyValuePair<string, ClPS1Game> pair in dcPs1Games)
                     {
@@ -340,28 +348,38 @@ namespace pbPSCReAlpha
             {
                 FlexibleMessageBox.Show("Error. Gamelist not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            slLogger.Trace("<< Search Game Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Search Game Click");
         }
 
         private void btLink_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Game Link Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Game Link Click");
 
             String sLink = tbHiddenLink.Text.Trim();
             if (!String.IsNullOrEmpty(sLink))
             {
                 System.Diagnostics.Process.Start("http://psxdatacenter.com/" + sLink);
             }
-            slLogger.Trace("<< Game Link Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Game Link Click");
         }
 
         private void lbGeneBigData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Game Selection changed in search results");
+            if (null != slLogger)
+                slLogger.Trace(">> Game Selection changed in search results");
             if (lbGeneBigData.SelectedIndex > -1)
             {
                 ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
-                tbGeneTitle.Text = psGame.Title.Trim();
+                String sTitle = psGame.Title.Trim();
+                int ipos = sTitle.LastIndexOf("- [");
+                if(ipos > -1)
+                {
+                    sTitle = sTitle.Substring(0, ipos).Trim();
+                }
+                tbGeneTitle.Text = sTitle.Trim();
                 tbGeneDiscs.Text = psGame.Serial.Trim();
                 tbHiddenLink.Text = psGame.Link.Trim();
                 btLink.Enabled = true;
@@ -372,12 +390,14 @@ namespace pbPSCReAlpha
                 btLink.Enabled = false;
                 btViewPage.Enabled = false;
             }
-            slLogger.Trace("<< Game Selection changed in search results");
+            if (null != slLogger)
+                slLogger.Trace("<< Game Selection changed in search results");
         }
 
         private void btSaveIni_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Save Game.ini Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Save Game.ini Click");
             String s1 = ClPbHelper.RemoveQuotes(tbGeneTitle.Text); // have to be not empty
             String s2 = ClPbHelper.RemoveQuotes(tbGeneDiscs.Text); // have to be not empty
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
@@ -434,7 +454,8 @@ namespace pbPSCReAlpha
                     }
                     catch (Exception ex)
                     {
-                        slLogger.Fatal(ex.Message);
+                        if (null != slLogger)
+                            slLogger.Fatal(ex.Message);
                     }
                 }
             }
@@ -442,7 +463,8 @@ namespace pbPSCReAlpha
             {
                 FlexibleMessageBox.Show("You have to enter at least Title and Discs to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-            slLogger.Trace("<< Save Game.ini Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Save Game.ini Click");
         }
 
         private void tbGeneSearchText_KeyDown(object sender, KeyEventArgs e)
@@ -455,14 +477,17 @@ namespace pbPSCReAlpha
 
         private void btGeneCopyTitle_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Copy in alphatitle Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Copy in alphatitle Click");
             tbGeneAlphaTitle.Text = tbGeneTitle.Text;
-            slLogger.Trace("<< Copy in alphatitle Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Copy in alphatitle Click");
         }
 
         private void btViewPage_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> View webpage Click");
+            if (null != slLogger)
+                slLogger.Trace(">> View webpage Click");
             if (lbGeneBigData.SelectedIndex > -1)
             {
                 try
@@ -476,10 +501,12 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
-            slLogger.Trace("<< View webpage Click");
+            if (null != slLogger)
+                slLogger.Trace("<< View webpage Click");
         }
 
         private void wbViewer_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -503,7 +530,8 @@ namespace pbPSCReAlpha
 
         private void btScraper_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Scrape webpage Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Scrape webpage Click");
             ClGameScraper clgs = new ClGameScraper(_docHtmlStr);
 
             tbGenePublisher.Text = clgs.Publisher;
@@ -524,23 +552,27 @@ namespace pbPSCReAlpha
             {
                 nuGeneYear.Value = (decimal)1995;
             }
-            slLogger.Trace("<< Scrape webpage Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Scrape webpage Click");
         }
 
         private void btReloadTitleDiscs_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Reload title and discs Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Reload title and discs Click");
             if (!newGame.IniMissing)
             {
                 tbGeneTitle.Text = newGame.Title;
                 tbGeneDiscs.Text = newGame.Discs;
             }
-            slLogger.Trace("<< Reload title and discs Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Reload title and discs Click");
         }
 
         private void btLoad_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Load image Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Load image Click");
             if (Directory.Exists(_folderPath))
             {
                 ofdGeneLoadImage.InitialDirectory = _folderPath;
@@ -561,15 +593,18 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
-            slLogger.Trace("<< Load image Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Load image Click");
         }
 
         private void btSave_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Save PNG Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Save PNG Click");
             if (!String.IsNullOrEmpty(_currentFilePathImg))
             {
                 String sFileName = _currentFilePathImg;
@@ -595,15 +630,18 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
-            slLogger.Trace("<< Save PNG Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Save PNG Click");
         }
 
         private void btSaveAs_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Save as PNG Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Save as PNG Click");
             if (Directory.Exists(_folderPath))
             {
                 sfdGeneSaveImage.InitialDirectory = _folderPath;
@@ -651,17 +689,20 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
             // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
 
-            slLogger.Trace("<< Save as PNG Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Save as PNG Click");
         }
 
         private void btScrapeImg_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Scrape image Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Scrape image Click");
             try
             {
                 using(Bitmap bm = new Bitmap(pbTmp.Image))
@@ -671,21 +712,24 @@ namespace pbPSCReAlpha
             }
             catch (Exception ex)
             {
-                slLogger.Fatal(ex.Message);
+                if (null != slLogger)
+                    slLogger.Fatal(ex.Message);
             }
-            slLogger.Trace("<< Scrape image Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Scrape image Click");
             
         }
 
         private void pbCover_DragDrop(object sender, DragEventArgs e)
         {
-            slLogger.Trace(">> Dragdrop image");
+            if (null != slLogger)
+                slLogger.Trace(">> Dragdrop image");
             try
             {
                 String[] sFileList = (String[])e.Data.GetData(DataFormats.FileDrop, false);
                 if (sFileList.Length == 1)
                 {
-                    String sExt = Path.GetExtension(sFileList[0]);
+                    String sExt = Path.GetExtension(sFileList[0]).ToLower();
                     List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
                     if (lsAcceptedExt.IndexOf(sExt) > -1)
                     {
@@ -696,20 +740,24 @@ namespace pbPSCReAlpha
                     }
                     else
                     {
-                        slLogger.Error("Extension " + sExt + " not accepted. Dragdrop a file with extension png, bmp, jpg or jpeg.");
+                        if (null != slLogger)
+                            slLogger.Error("Extension " + sExt + " not accepted. Dragdrop a file with extension png, bmp, jpg or jpeg.");
                     }
                 }
                 else
                 {
                     FlexibleMessageBox.Show("Only one file for drag&drop operation please.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    slLogger.Error("Dragdrop only one file please.");
+                    if (null != slLogger)
+                        slLogger.Error("Dragdrop only one file please.");
                 }
             }
             catch (Exception ex)
             {
-                slLogger.Fatal(ex.Message);
+                if (null != slLogger)
+                    slLogger.Fatal(ex.Message);
             }
-            slLogger.Trace("<< Dragdrop image");
+            if (null != slLogger)
+                slLogger.Trace("<< Dragdrop image");
         }
 
         private void pbCover_DragEnter(object sender, DragEventArgs e)
@@ -720,7 +768,8 @@ namespace pbPSCReAlpha
 
         private void btIniReload_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Game.ini Reload Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Game.ini Reload Click");
             if (newGame == null)
             {
                 //
@@ -749,12 +798,14 @@ namespace pbPSCReAlpha
                     //
                 }
             }
-            slLogger.Trace("<< Game.ini Reload Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Game.ini Reload Click");
         }
 
         private void btPictureReload_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Picture Reload Click");
+            if (null != slLogger)
+                slLogger.Trace(">> Picture Reload Click");
             if(newGame == null)
             {
                 //
@@ -775,10 +826,12 @@ namespace pbPSCReAlpha
                 }
                 catch (Exception ex)
                 {
-                    slLogger.Fatal(ex.Message);
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
                 }
             }
-            slLogger.Trace("<< Picture Reload Click");
+            if (null != slLogger)
+                slLogger.Trace("<< Picture Reload Click");
         }
 
         private void pbCover_LoadCompleted(object sender, AsyncCompletedEventArgs e)
@@ -795,6 +848,11 @@ namespace pbPSCReAlpha
         {
             //
             btScrapeImg.Enabled = true;
+        }
+
+        private void lbGeneBigData_DoubleClick(object sender, EventArgs e)
+        {
+            btViewPage_Click(sender, e);
         }
     }
 }

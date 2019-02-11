@@ -37,13 +37,25 @@ namespace pbPSCReAlpha.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int iVersionBleemSync {
             get {
                 return ((int)(this["iVersionBleemSync"]));
             }
             set {
                 this["iVersionBleemSync"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int iSimultaneous {
+            get {
+                return ((int)(this["iSimultaneous"]));
+            }
+            set {
+                this["iSimultaneous"] = value;
             }
         }
     }

@@ -93,8 +93,15 @@ namespace pbPSCReAlpha
 
         private void WriteLine(string text, bool append = true)
         {
-            String s = Environment.NewLine + text;
-            _tb.AppendText(s);
+            try
+            {
+                String s = Environment.NewLine + text;
+                _tb.AppendText(s);
+            }
+            catch(Exception ex)
+            {
+                //
+            }
             /*
             try
             {
