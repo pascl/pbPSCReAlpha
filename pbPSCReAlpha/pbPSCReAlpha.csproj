@@ -252,6 +252,7 @@
     <None Include="Resources\arrow-left-4.png" />
     <None Include="Resources\draw-arrow-back.png" />
     <None Include="Resources\draw-arrow-forward.png" />
+    <None Include="Resources\edit-4.png" />
     <Content Include="sbigames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -2,17 +2,39 @@
 
 A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync.
 
-Last version: 1.1
+
+Last version: 1.11
 
 ![Preview](https://i.imgur.com/ueJQm0Z.png)
+
+## General
+
+An USB drive configured by Bleemsync (example of 1.01 version) contains several folders:
+* bleemsync
+* f854cc9b-6cfc-4524-90a2-a2b35bbc3e24
+* logs
+* games
+
+In the games folder, some numeroted folders (one per game) containing:
+* png file (only one)
+* cue file(s) (one per disc if several)
+* bin file(s) (at least one per disc but can be more)
+* instead of bin & cue files, pbp file(s) (one per disc if several)
+* sbi file(s) necessary fo some PAL games
+* game.ini file or not, depending of the bleemsync version (or if you have already run this tool).
+
+This software needs a Game.ini file for each game. These files were necessary in the older versions of bleemsync but not present anymore since 1.0 version. This software can create these files by reading the database file on the usb drive (after a click on Refresh or in the Tranformer tab).
+
+After modifications in the software, you have to click on Recreate database to have these modifications available on the PSC.
 
 ## Viewer
 
 ### View
 1. Select your "Games" directory with the textfield or the Browse button.
 2. Click on Refresh.
-3. Click on a game in the left-hand list (found errors are marked here with a star).
-4. Information of the game display on the right-hand of the window. Several errors/warnings can be detected and are visible by icons near the files.
+3. **NEW 1.11** If a game.ini is missing in a folder, ask user to read database and create these files (if possible).
+4. Click on a game in the left-hand list (found errors are marked here with a star).
+5. Information of the game display on the right-hand of the window. Several errors/warnings can be detected and are visible by icons near the files.
 
 At the top of the window, you can switch between BleemSync versions.
 
@@ -115,6 +137,9 @@ The button appears only if the file is not detected in a folder. The file added 
 
 This file becomes not necessary when you use BlemSync1.0.0. So the button will not appear anymore.
 
+### **NEW 1.11** Generate m3u file
+The button appears only for multidisc games. Creating a m3u file is not necessary if you use only the stock emulator. It is recommended if you use retroarch with a psx core.
+
 ### Add files
 Browse your folders to add files in the selected folder (multiple selection is possible). You can drag and drop files directly in the filelist instead of clicking here.
 
@@ -126,6 +151,8 @@ Progress bars will appear during copy operation. They will disappear when copy i
 
 ### Refresh folder
 Updating information about the current selected game is done automatically after the other operations but can be forced by this button.
+
+**NEW 1.11** If a game.ini is missing in a folder, ask user to read database and create these files (if possible).
 
 ### Open folder
 Open Windows explorer directly in this folder.
