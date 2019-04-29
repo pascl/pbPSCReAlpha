@@ -58,5 +58,101 @@ namespace pbPSCReAlpha.Properties {
                 this["iSimultaneous"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int iSortOption1 {
+            get {
+                return ((int)(this["iSortOption1"]));
+            }
+            set {
+                this["iSortOption1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int iSortAsc1 {
+            get {
+                return ((int)(this["iSortAsc1"]));
+            }
+            set {
+                this["iSortAsc1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int iSortOption2 {
+            get {
+                return ((int)(this["iSortOption2"]));
+            }
+            set {
+                this["iSortOption2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int iSortAsc2 {
+            get {
+                return ((int)(this["iSortAsc2"]));
+            }
+            set {
+                this["iSortAsc2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int iSortOption3 {
+            get {
+                return ((int)(this["iSortOption3"]));
+            }
+            set {
+                this["iSortOption3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int iSortAsc3 {
+            get {
+                return ((int)(this["iSortAsc3"]));
+            }
+            set {
+                this["iSortAsc3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int iSortOption4 {
+            get {
+                return ((int)(this["iSortOption4"]));
+            }
+            set {
+                this["iSortOption4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int iSortAsc4 {
+            get {
+                return ((int)(this["iSortAsc4"]));
+            }
+            set {
+                this["iSortAsc4"] = value;
+            }
+        }
     }
 }

@@ -33,9 +33,26 @@
             this.fbdGamesFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.tabControlAll = new System.Windows.Forms.TabControl();
             this.tabExplorer = new System.Windows.Forms.TabPage();
+            this.btLaunchPngquant = new System.Windows.Forms.Button();
             this.lbFreeSpace = new System.Windows.Forms.Label();
+            this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
+            this.btM3uGenerate = new System.Windows.Forms.Button();
             this.gbAutoRename = new System.Windows.Forms.GroupBox();
+            this.btPbpRename = new System.Windows.Forms.Button();
+            this.btSbiRename = new System.Windows.Forms.Button();
+            this.btPngRename = new System.Windows.Forms.Button();
+            this.btBinRename = new System.Windows.Forms.Button();
+            this.btCueRename = new System.Windows.Forms.Button();
+            this.btOpenFolder = new System.Windows.Forms.Button();
+            this.btRefreshFolderOnly = new System.Windows.Forms.Button();
+            this.btAddFiles = new System.Windows.Forms.Button();
+            this.btEditCue = new System.Windows.Forms.Button();
+            this.btAddPcsxCfg = new System.Windows.Forms.Button();
+            this.btEditGameIni = new System.Windows.Forms.Button();
+            this.btNewFolder = new System.Windows.Forms.Button();
+            this.btReSort = new System.Windows.Forms.Button();
+            this.btCrowseGamesFolder = new System.Windows.Forms.Button();
             this.tbFolderPath = new System.Windows.Forms.TextBox();
             this.gbExploreDetails = new System.Windows.Forms.GroupBox();
             this.lbFolderSizeLabel = new System.Windows.Forms.Label();
@@ -55,9 +72,15 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.pbExploreImage = new System.Windows.Forms.PictureBox();
             this.lbGames = new System.Windows.Forms.ListBox();
+            this.btRefresh = new System.Windows.Forms.Button();
             this.tabTransform = new System.Windows.Forms.TabPage();
             this.gbTransform = new System.Windows.Forms.GroupBox();
+            this.btReadBS100Database = new System.Windows.Forms.Button();
+            this.btReadBS041Database = new System.Windows.Forms.Button();
+            this.btUpgradeFolders = new System.Windows.Forms.Button();
+            this.btDowngradeFolders = new System.Windows.Forms.Button();
             this.tabConfig = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -86,34 +109,28 @@
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadDatabaseFile = new System.Windows.Forms.OpenFileDialog();
-            this.btLaunchPngquant = new System.Windows.Forms.Button();
-            this.btLaunchBleemsync = new System.Windows.Forms.Button();
-            this.btM3uGenerate = new System.Windows.Forms.Button();
-            this.btPbpRename = new System.Windows.Forms.Button();
-            this.btSbiRename = new System.Windows.Forms.Button();
-            this.btPngRename = new System.Windows.Forms.Button();
-            this.btBinRename = new System.Windows.Forms.Button();
-            this.btCueRename = new System.Windows.Forms.Button();
-            this.btOpenFolder = new System.Windows.Forms.Button();
-            this.btRefreshFolderOnly = new System.Windows.Forms.Button();
-            this.btAddFiles = new System.Windows.Forms.Button();
-            this.btEditCue = new System.Windows.Forms.Button();
-            this.btAddPcsxCfg = new System.Windows.Forms.Button();
-            this.btEditGameIni = new System.Windows.Forms.Button();
-            this.btNewFolder = new System.Windows.Forms.Button();
-            this.btReSort = new System.Windows.Forms.Button();
-            this.btCrowseGamesFolder = new System.Windows.Forms.Button();
-            this.pbExploreImage = new System.Windows.Forms.PictureBox();
-            this.btRefresh = new System.Windows.Forms.Button();
-            this.btReadBS100Database = new System.Windows.Forms.Button();
-            this.btReadBS041Database = new System.Windows.Forms.Button();
-            this.btUpgradeFolders = new System.Windows.Forms.Button();
-            this.btDowngradeFolders = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cbSortingOption1 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption2 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption3 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption4 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption1b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption2b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption3b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption4b = new System.Windows.Forms.ComboBox();
+            this.cbSortOption2Check = new System.Windows.Forms.CheckBox();
+            this.cbSortOption3Check = new System.Windows.Forms.CheckBox();
+            this.cbSortOption4Check = new System.Windows.Forms.CheckBox();
+            this.lbCurrentSortOption1 = new System.Windows.Forms.Label();
+            this.lbCurrentSortOption2 = new System.Windows.Forms.Label();
+            this.lbCurrentSortOption3 = new System.Windows.Forms.Label();
+            this.lbCurrentSortOption4 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
             this.gbAutoRename.SuspendLayout();
             this.gbExploreDetails.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
             this.tabTransform.SuspendLayout();
             this.gbTransform.SuspendLayout();
             this.tabConfig.SuspendLayout();
@@ -121,7 +138,6 @@
             this.tabDebug.SuspendLayout();
             this.tabReadMe.SuspendLayout();
             this.msMainMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlAll
@@ -160,6 +176,19 @@
             this.tabExplorer.Text = "Explorer";
             this.tabExplorer.UseVisualStyleBackColor = true;
             // 
+            // btLaunchPngquant
+            // 
+            this.btLaunchPngquant.Enabled = false;
+            this.btLaunchPngquant.Image = global::pbPSCReAlpha.Properties.Resources.pictures;
+            this.btLaunchPngquant.Location = new System.Drawing.Point(246, 7);
+            this.btLaunchPngquant.Name = "btLaunchPngquant";
+            this.btLaunchPngquant.Size = new System.Drawing.Size(130, 25);
+            this.btLaunchPngquant.TabIndex = 12;
+            this.btLaunchPngquant.Text = "Compress png files";
+            this.btLaunchPngquant.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btLaunchPngquant.UseVisualStyleBackColor = true;
+            this.btLaunchPngquant.Click += new System.EventHandler(this.btLaunchPngquant_Click);
+            // 
             // lbFreeSpace
             // 
             this.lbFreeSpace.Location = new System.Drawing.Point(339, 16);
@@ -168,6 +197,19 @@
             this.lbFreeSpace.TabIndex = 11;
             this.lbFreeSpace.Text = "--";
             this.lbFreeSpace.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btLaunchBleemsync
+            // 
+            this.btLaunchBleemsync.Image = global::pbPSCReAlpha.Properties.Resources.inode_blockdevice;
+            this.btLaunchBleemsync.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btLaunchBleemsync.Location = new System.Drawing.Point(3, 522);
+            this.btLaunchBleemsync.Name = "btLaunchBleemsync";
+            this.btLaunchBleemsync.Size = new System.Drawing.Size(197, 48);
+            this.btLaunchBleemsync.TabIndex = 10;
+            this.btLaunchBleemsync.Text = "Recreate DataBase";
+            this.btLaunchBleemsync.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btLaunchBleemsync.UseVisualStyleBackColor = true;
+            this.btLaunchBleemsync.Click += new System.EventHandler(this.btLaunchBleemsync_Click);
             // 
             // gbExploreEdit
             // 
@@ -186,6 +228,21 @@
             this.gbExploreEdit.TabStop = false;
             this.gbExploreEdit.Text = "Edit";
             // 
+            // btM3uGenerate
+            // 
+            this.btM3uGenerate.Enabled = false;
+            this.btM3uGenerate.Image = global::pbPSCReAlpha.Properties.Resources.edit_4;
+            this.btM3uGenerate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btM3uGenerate.Location = new System.Drawing.Point(220, 50);
+            this.btM3uGenerate.Name = "btM3uGenerate";
+            this.btM3uGenerate.Size = new System.Drawing.Size(115, 25);
+            this.btM3uGenerate.TabIndex = 12;
+            this.btM3uGenerate.Text = "Generate m3u file";
+            this.btM3uGenerate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btM3uGenerate.UseVisualStyleBackColor = true;
+            this.btM3uGenerate.Visible = false;
+            this.btM3uGenerate.Click += new System.EventHandler(this.btM3uGenerate_Click);
+            // 
             // gbAutoRename
             // 
             this.gbAutoRename.Controls.Add(this.btPbpRename);
@@ -200,6 +257,196 @@
             this.gbAutoRename.TabStop = false;
             this.gbAutoRename.Text = "Auto-Rename";
             this.gbAutoRename.Visible = false;
+            // 
+            // btPbpRename
+            // 
+            this.btPbpRename.Enabled = false;
+            this.btPbpRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btPbpRename.Location = new System.Drawing.Point(178, 19);
+            this.btPbpRename.Name = "btPbpRename";
+            this.btPbpRename.Size = new System.Drawing.Size(82, 25);
+            this.btPbpRename.TabIndex = 13;
+            this.btPbpRename.Text = "pbp file(s)";
+            this.btPbpRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btPbpRename.UseVisualStyleBackColor = true;
+            this.btPbpRename.Click += new System.EventHandler(this.btPbpRename_Click);
+            // 
+            // btSbiRename
+            // 
+            this.btSbiRename.Enabled = false;
+            this.btSbiRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btSbiRename.Location = new System.Drawing.Point(354, 19);
+            this.btSbiRename.Name = "btSbiRename";
+            this.btSbiRename.Size = new System.Drawing.Size(82, 25);
+            this.btSbiRename.TabIndex = 12;
+            this.btSbiRename.Text = "sbi file(s)";
+            this.btSbiRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btSbiRename.UseVisualStyleBackColor = true;
+            this.btSbiRename.Click += new System.EventHandler(this.btSbiRename_Click);
+            // 
+            // btPngRename
+            // 
+            this.btPngRename.Enabled = false;
+            this.btPngRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btPngRename.Location = new System.Drawing.Point(266, 19);
+            this.btPngRename.Name = "btPngRename";
+            this.btPngRename.Size = new System.Drawing.Size(82, 25);
+            this.btPngRename.TabIndex = 11;
+            this.btPngRename.Text = "png file";
+            this.btPngRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btPngRename.UseVisualStyleBackColor = true;
+            this.btPngRename.Click += new System.EventHandler(this.btPngRename_Click);
+            // 
+            // btBinRename
+            // 
+            this.btBinRename.Enabled = false;
+            this.btBinRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btBinRename.Location = new System.Drawing.Point(4, 19);
+            this.btBinRename.Name = "btBinRename";
+            this.btBinRename.Size = new System.Drawing.Size(82, 25);
+            this.btBinRename.TabIndex = 9;
+            this.btBinRename.Text = "bin file(s)";
+            this.btBinRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btBinRename.UseVisualStyleBackColor = true;
+            this.btBinRename.Click += new System.EventHandler(this.btBinRename_Click);
+            // 
+            // btCueRename
+            // 
+            this.btCueRename.Enabled = false;
+            this.btCueRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
+            this.btCueRename.Location = new System.Drawing.Point(90, 19);
+            this.btCueRename.Name = "btCueRename";
+            this.btCueRename.Size = new System.Drawing.Size(82, 25);
+            this.btCueRename.TabIndex = 10;
+            this.btCueRename.Text = "cue file(s)";
+            this.btCueRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btCueRename.UseVisualStyleBackColor = true;
+            this.btCueRename.Click += new System.EventHandler(this.btCueRename_Click);
+            // 
+            // btOpenFolder
+            // 
+            this.btOpenFolder.Enabled = false;
+            this.btOpenFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
+            this.btOpenFolder.Location = new System.Drawing.Point(363, 50);
+            this.btOpenFolder.Name = "btOpenFolder";
+            this.btOpenFolder.Size = new System.Drawing.Size(115, 25);
+            this.btOpenFolder.TabIndex = 8;
+            this.btOpenFolder.Text = "Open folder";
+            this.btOpenFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btOpenFolder.UseVisualStyleBackColor = true;
+            this.btOpenFolder.Visible = false;
+            this.btOpenFolder.Click += new System.EventHandler(this.btOpenFolder_Click);
+            // 
+            // btRefreshFolderOnly
+            // 
+            this.btRefreshFolderOnly.Enabled = false;
+            this.btRefreshFolderOnly.Image = global::pbPSCReAlpha.Properties.Resources.view_refresh_6;
+            this.btRefreshFolderOnly.Location = new System.Drawing.Point(363, 19);
+            this.btRefreshFolderOnly.Name = "btRefreshFolderOnly";
+            this.btRefreshFolderOnly.Size = new System.Drawing.Size(115, 25);
+            this.btRefreshFolderOnly.TabIndex = 7;
+            this.btRefreshFolderOnly.Text = "Refresh folder";
+            this.btRefreshFolderOnly.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btRefreshFolderOnly.UseVisualStyleBackColor = true;
+            this.btRefreshFolderOnly.Visible = false;
+            this.btRefreshFolderOnly.Click += new System.EventHandler(this.btRefreshFolderOnly_Click);
+            // 
+            // btAddFiles
+            // 
+            this.btAddFiles.Enabled = false;
+            this.btAddFiles.Image = global::pbPSCReAlpha.Properties.Resources.brick_add;
+            this.btAddFiles.Location = new System.Drawing.Point(104, 19);
+            this.btAddFiles.Name = "btAddFiles";
+            this.btAddFiles.Size = new System.Drawing.Size(115, 25);
+            this.btAddFiles.TabIndex = 6;
+            this.btAddFiles.Text = "Add files";
+            this.btAddFiles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btAddFiles.UseVisualStyleBackColor = true;
+            this.btAddFiles.Visible = false;
+            this.btAddFiles.Click += new System.EventHandler(this.btAddFiles_Click);
+            // 
+            // btEditCue
+            // 
+            this.btEditCue.Enabled = false;
+            this.btEditCue.Image = global::pbPSCReAlpha.Properties.Resources.accessories_text_editor_3;
+            this.btEditCue.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btEditCue.Location = new System.Drawing.Point(104, 50);
+            this.btEditCue.Name = "btEditCue";
+            this.btEditCue.Size = new System.Drawing.Size(115, 25);
+            this.btEditCue.TabIndex = 3;
+            this.btEditCue.Text = "Edit cue file(s)";
+            this.btEditCue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btEditCue.UseVisualStyleBackColor = true;
+            this.btEditCue.Visible = false;
+            this.btEditCue.Click += new System.EventHandler(this.btEditCue_Click);
+            // 
+            // btAddPcsxCfg
+            // 
+            this.btAddPcsxCfg.Enabled = false;
+            this.btAddPcsxCfg.Image = global::pbPSCReAlpha.Properties.Resources.cog_add;
+            this.btAddPcsxCfg.Location = new System.Drawing.Point(220, 19);
+            this.btAddPcsxCfg.Name = "btAddPcsxCfg";
+            this.btAddPcsxCfg.Size = new System.Drawing.Size(115, 25);
+            this.btAddPcsxCfg.TabIndex = 2;
+            this.btAddPcsxCfg.Text = "Add pcsx.cfg";
+            this.btAddPcsxCfg.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btAddPcsxCfg.UseVisualStyleBackColor = true;
+            this.btAddPcsxCfg.Visible = false;
+            this.btAddPcsxCfg.Click += new System.EventHandler(this.btAddPcsxCfg_Click);
+            // 
+            // btEditGameIni
+            // 
+            this.btEditGameIni.Image = global::pbPSCReAlpha.Properties.Resources.edit_3;
+            this.btEditGameIni.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btEditGameIni.Location = new System.Drawing.Point(6, 19);
+            this.btEditGameIni.Name = "btEditGameIni";
+            this.btEditGameIni.Size = new System.Drawing.Size(97, 56);
+            this.btEditGameIni.TabIndex = 0;
+            this.btEditGameIni.Text = "Edit Game.ini + picture";
+            this.btEditGameIni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btEditGameIni.UseVisualStyleBackColor = true;
+            this.btEditGameIni.Click += new System.EventHandler(this.btEditGameIni_Click);
+            // 
+            // btNewFolder
+            // 
+            this.btNewFolder.Enabled = false;
+            this.btNewFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder_new_7;
+            this.btNewFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btNewFolder.Location = new System.Drawing.Point(165, 7);
+            this.btNewFolder.Name = "btNewFolder";
+            this.btNewFolder.Size = new System.Drawing.Size(75, 25);
+            this.btNewFolder.TabIndex = 8;
+            this.btNewFolder.Text = "New";
+            this.btNewFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btNewFolder.UseVisualStyleBackColor = true;
+            this.btNewFolder.Click += new System.EventHandler(this.btNewFolder_Click);
+            // 
+            // btReSort
+            // 
+            this.btReSort.Enabled = false;
+            this.btReSort.Image = global::pbPSCReAlpha.Properties.Resources.edit_sort_az;
+            this.btReSort.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btReSort.Location = new System.Drawing.Point(84, 7);
+            this.btReSort.Name = "btReSort";
+            this.btReSort.Size = new System.Drawing.Size(75, 25);
+            this.btReSort.TabIndex = 7;
+            this.btReSort.Text = "Sort";
+            this.btReSort.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btReSort.UseVisualStyleBackColor = true;
+            this.btReSort.Click += new System.EventHandler(this.btReSort_Click);
+            // 
+            // btCrowseGamesFolder
+            // 
+            this.btCrowseGamesFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
+            this.btCrowseGamesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btCrowseGamesFolder.Location = new System.Drawing.Point(613, 7);
+            this.btCrowseGamesFolder.Name = "btCrowseGamesFolder";
+            this.btCrowseGamesFolder.Size = new System.Drawing.Size(75, 25);
+            this.btCrowseGamesFolder.TabIndex = 6;
+            this.btCrowseGamesFolder.Text = "Browse";
+            this.btCrowseGamesFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btCrowseGamesFolder.UseVisualStyleBackColor = true;
+            this.btCrowseGamesFolder.Click += new System.EventHandler(this.btCrowseGamesFolder_Click);
             // 
             // tbFolderPath
             // 
@@ -406,6 +653,18 @@
             this.label9.TabIndex = 4;
             this.label9.Text = "Title:";
             // 
+            // pbExploreImage
+            // 
+            this.pbExploreImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbExploreImage.Location = new System.Drawing.Point(6, 19);
+            this.pbExploreImage.Name = "pbExploreImage";
+            this.pbExploreImage.Size = new System.Drawing.Size(150, 150);
+            this.pbExploreImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbExploreImage.TabIndex = 3;
+            this.pbExploreImage.TabStop = false;
+            this.pbExploreImage.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbExploreImage_DragDrop);
+            this.pbExploreImage.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbExploreImage_DragEnter);
+            // 
             // lbGames
             // 
             this.lbGames.FormattingEnabled = true;
@@ -416,6 +675,19 @@
             this.lbGames.TabIndex = 1;
             this.lbGames.SelectedIndexChanged += new System.EventHandler(this.lbGames_SelectedIndexChanged);
             this.lbGames.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lbGames_KeyDown);
+            // 
+            // btRefresh
+            // 
+            this.btRefresh.Image = global::pbPSCReAlpha.Properties.Resources.view_refresh_6;
+            this.btRefresh.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btRefresh.Location = new System.Drawing.Point(3, 7);
+            this.btRefresh.Name = "btRefresh";
+            this.btRefresh.Size = new System.Drawing.Size(75, 25);
+            this.btRefresh.TabIndex = 0;
+            this.btRefresh.Text = "Refresh";
+            this.btRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btRefresh.UseVisualStyleBackColor = true;
+            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
             // 
             // tabTransform
             // 
@@ -441,8 +713,60 @@
             this.gbTransform.TabStop = false;
             this.gbTransform.Text = "Folder modifications";
             // 
+            // btReadBS100Database
+            // 
+            this.btReadBS100Database.Image = global::pbPSCReAlpha.Properties.Resources.arrow_right_3;
+            this.btReadBS100Database.Location = new System.Drawing.Point(341, 142);
+            this.btReadBS100Database.Name = "btReadBS100Database";
+            this.btReadBS100Database.Size = new System.Drawing.Size(333, 117);
+            this.btReadBS100Database.TabIndex = 3;
+            this.btReadBS100Database.Text = "Read a BS1.0.0 database";
+            this.btReadBS100Database.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btReadBS100Database.UseVisualStyleBackColor = true;
+            this.btReadBS100Database.Click += new System.EventHandler(this.btReadBS100Database_Click);
+            // 
+            // btReadBS041Database
+            // 
+            this.btReadBS041Database.Image = global::pbPSCReAlpha.Properties.Resources.arrow_right;
+            this.btReadBS041Database.Location = new System.Drawing.Point(6, 142);
+            this.btReadBS041Database.Name = "btReadBS041Database";
+            this.btReadBS041Database.Size = new System.Drawing.Size(333, 117);
+            this.btReadBS041Database.TabIndex = 2;
+            this.btReadBS041Database.Text = "Read a BS0.4.1 database";
+            this.btReadBS041Database.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
+            this.btReadBS041Database.UseVisualStyleBackColor = true;
+            this.btReadBS041Database.Click += new System.EventHandler(this.btReadBS041Database_Click);
+            // 
+            // btUpgradeFolders
+            // 
+            this.btUpgradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_up_double_3;
+            this.btUpgradeFolders.Location = new System.Drawing.Point(341, 19);
+            this.btUpgradeFolders.Name = "btUpgradeFolders";
+            this.btUpgradeFolders.Size = new System.Drawing.Size(333, 117);
+            this.btUpgradeFolders.TabIndex = 1;
+            this.btUpgradeFolders.Text = "Upgrade (BS1.0.0 compatible folders)";
+            this.btUpgradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btUpgradeFolders.UseVisualStyleBackColor = true;
+            this.btUpgradeFolders.Click += new System.EventHandler(this.btUpgradeFolders_Click);
+            // 
+            // btDowngradeFolders
+            // 
+            this.btDowngradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_down_double;
+            this.btDowngradeFolders.Location = new System.Drawing.Point(6, 19);
+            this.btDowngradeFolders.Name = "btDowngradeFolders";
+            this.btDowngradeFolders.Size = new System.Drawing.Size(333, 117);
+            this.btDowngradeFolders.TabIndex = 0;
+            this.btDowngradeFolders.Text = "Downgrade (BS0.4.1 compatible folders)";
+            this.btDowngradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
+            this.btDowngradeFolders.UseVisualStyleBackColor = true;
+            this.btDowngradeFolders.Click += new System.EventHandler(this.btDowngradeFolders_Click);
+            // 
             // tabConfig
             // 
+            this.tabConfig.Controls.Add(this.lbCurrentSortOption4);
+            this.tabConfig.Controls.Add(this.lbCurrentSortOption3);
+            this.tabConfig.Controls.Add(this.lbCurrentSortOption2);
+            this.tabConfig.Controls.Add(this.lbCurrentSortOption1);
             this.tabConfig.Controls.Add(this.label6);
             this.tabConfig.Controls.Add(this.label5);
             this.tabConfig.Controls.Add(this.btIniFileCopy);
@@ -464,7 +788,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(187, 273);
+            this.label6.Location = new System.Drawing.Point(187, 556);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(503, 13);
             this.label6.TabIndex = 14;
@@ -474,7 +798,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(170, 257);
+            this.label5.Location = new System.Drawing.Point(170, 540);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(476, 13);
             this.label5.TabIndex = 13;
@@ -483,7 +807,7 @@
             // 
             // btIniFileCopy
             // 
-            this.btIniFileCopy.Location = new System.Drawing.Point(8, 240);
+            this.btIniFileCopy.Location = new System.Drawing.Point(8, 523);
             this.btIniFileCopy.Name = "btIniFileCopy";
             this.btIniFileCopy.Size = new System.Drawing.Size(150, 46);
             this.btIniFileCopy.TabIndex = 12;
@@ -494,7 +818,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(170, 205);
+            this.label4.Location = new System.Drawing.Point(170, 488);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(402, 13);
             this.label4.TabIndex = 11;
@@ -504,7 +828,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(170, 153);
+            this.label3.Location = new System.Drawing.Point(170, 436);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(275, 13);
             this.label3.TabIndex = 10;
@@ -530,19 +854,31 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbSortOption4Check);
+            this.groupBox1.Controls.Add(this.cbSortOption3Check);
+            this.groupBox1.Controls.Add(this.cbSortOption2Check);
+            this.groupBox1.Controls.Add(this.cbSortingOption4b);
+            this.groupBox1.Controls.Add(this.cbSortingOption3b);
+            this.groupBox1.Controls.Add(this.cbSortingOption2b);
+            this.groupBox1.Controls.Add(this.cbSortingOption1b);
+            this.groupBox1.Controls.Add(this.cbSortingOption4);
+            this.groupBox1.Controls.Add(this.cbSortingOption3);
+            this.groupBox1.Controls.Add(this.cbSortingOption2);
+            this.groupBox1.Controls.Add(this.cbSortingOption1);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.btValidateCfg);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cbSimultaneousCopiedFiles);
             this.groupBox1.Location = new System.Drawing.Point(8, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(444, 100);
+            this.groupBox1.Size = new System.Drawing.Size(444, 386);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Files";
+            this.groupBox1.Text = "Parameters";
             // 
             // btValidateCfg
             // 
-            this.btValidateCfg.Location = new System.Drawing.Point(362, 71);
+            this.btValidateCfg.Location = new System.Drawing.Point(362, 357);
             this.btValidateCfg.Name = "btValidateCfg";
             this.btValidateCfg.Size = new System.Drawing.Size(75, 23);
             this.btValidateCfg.TabIndex = 2;
@@ -577,7 +913,7 @@
             // 
             // btCheckMemCard
             // 
-            this.btCheckMemCard.Location = new System.Drawing.Point(8, 188);
+            this.btCheckMemCard.Location = new System.Drawing.Point(8, 471);
             this.btCheckMemCard.Name = "btCheckMemCard";
             this.btCheckMemCard.Size = new System.Drawing.Size(150, 46);
             this.btCheckMemCard.TabIndex = 9;
@@ -587,7 +923,7 @@
             // 
             // btCheckBin
             // 
-            this.btCheckBin.Location = new System.Drawing.Point(8, 136);
+            this.btCheckBin.Location = new System.Drawing.Point(8, 419);
             this.btCheckBin.Name = "btCheckBin";
             this.btCheckBin.Size = new System.Drawing.Size(150, 46);
             this.btCheckBin.TabIndex = 8;
@@ -723,309 +1059,192 @@
             this.ofdLoadDatabaseFile.Filter = "DB file|*.db";
             this.ofdLoadDatabaseFile.ShowHelp = true;
             // 
-            // btLaunchPngquant
+            // label7
             // 
-            this.btLaunchPngquant.Enabled = false;
-            this.btLaunchPngquant.Image = global::pbPSCReAlpha.Properties.Resources.pictures;
-            this.btLaunchPngquant.Location = new System.Drawing.Point(246, 7);
-            this.btLaunchPngquant.Name = "btLaunchPngquant";
-            this.btLaunchPngquant.Size = new System.Drawing.Size(130, 25);
-            this.btLaunchPngquant.TabIndex = 12;
-            this.btLaunchPngquant.Text = "Compress png files";
-            this.btLaunchPngquant.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btLaunchPngquant.UseVisualStyleBackColor = true;
-            this.btLaunchPngquant.Click += new System.EventHandler(this.btLaunchPngquant_Click);
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 66);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Sorting Options:";
             // 
-            // btLaunchBleemsync
+            // cbSortingOption1
             // 
-            this.btLaunchBleemsync.Image = global::pbPSCReAlpha.Properties.Resources.inode_blockdevice;
-            this.btLaunchBleemsync.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btLaunchBleemsync.Location = new System.Drawing.Point(3, 522);
-            this.btLaunchBleemsync.Name = "btLaunchBleemsync";
-            this.btLaunchBleemsync.Size = new System.Drawing.Size(197, 48);
-            this.btLaunchBleemsync.TabIndex = 10;
-            this.btLaunchBleemsync.Text = "Recreate DataBase";
-            this.btLaunchBleemsync.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btLaunchBleemsync.UseVisualStyleBackColor = true;
-            this.btLaunchBleemsync.Click += new System.EventHandler(this.btLaunchBleemsync_Click);
+            this.cbSortingOption1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption1.FormattingEnabled = true;
+            this.cbSortingOption1.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption1.Location = new System.Drawing.Point(242, 63);
+            this.cbSortingOption1.Name = "cbSortingOption1";
+            this.cbSortingOption1.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption1.TabIndex = 4;
             // 
-            // btM3uGenerate
+            // cbSortingOption2
             // 
-            this.btM3uGenerate.Enabled = false;
-            this.btM3uGenerate.Image = global::pbPSCReAlpha.Properties.Resources.edit_4;
-            this.btM3uGenerate.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btM3uGenerate.Location = new System.Drawing.Point(220, 50);
-            this.btM3uGenerate.Name = "btM3uGenerate";
-            this.btM3uGenerate.Size = new System.Drawing.Size(115, 25);
-            this.btM3uGenerate.TabIndex = 12;
-            this.btM3uGenerate.Text = "Generate m3u file";
-            this.btM3uGenerate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btM3uGenerate.UseVisualStyleBackColor = true;
-            this.btM3uGenerate.Visible = false;
-            this.btM3uGenerate.Click += new System.EventHandler(this.btM3uGenerate_Click);
+            this.cbSortingOption2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption2.Enabled = false;
+            this.cbSortingOption2.FormattingEnabled = true;
+            this.cbSortingOption2.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption2.Location = new System.Drawing.Point(242, 90);
+            this.cbSortingOption2.Name = "cbSortingOption2";
+            this.cbSortingOption2.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption2.TabIndex = 5;
             // 
-            // btPbpRename
+            // cbSortingOption3
             // 
-            this.btPbpRename.Enabled = false;
-            this.btPbpRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btPbpRename.Location = new System.Drawing.Point(178, 19);
-            this.btPbpRename.Name = "btPbpRename";
-            this.btPbpRename.Size = new System.Drawing.Size(82, 25);
-            this.btPbpRename.TabIndex = 13;
-            this.btPbpRename.Text = "pbp file(s)";
-            this.btPbpRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btPbpRename.UseVisualStyleBackColor = true;
-            this.btPbpRename.Click += new System.EventHandler(this.btPbpRename_Click);
+            this.cbSortingOption3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption3.Enabled = false;
+            this.cbSortingOption3.FormattingEnabled = true;
+            this.cbSortingOption3.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption3.Location = new System.Drawing.Point(242, 117);
+            this.cbSortingOption3.Name = "cbSortingOption3";
+            this.cbSortingOption3.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption3.TabIndex = 6;
             // 
-            // btSbiRename
+            // cbSortingOption4
             // 
-            this.btSbiRename.Enabled = false;
-            this.btSbiRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btSbiRename.Location = new System.Drawing.Point(354, 19);
-            this.btSbiRename.Name = "btSbiRename";
-            this.btSbiRename.Size = new System.Drawing.Size(82, 25);
-            this.btSbiRename.TabIndex = 12;
-            this.btSbiRename.Text = "sbi file(s)";
-            this.btSbiRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btSbiRename.UseVisualStyleBackColor = true;
-            this.btSbiRename.Click += new System.EventHandler(this.btSbiRename_Click);
+            this.cbSortingOption4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption4.Enabled = false;
+            this.cbSortingOption4.FormattingEnabled = true;
+            this.cbSortingOption4.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption4.Location = new System.Drawing.Point(242, 144);
+            this.cbSortingOption4.Name = "cbSortingOption4";
+            this.cbSortingOption4.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption4.TabIndex = 7;
             // 
-            // btPngRename
+            // cbSortingOption1b
             // 
-            this.btPngRename.Enabled = false;
-            this.btPngRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btPngRename.Location = new System.Drawing.Point(266, 19);
-            this.btPngRename.Name = "btPngRename";
-            this.btPngRename.Size = new System.Drawing.Size(82, 25);
-            this.btPngRename.TabIndex = 11;
-            this.btPngRename.Text = "png file";
-            this.btPngRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btPngRename.UseVisualStyleBackColor = true;
-            this.btPngRename.Click += new System.EventHandler(this.btPngRename_Click);
+            this.cbSortingOption1b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption1b.FormattingEnabled = true;
+            this.cbSortingOption1b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption1b.Location = new System.Drawing.Point(369, 63);
+            this.cbSortingOption1b.Name = "cbSortingOption1b";
+            this.cbSortingOption1b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption1b.TabIndex = 8;
             // 
-            // btBinRename
+            // cbSortingOption2b
             // 
-            this.btBinRename.Enabled = false;
-            this.btBinRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btBinRename.Location = new System.Drawing.Point(4, 19);
-            this.btBinRename.Name = "btBinRename";
-            this.btBinRename.Size = new System.Drawing.Size(82, 25);
-            this.btBinRename.TabIndex = 9;
-            this.btBinRename.Text = "bin file(s)";
-            this.btBinRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btBinRename.UseVisualStyleBackColor = true;
-            this.btBinRename.Click += new System.EventHandler(this.btBinRename_Click);
+            this.cbSortingOption2b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption2b.Enabled = false;
+            this.cbSortingOption2b.FormattingEnabled = true;
+            this.cbSortingOption2b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption2b.Location = new System.Drawing.Point(369, 90);
+            this.cbSortingOption2b.Name = "cbSortingOption2b";
+            this.cbSortingOption2b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption2b.TabIndex = 9;
             // 
-            // btCueRename
+            // cbSortingOption3b
             // 
-            this.btCueRename.Enabled = false;
-            this.btCueRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btCueRename.Location = new System.Drawing.Point(90, 19);
-            this.btCueRename.Name = "btCueRename";
-            this.btCueRename.Size = new System.Drawing.Size(82, 25);
-            this.btCueRename.TabIndex = 10;
-            this.btCueRename.Text = "cue file(s)";
-            this.btCueRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btCueRename.UseVisualStyleBackColor = true;
-            this.btCueRename.Click += new System.EventHandler(this.btCueRename_Click);
+            this.cbSortingOption3b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption3b.Enabled = false;
+            this.cbSortingOption3b.FormattingEnabled = true;
+            this.cbSortingOption3b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption3b.Location = new System.Drawing.Point(369, 117);
+            this.cbSortingOption3b.Name = "cbSortingOption3b";
+            this.cbSortingOption3b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption3b.TabIndex = 10;
             // 
-            // btOpenFolder
+            // cbSortingOption4b
             // 
-            this.btOpenFolder.Enabled = false;
-            this.btOpenFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
-            this.btOpenFolder.Location = new System.Drawing.Point(363, 50);
-            this.btOpenFolder.Name = "btOpenFolder";
-            this.btOpenFolder.Size = new System.Drawing.Size(115, 25);
-            this.btOpenFolder.TabIndex = 8;
-            this.btOpenFolder.Text = "Open folder";
-            this.btOpenFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btOpenFolder.UseVisualStyleBackColor = true;
-            this.btOpenFolder.Visible = false;
-            this.btOpenFolder.Click += new System.EventHandler(this.btOpenFolder_Click);
+            this.cbSortingOption4b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption4b.Enabled = false;
+            this.cbSortingOption4b.FormattingEnabled = true;
+            this.cbSortingOption4b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption4b.Location = new System.Drawing.Point(369, 144);
+            this.cbSortingOption4b.Name = "cbSortingOption4b";
+            this.cbSortingOption4b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption4b.TabIndex = 11;
             // 
-            // btRefreshFolderOnly
+            // cbSortOption2Check
             // 
-            this.btRefreshFolderOnly.Enabled = false;
-            this.btRefreshFolderOnly.Image = global::pbPSCReAlpha.Properties.Resources.view_refresh_6;
-            this.btRefreshFolderOnly.Location = new System.Drawing.Point(363, 19);
-            this.btRefreshFolderOnly.Name = "btRefreshFolderOnly";
-            this.btRefreshFolderOnly.Size = new System.Drawing.Size(115, 25);
-            this.btRefreshFolderOnly.TabIndex = 7;
-            this.btRefreshFolderOnly.Text = "Refresh folder";
-            this.btRefreshFolderOnly.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btRefreshFolderOnly.UseVisualStyleBackColor = true;
-            this.btRefreshFolderOnly.Visible = false;
-            this.btRefreshFolderOnly.Click += new System.EventHandler(this.btRefreshFolderOnly_Click);
+            this.cbSortOption2Check.AutoSize = true;
+            this.cbSortOption2Check.Location = new System.Drawing.Point(221, 93);
+            this.cbSortOption2Check.Name = "cbSortOption2Check";
+            this.cbSortOption2Check.Size = new System.Drawing.Size(15, 14);
+            this.cbSortOption2Check.TabIndex = 12;
+            this.cbSortOption2Check.UseVisualStyleBackColor = true;
+            this.cbSortOption2Check.CheckedChanged += new System.EventHandler(this.cbSortOption2Check_CheckedChanged);
             // 
-            // btAddFiles
+            // cbSortOption3Check
             // 
-            this.btAddFiles.Enabled = false;
-            this.btAddFiles.Image = global::pbPSCReAlpha.Properties.Resources.brick_add;
-            this.btAddFiles.Location = new System.Drawing.Point(104, 19);
-            this.btAddFiles.Name = "btAddFiles";
-            this.btAddFiles.Size = new System.Drawing.Size(115, 25);
-            this.btAddFiles.TabIndex = 6;
-            this.btAddFiles.Text = "Add files";
-            this.btAddFiles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btAddFiles.UseVisualStyleBackColor = true;
-            this.btAddFiles.Visible = false;
-            this.btAddFiles.Click += new System.EventHandler(this.btAddFiles_Click);
+            this.cbSortOption3Check.AutoSize = true;
+            this.cbSortOption3Check.Enabled = false;
+            this.cbSortOption3Check.Location = new System.Drawing.Point(221, 120);
+            this.cbSortOption3Check.Name = "cbSortOption3Check";
+            this.cbSortOption3Check.Size = new System.Drawing.Size(15, 14);
+            this.cbSortOption3Check.TabIndex = 13;
+            this.cbSortOption3Check.UseVisualStyleBackColor = true;
+            this.cbSortOption3Check.CheckedChanged += new System.EventHandler(this.cbSortOption3Check_CheckedChanged);
             // 
-            // btEditCue
+            // cbSortOption4Check
             // 
-            this.btEditCue.Enabled = false;
-            this.btEditCue.Image = global::pbPSCReAlpha.Properties.Resources.accessories_text_editor_3;
-            this.btEditCue.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditCue.Location = new System.Drawing.Point(104, 50);
-            this.btEditCue.Name = "btEditCue";
-            this.btEditCue.Size = new System.Drawing.Size(115, 25);
-            this.btEditCue.TabIndex = 3;
-            this.btEditCue.Text = "Edit cue file(s)";
-            this.btEditCue.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btEditCue.UseVisualStyleBackColor = true;
-            this.btEditCue.Visible = false;
-            this.btEditCue.Click += new System.EventHandler(this.btEditCue_Click);
+            this.cbSortOption4Check.AutoSize = true;
+            this.cbSortOption4Check.Enabled = false;
+            this.cbSortOption4Check.Location = new System.Drawing.Point(221, 147);
+            this.cbSortOption4Check.Name = "cbSortOption4Check";
+            this.cbSortOption4Check.Size = new System.Drawing.Size(15, 14);
+            this.cbSortOption4Check.TabIndex = 14;
+            this.cbSortOption4Check.UseVisualStyleBackColor = true;
+            this.cbSortOption4Check.CheckedChanged += new System.EventHandler(this.cbSortOption4Check_CheckedChanged);
             // 
-            // btAddPcsxCfg
+            // lbCurrentSortOption1
             // 
-            this.btAddPcsxCfg.Enabled = false;
-            this.btAddPcsxCfg.Image = global::pbPSCReAlpha.Properties.Resources.cog_add;
-            this.btAddPcsxCfg.Location = new System.Drawing.Point(220, 19);
-            this.btAddPcsxCfg.Name = "btAddPcsxCfg";
-            this.btAddPcsxCfg.Size = new System.Drawing.Size(115, 25);
-            this.btAddPcsxCfg.TabIndex = 2;
-            this.btAddPcsxCfg.Text = "Add pcsx.cfg";
-            this.btAddPcsxCfg.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btAddPcsxCfg.UseVisualStyleBackColor = true;
-            this.btAddPcsxCfg.Visible = false;
-            this.btAddPcsxCfg.Click += new System.EventHandler(this.btAddPcsxCfg_Click);
+            this.lbCurrentSortOption1.Location = new System.Drawing.Point(458, 93);
+            this.lbCurrentSortOption1.Name = "lbCurrentSortOption1";
+            this.lbCurrentSortOption1.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption1.TabIndex = 15;
+            this.lbCurrentSortOption1.Text = "---";
+            this.lbCurrentSortOption1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // btEditGameIni
+            // lbCurrentSortOption2
             // 
-            this.btEditGameIni.Image = global::pbPSCReAlpha.Properties.Resources.edit_3;
-            this.btEditGameIni.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btEditGameIni.Location = new System.Drawing.Point(6, 19);
-            this.btEditGameIni.Name = "btEditGameIni";
-            this.btEditGameIni.Size = new System.Drawing.Size(97, 56);
-            this.btEditGameIni.TabIndex = 0;
-            this.btEditGameIni.Text = "Edit Game.ini + picture";
-            this.btEditGameIni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btEditGameIni.UseVisualStyleBackColor = true;
-            this.btEditGameIni.Click += new System.EventHandler(this.btEditGameIni_Click);
+            this.lbCurrentSortOption2.Location = new System.Drawing.Point(458, 120);
+            this.lbCurrentSortOption2.Name = "lbCurrentSortOption2";
+            this.lbCurrentSortOption2.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption2.TabIndex = 16;
+            this.lbCurrentSortOption2.Text = "---";
+            this.lbCurrentSortOption2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // btNewFolder
+            // lbCurrentSortOption3
             // 
-            this.btNewFolder.Enabled = false;
-            this.btNewFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder_new_7;
-            this.btNewFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btNewFolder.Location = new System.Drawing.Point(165, 7);
-            this.btNewFolder.Name = "btNewFolder";
-            this.btNewFolder.Size = new System.Drawing.Size(75, 25);
-            this.btNewFolder.TabIndex = 8;
-            this.btNewFolder.Text = "New";
-            this.btNewFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btNewFolder.UseVisualStyleBackColor = true;
-            this.btNewFolder.Click += new System.EventHandler(this.btNewFolder_Click);
+            this.lbCurrentSortOption3.Location = new System.Drawing.Point(458, 147);
+            this.lbCurrentSortOption3.Name = "lbCurrentSortOption3";
+            this.lbCurrentSortOption3.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption3.TabIndex = 17;
+            this.lbCurrentSortOption3.Text = "---";
+            this.lbCurrentSortOption3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // btReSort
+            // lbCurrentSortOption4
             // 
-            this.btReSort.Enabled = false;
-            this.btReSort.Image = global::pbPSCReAlpha.Properties.Resources.edit_sort_az;
-            this.btReSort.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btReSort.Location = new System.Drawing.Point(84, 7);
-            this.btReSort.Name = "btReSort";
-            this.btReSort.Size = new System.Drawing.Size(75, 25);
-            this.btReSort.TabIndex = 7;
-            this.btReSort.Text = "Sort";
-            this.btReSort.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btReSort.UseVisualStyleBackColor = true;
-            this.btReSort.Click += new System.EventHandler(this.btReSort_Click);
-            // 
-            // btCrowseGamesFolder
-            // 
-            this.btCrowseGamesFolder.Image = global::pbPSCReAlpha.Properties.Resources.folder;
-            this.btCrowseGamesFolder.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btCrowseGamesFolder.Location = new System.Drawing.Point(613, 7);
-            this.btCrowseGamesFolder.Name = "btCrowseGamesFolder";
-            this.btCrowseGamesFolder.Size = new System.Drawing.Size(75, 25);
-            this.btCrowseGamesFolder.TabIndex = 6;
-            this.btCrowseGamesFolder.Text = "Browse";
-            this.btCrowseGamesFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btCrowseGamesFolder.UseVisualStyleBackColor = true;
-            this.btCrowseGamesFolder.Click += new System.EventHandler(this.btCrowseGamesFolder_Click);
-            // 
-            // pbExploreImage
-            // 
-            this.pbExploreImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbExploreImage.Location = new System.Drawing.Point(6, 19);
-            this.pbExploreImage.Name = "pbExploreImage";
-            this.pbExploreImage.Size = new System.Drawing.Size(150, 150);
-            this.pbExploreImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbExploreImage.TabIndex = 3;
-            this.pbExploreImage.TabStop = false;
-            this.pbExploreImage.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbExploreImage_DragDrop);
-            this.pbExploreImage.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbExploreImage_DragEnter);
-            // 
-            // btRefresh
-            // 
-            this.btRefresh.Image = global::pbPSCReAlpha.Properties.Resources.view_refresh_6;
-            this.btRefresh.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btRefresh.Location = new System.Drawing.Point(3, 7);
-            this.btRefresh.Name = "btRefresh";
-            this.btRefresh.Size = new System.Drawing.Size(75, 25);
-            this.btRefresh.TabIndex = 0;
-            this.btRefresh.Text = "Refresh";
-            this.btRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btRefresh.UseVisualStyleBackColor = true;
-            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
-            // 
-            // btReadBS100Database
-            // 
-            this.btReadBS100Database.Image = global::pbPSCReAlpha.Properties.Resources.arrow_right_3;
-            this.btReadBS100Database.Location = new System.Drawing.Point(341, 142);
-            this.btReadBS100Database.Name = "btReadBS100Database";
-            this.btReadBS100Database.Size = new System.Drawing.Size(333, 117);
-            this.btReadBS100Database.TabIndex = 3;
-            this.btReadBS100Database.Text = "Read a BS1.0.0 database";
-            this.btReadBS100Database.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btReadBS100Database.UseVisualStyleBackColor = true;
-            this.btReadBS100Database.Click += new System.EventHandler(this.btReadBS100Database_Click);
-            // 
-            // btReadBS041Database
-            // 
-            this.btReadBS041Database.Image = global::pbPSCReAlpha.Properties.Resources.arrow_right;
-            this.btReadBS041Database.Location = new System.Drawing.Point(6, 142);
-            this.btReadBS041Database.Name = "btReadBS041Database";
-            this.btReadBS041Database.Size = new System.Drawing.Size(333, 117);
-            this.btReadBS041Database.TabIndex = 2;
-            this.btReadBS041Database.Text = "Read a BS0.4.1 database";
-            this.btReadBS041Database.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
-            this.btReadBS041Database.UseVisualStyleBackColor = true;
-            this.btReadBS041Database.Click += new System.EventHandler(this.btReadBS041Database_Click);
-            // 
-            // btUpgradeFolders
-            // 
-            this.btUpgradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_up_double_3;
-            this.btUpgradeFolders.Location = new System.Drawing.Point(341, 19);
-            this.btUpgradeFolders.Name = "btUpgradeFolders";
-            this.btUpgradeFolders.Size = new System.Drawing.Size(333, 117);
-            this.btUpgradeFolders.TabIndex = 1;
-            this.btUpgradeFolders.Text = "Upgrade (BS1.0.0 compatible folders)";
-            this.btUpgradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btUpgradeFolders.UseVisualStyleBackColor = true;
-            this.btUpgradeFolders.Click += new System.EventHandler(this.btUpgradeFolders_Click);
-            // 
-            // btDowngradeFolders
-            // 
-            this.btDowngradeFolders.Image = global::pbPSCReAlpha.Properties.Resources.arrow_down_double;
-            this.btDowngradeFolders.Location = new System.Drawing.Point(6, 19);
-            this.btDowngradeFolders.Name = "btDowngradeFolders";
-            this.btDowngradeFolders.Size = new System.Drawing.Size(333, 117);
-            this.btDowngradeFolders.TabIndex = 0;
-            this.btDowngradeFolders.Text = "Downgrade (BS0.4.1 compatible folders)";
-            this.btDowngradeFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
-            this.btDowngradeFolders.UseVisualStyleBackColor = true;
-            this.btDowngradeFolders.Click += new System.EventHandler(this.btDowngradeFolders_Click);
+            this.lbCurrentSortOption4.Location = new System.Drawing.Point(458, 174);
+            this.lbCurrentSortOption4.Name = "lbCurrentSortOption4";
+            this.lbCurrentSortOption4.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption4.TabIndex = 18;
+            this.lbCurrentSortOption4.Text = "---";
+            this.lbCurrentSortOption4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Form1
             // 
@@ -1047,6 +1266,7 @@
             this.gbAutoRename.ResumeLayout(false);
             this.gbExploreDetails.ResumeLayout(false);
             this.gbExploreDetails.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
             this.tabTransform.ResumeLayout(false);
             this.gbTransform.ResumeLayout(false);
             this.tabConfig.ResumeLayout(false);
@@ -1058,7 +1278,6 @@
             this.tabReadMe.ResumeLayout(false);
             this.msMainMenu.ResumeLayout(false);
             this.msMainMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbExploreImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1145,6 +1364,22 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btM3uGenerate;
+        private System.Windows.Forms.Label lbCurrentSortOption4;
+        private System.Windows.Forms.Label lbCurrentSortOption3;
+        private System.Windows.Forms.Label lbCurrentSortOption2;
+        private System.Windows.Forms.Label lbCurrentSortOption1;
+        private System.Windows.Forms.CheckBox cbSortOption4Check;
+        private System.Windows.Forms.CheckBox cbSortOption3Check;
+        private System.Windows.Forms.CheckBox cbSortOption2Check;
+        private System.Windows.Forms.ComboBox cbSortingOption4b;
+        private System.Windows.Forms.ComboBox cbSortingOption3b;
+        private System.Windows.Forms.ComboBox cbSortingOption2b;
+        private System.Windows.Forms.ComboBox cbSortingOption1b;
+        private System.Windows.Forms.ComboBox cbSortingOption4;
+        private System.Windows.Forms.ComboBox cbSortingOption3;
+        private System.Windows.Forms.ComboBox cbSortingOption2;
+        private System.Windows.Forms.ComboBox cbSortingOption1;
+        private System.Windows.Forms.Label label7;
     }
 }
 

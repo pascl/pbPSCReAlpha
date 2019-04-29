@@ -29,6 +29,8 @@ namespace pbPSCReAlpha
         int iBleemsyncVersion;
         int iSimultaneous = 2;
         ClVersionHelper[] bleemsyncVersions;
+        int[] iSortOptions;
+        int[] iSortAscOrDesc;
 
         bool bSavesAndGamesFoldersSeparated = false;
 
@@ -36,7 +38,7 @@ namespace pbPSCReAlpha
         {
             InitializeComponent();
             this.Text = "pbPSCReAlpha v" + Assembly.GetExecutingAssembly().GetName().Version;
-
+            
             iSimultaneous = Properties.Settings.Default.iSimultaneous;
             if (iSimultaneous <= 0)
             {
@@ -44,6 +46,50 @@ namespace pbPSCReAlpha
             }
             cbSimultaneousCopiedFiles.SelectedIndex = iSimultaneous - 1;
             lbCurrentSimultaneousCopiedFiles.Text = iSimultaneous.ToString();
+
+            iSortOptions = new int[4] { Properties.Settings.Default.iSortOption1, Properties.Settings.Default.iSortOption2, Properties.Settings.Default.iSortOption3, Properties.Settings.Default.iSortOption4 };
+            iSortAscOrDesc = new int[4] { Properties.Settings.Default.iSortAsc1, Properties.Settings.Default.iSortAsc2, Properties.Settings.Default.iSortAsc3, Properties.Settings.Default.iSortAsc4 };
+
+            cbSortingOption1.SelectedIndex = iSortOptions[0];
+            cbSortingOption1b.SelectedIndex = iSortAscOrDesc[0];
+
+            if((iSortOptions[1] == -1) && (iSortAscOrDesc[1] == -1))
+            {
+                cbSortOption2Check.Checked = false;
+            }
+            else
+            {
+                cbSortOption2Check.Checked = true;
+            }
+            cbSortingOption2.SelectedIndex = iSortOptions[1];
+            cbSortingOption2b.SelectedIndex = iSortAscOrDesc[1];
+
+            if ((iSortOptions[2] == -1) && (iSortAscOrDesc[2] == -1))
+            {
+                cbSortOption3Check.Checked = false;
+            }
+            else
+            {
+                cbSortOption3Check.Checked = true;
+            }
+            cbSortingOption3.SelectedIndex = iSortOptions[2];
+            cbSortingOption3b.SelectedIndex = iSortAscOrDesc[2];
+
+            if ((iSortOptions[3] == -1) && (iSortAscOrDesc[3] == -1))
+            {
+                cbSortOption4Check.Checked = false;
+            }
+            else
+            {
+                cbSortOption4Check.Checked = true;
+            }
+            cbSortingOption4.SelectedIndex = iSortOptions[3];
+            cbSortingOption4b.SelectedIndex = iSortAscOrDesc[3];
+
+            lbCurrentSortOption1.Text = sortOptionToString(iSortOptions[0], iSortAscOrDesc[0]);
+            lbCurrentSortOption2.Text = sortOptionToString(iSortOptions[1], iSortAscOrDesc[1]);
+            lbCurrentSortOption3.Text = sortOptionToString(iSortOptions[2], iSortAscOrDesc[2]);
+            lbCurrentSortOption4.Text = sortOptionToString(iSortOptions[3], iSortAscOrDesc[3]);
 
             this.frmCopy = new Form5(iSimultaneous);
             this.frmCopy.Visible = false;
@@ -107,6 +153,36 @@ namespace pbPSCReAlpha
                 st = sr.ReadToEnd();
             }
             wbReadme.DocumentText = Markdown.ToHtml(st);
+        }
+
+        private string sortOptionToString(int v1, int v2)
+        {
+            String sText = "---";
+            switch(v1)
+            {
+                case 0:
+                    sText = "Alphabetical";
+                    break;
+                case 1:
+                    sText = "Publisher";
+                    break;
+                case 2:
+                    sText = "Year";
+                    break;
+                case 3:
+                    sText = "Players";
+                    break;
+            }
+            switch(v2)
+            {
+                case 0:
+                    sText += " ASC";
+                    break;
+                case 1:
+                    sText += " DESC";
+                    break;
+            }
+            return sText;
         }
 
         private void btCrowseGamesFolder_Click(object sender, EventArgs e)
@@ -1043,6 +1119,140 @@ namespace pbPSCReAlpha
                         int iNewIndex = 1;
                         int iPrevIndex = iNewIndex;
                         List<int> liFoldersDone = new List<int>();
+                        
+                        List<String> lsLevel1 = generateListSorted(dcGames, iSortOptions[0], iSortAscOrDesc[0]);
+                        List<String> lsLevel2 = generateListSorted(dcGames, iSortOptions[1], iSortAscOrDesc[1]);
+                        List<String> lsLevel3 = generateListSorted(dcGames, iSortOptions[2], iSortAscOrDesc[2]);
+                        List<String> lsLevel4 = generateListSorted(dcGames, iSortOptions[3], iSortAscOrDesc[3]);
+
+                        List<String> lsSorted = new List<String>();
+
+                        foreach (String s1 in lsLevel1)
+                        {
+                            if(lsLevel2.Count > 0)
+                            {
+                                foreach (String s2 in lsLevel2)
+                                {
+                                    if (lsLevel3.Count > 0)
+                                    {
+                                        foreach (String s3 in lsLevel3)
+                                        {
+                                            if (lsLevel4.Count > 0)
+                                            {
+                                                foreach (String s4 in lsLevel4)
+                                                {
+                                                    foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                                                    {
+                                                        ClGameStructure c1 = pair.Value;
+                                                        if(isFoundGame(c1, iSortOptions[0], s1) && isFoundGame(c1, iSortOptions[1], s2) &&
+                                                            isFoundGame(c1, iSortOptions[2], s3) && isFoundGame(c1, iSortOptions[3], s4))
+                                                        {
+                                                            String sTitle = c1.Title;
+                                                            if (!String.IsNullOrEmpty(c1.Alphatitle))
+                                                            {
+                                                                sTitle = c1.Alphatitle;
+                                                            }
+                                                            lsSorted.Add(sTitle);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                                                {
+                                                    ClGameStructure c1 = pair.Value;
+                                                    if (isFoundGame(c1, iSortOptions[0], s1) && isFoundGame(c1, iSortOptions[1], s2) &&
+                                                        isFoundGame(c1, iSortOptions[2], s3))
+                                                    {
+                                                        String sTitle = c1.Title;
+                                                        if (!String.IsNullOrEmpty(c1.Alphatitle))
+                                                        {
+                                                            sTitle = c1.Alphatitle;
+                                                        }
+                                                        lsSorted.Add(sTitle);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                                        {
+                                            ClGameStructure c1 = pair.Value;
+                                            if (isFoundGame(c1, iSortOptions[0], s1) && isFoundGame(c1, iSortOptions[1], s2))
+                                            {
+                                                String sTitle = c1.Title;
+                                                if (!String.IsNullOrEmpty(c1.Alphatitle))
+                                                {
+                                                    sTitle = c1.Alphatitle;
+                                                }
+                                                lsSorted.Add(sTitle);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                                {
+                                    ClGameStructure c1 = pair.Value;
+                                    if (isFoundGame(c1, iSortOptions[0], s1))
+                                    {
+                                        String sTitle = c1.Title;
+                                        if (!String.IsNullOrEmpty(c1.Alphatitle))
+                                        {
+                                            sTitle = c1.Alphatitle;
+                                        }
+                                        lsSorted.Add(sTitle);
+                                    }
+                                }
+                            }
+                        }
+
+                        foreach (String s in lsSorted)
+                        {
+                            iPrevIndex = iNewIndex;
+                            foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                            {
+                                ClGameStructure c1 = pair.Value;
+                                int iIndexFolder = int.Parse(c1.FolderIndex);
+                                if (((c1.Alphatitle != String.Empty) && (c1.Alphatitle == s)) || ((c1.Alphatitle == String.Empty) && (c1.Title == s)))
+                                {
+                                    if (liFoldersDone.IndexOf(iIndexFolder) == -1) // if same title in different folders
+                                    {
+                                        if ((sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString()) != (sFolderPath + "\\" + (iNewIndex).ToString()))
+                                        {
+                                            Directory.Move(sFolderPath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderPath + "\\" + (iNewIndex).ToString());
+                                        }
+                                        if (bSavesAndGamesFoldersSeparated)
+                                        {
+                                            if (Directory.Exists(sFolderSavePath + "\\" + (iIndexFolder + iDecalage).ToString()))
+                                            {
+                                                if ((sFolderSavePath + "\\" + (iIndexFolder + iDecalage).ToString()) != (sFolderSavePath + "\\" + (iNewIndex).ToString()))
+                                                {
+                                                    Directory.Move(sFolderSavePath + "\\" + (iIndexFolder + iDecalage).ToString(), sFolderSavePath + "\\" + (iNewIndex).ToString());
+                                                }
+                                            }
+                                        }
+                                        liFoldersDone.Add(iIndexFolder);
+                                        iNewIndex++;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (iNewIndex == iPrevIndex)
+                            {
+                                // just in case
+                                iNewIndex++;
+                            }
+                        }
+
+
+                        /*
+                        OLD WAY
                         foreach (String s in lsTitles)
                         {
                             iPrevIndex = iNewIndex;
@@ -1080,6 +1290,7 @@ namespace pbPSCReAlpha
                                 iNewIndex++;
                             }
                         }
+                        */
                         refreshGameListFolders();
                     }
                     catch (Exception ex)
@@ -1096,11 +1307,112 @@ namespace pbPSCReAlpha
             slLogger.Trace("<< Resort gamelist Click");
         }
 
+        private bool isFoundGame(ClGameStructure cgs, int v1, String s)
+        {
+            bool b = false;
+            switch (v1)
+            {
+                case 0:
+                    String sTitle = cgs.Title;
+                    if (!String.IsNullOrEmpty(cgs.Alphatitle))
+                    {
+                        sTitle = cgs.Alphatitle;
+                    }
+                    if (sTitle == s)
+                    {
+                        b = true;
+                    }
+                    break;
+                case 1:
+                    if (cgs.Publisher == s)
+                    {
+                        b = true;
+                    }
+                    break;
+                case 2:
+                    if (cgs.Year == s)
+                    {
+                        b = true;
+                    }
+                    break;
+                case 3:
+                    if (cgs.Players == s)
+                    {
+                        b = true;
+                    }
+                    break;
+            }
+            return b;
+        }
+
+        private List<string> generateListSorted(Dictionary<string, ClGameStructure> dcGames, int v1, int v2)
+        {
+            List<string> ls = new List<string>();
+            if (v1 > -1)
+            {
+                foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                {
+                    ClGameStructure c1 = pair.Value;
+                    switch (v1)
+                    {
+                        case 0:
+                            String sTitle = c1.Title;
+                            if (!String.IsNullOrEmpty(c1.Alphatitle))
+                            {
+                                sTitle = c1.Alphatitle;
+                            }
+                            if (ls.IndexOf(sTitle) == -1)
+                            {
+                                ls.Add(sTitle);
+                            }
+                            break;
+                        case 1:
+                            if (ls.IndexOf(c1.Publisher) == -1)
+                            {
+                                ls.Add(c1.Publisher);
+                            }
+                            break;
+                        case 2:
+                            if (ls.IndexOf(c1.Year) == -1)
+                            {
+                                ls.Add(c1.Year);
+                            }
+                            break;
+                        case 3:
+                            if (ls.IndexOf(c1.Players) == -1)
+                            {
+                                ls.Add(c1.Players);
+                            }
+                            break;
+                    }
+                }
+                using (NaturalComparer comparer = new NaturalComparer())
+                {
+                    ls.Sort(comparer);
+                }
+                if (1 == v2)
+                {
+                    ls.Reverse();
+                }
+            }
+            return ls;
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
             Properties.Settings.Default.iVersionBleemSync = iBleemsyncVersion;
             Properties.Settings.Default.iSimultaneous = iSimultaneous;
+
+            Properties.Settings.Default.iSortOption1 = iSortOptions[0];
+            Properties.Settings.Default.iSortAsc1 = iSortAscOrDesc[0];
+            Properties.Settings.Default.iSortOption2 = iSortOptions[1];
+            Properties.Settings.Default.iSortAsc2 = iSortAscOrDesc[1];
+            Properties.Settings.Default.iSortOption3 = iSortOptions[2];
+            Properties.Settings.Default.iSortAsc3 = iSortAscOrDesc[2];
+            Properties.Settings.Default.iSortOption4 = iSortOptions[3];
+            Properties.Settings.Default.iSortAsc4 = iSortAscOrDesc[3];
+
             Properties.Settings.Default.Save();
             //slLogger.Trace("Saving parameters for next time. Bye.");
         }
@@ -3021,6 +3333,53 @@ namespace pbPSCReAlpha
                 Properties.Settings.Default.iSimultaneous = iSimultaneous;
                 frmCopy.SimultaneousCopiedFiles = iSimultaneous;
             }
+
+            iSortOptions[0] = cbSortingOption1.SelectedIndex;
+            iSortAscOrDesc[0] = cbSortingOption1b.SelectedIndex;
+            if (cbSortingOption2.SelectedIndex > -1)
+            {
+                iSortOptions[1] = cbSortingOption2.SelectedIndex;
+                iSortAscOrDesc[1] = cbSortingOption2b.SelectedIndex;
+            }
+            else
+            {
+                iSortOptions[1] = -1;
+                iSortAscOrDesc[1] = -1;
+            }
+            if (cbSortingOption3.SelectedIndex > -1)
+            {
+                iSortOptions[2] = cbSortingOption3.SelectedIndex;
+                iSortAscOrDesc[2] = cbSortingOption3b.SelectedIndex;
+            }
+            else
+            {
+                iSortOptions[2] = -1;
+                iSortAscOrDesc[2] = -1;
+            }
+            if (cbSortingOption4.SelectedIndex > -1)
+            {
+                iSortOptions[3] = cbSortingOption4.SelectedIndex;
+                iSortAscOrDesc[3] = cbSortingOption4b.SelectedIndex;
+            }
+            else
+            {
+                iSortOptions[3] = -1;
+                iSortAscOrDesc[3] = -1;
+            }
+
+            Properties.Settings.Default.iSortOption1 = iSortOptions[0];
+            Properties.Settings.Default.iSortAsc1 = iSortAscOrDesc[0];
+            Properties.Settings.Default.iSortOption2 = iSortOptions[1];
+            Properties.Settings.Default.iSortAsc2 = iSortAscOrDesc[1];
+            Properties.Settings.Default.iSortOption3 = iSortOptions[2];
+            Properties.Settings.Default.iSortAsc3 = iSortAscOrDesc[2];
+            Properties.Settings.Default.iSortOption4 = iSortOptions[3];
+            Properties.Settings.Default.iSortAsc4 = iSortAscOrDesc[3];
+
+            lbCurrentSortOption1.Text = sortOptionToString(iSortOptions[0], iSortAscOrDesc[0]);
+            lbCurrentSortOption2.Text = sortOptionToString(iSortOptions[1], iSortAscOrDesc[1]);
+            lbCurrentSortOption3.Text = sortOptionToString(iSortOptions[2], iSortAscOrDesc[2]);
+            lbCurrentSortOption4.Text = sortOptionToString(iSortOptions[3], iSortAscOrDesc[3]);
         }
 
         private void btCheckBin_Click(object sender, EventArgs e)
@@ -3119,6 +3478,68 @@ namespace pbPSCReAlpha
                 }
             }
             slLogger.Trace("<< M3U generate Click");
+        }
+
+        private void cbSortOption2Check_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cbSortOption2Check.Checked)
+            {
+                cbSortingOption2.SelectedIndex = 1;
+                cbSortingOption2b.SelectedIndex = 0;
+                cbSortingOption2.Enabled = true;
+                cbSortingOption2b.Enabled = true;
+                cbSortOption3Check.Enabled = true;
+            }
+            else
+            {
+                cbSortingOption2.Enabled = false;
+                cbSortingOption2b.Enabled = false;
+                cbSortingOption2.SelectedIndex = -1;
+                cbSortingOption2b.SelectedIndex = -1;
+                cbSortOption3Check.Enabled = false;
+            }
+        }
+
+        private void cbSortOption3Check_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbSortOption3Check.Checked)
+            {
+                cbSortingOption3.SelectedIndex = 2;
+                cbSortingOption3b.SelectedIndex = 0;
+                cbSortingOption3.Enabled = true;
+                cbSortingOption3b.Enabled = true;
+                cbSortOption4Check.Enabled = true;
+                cbSortOption2Check.Enabled = false;
+            }
+            else
+            {
+                cbSortingOption3.Enabled = false;
+                cbSortingOption3b.Enabled = false;
+                cbSortingOption3.SelectedIndex = -1;
+                cbSortingOption3b.SelectedIndex = -1;
+                cbSortOption4Check.Enabled = false;
+                cbSortOption2Check.Enabled = true;
+            }
+        }
+
+        private void cbSortOption4Check_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbSortOption4Check.Checked)
+            {
+                cbSortingOption4.SelectedIndex = 3;
+                cbSortingOption4b.SelectedIndex = 0;
+                cbSortingOption4.Enabled = true;
+                cbSortingOption4b.Enabled = true;
+                cbSortOption3Check.Enabled = false;
+            }
+            else
+            {
+                cbSortingOption4.Enabled = false;
+                cbSortingOption4b.Enabled = false;
+                cbSortingOption4.SelectedIndex = -1;
+                cbSortingOption4b.SelectedIndex = -1;
+                cbSortOption3Check.Enabled = true;
+            }
         }
     }
 }
