@@ -136,6 +136,7 @@ namespace pbPSCReAlpha
                         tbGeneTitle.Clear();
                         tbGeneAlphaTitle.Clear();
                         tbGenePublisher.Clear();
+                        tbGeneDeveloper.Clear();
                         nuGenePlayers.Value = (decimal)1;
                         nuGeneYear.Value = (decimal)1995;
                         while ((s = sr.ReadLine()) != null)
@@ -153,6 +154,11 @@ namespace pbPSCReAlpha
                             if (s.StartsWith("Publisher="))
                             {
                                 tbGenePublisher.Text = ClPbHelper.RemoveQuotes(s.Substring(10));
+                            }
+                            else
+                            if (s.StartsWith("Developer="))
+                            {
+                                tbGeneDeveloper.Text = ClPbHelper.RemoveQuotes(s.Substring(10));
                             }
                             else
                             if (s.StartsWith("Players="))
@@ -193,6 +199,7 @@ namespace pbPSCReAlpha
                     newGame.Title = tbGeneTitle.Text;
                     newGame.Discs = tbGeneDiscs.Text;
                     newGame.Publisher = tbGenePublisher.Text;
+                    newGame.Developer = tbGeneDeveloper.Text;
                     newGame.Alphatitle = tbGeneAlphaTitle.Text;
                     try
                     {
@@ -235,6 +242,7 @@ namespace pbPSCReAlpha
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
             {
                 String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text);
+                String s3_5 = ClPbHelper.RemoveQuotes(tbGeneDeveloper.Text);
                 String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text);
                 int i1 = (int)(nuGenePlayers.Value);
                 int i2 = (int)(nuGeneYear.Value);
@@ -256,6 +264,7 @@ namespace pbPSCReAlpha
                         dcTosave.Add("title", s1);
                         dcTosave.Add("discs", s2);
                         dcTosave.Add("publisher", s3);
+                        dcTosave.Add("developer", s3_5);
                         dcTosave.Add("alphatitle", s4);
                         dcTosave.Add("players", i1.ToString());
                         dcTosave.Add("year", i2.ToString());
@@ -275,6 +284,7 @@ namespace pbPSCReAlpha
                         newGame.Title = s1;
                         newGame.Discs = s2;
                         newGame.Publisher = s3;
+                        newGame.Developer = s3_5;
                         newGame.Alphatitle = s4;
                         try
                         {
@@ -403,6 +413,7 @@ namespace pbPSCReAlpha
             if ((!String.IsNullOrEmpty(s1)) && (!(String.IsNullOrEmpty(s2))))
             {
                 String s3 = ClPbHelper.RemoveQuotes(tbGenePublisher.Text);
+                String s3_5 = ClPbHelper.RemoveQuotes(tbGeneDeveloper.Text);
                 String s4 = ClPbHelper.RemoveQuotes(tbGeneAlphaTitle.Text);
                 int i1 = (int)(nuGenePlayers.Value);
                 int i2 = (int)(nuGeneYear.Value);
@@ -415,6 +426,7 @@ namespace pbPSCReAlpha
                         dcTosave.Add("title", s1);
                         dcTosave.Add("discs", s2);
                         dcTosave.Add("publisher", s3);
+                        dcTosave.Add("developer", s3_5);
                         dcTosave.Add("alphatitle", s4);
                         dcTosave.Add("players", i1.ToString());
                         dcTosave.Add("year", i2.ToString());
@@ -434,6 +446,7 @@ namespace pbPSCReAlpha
                         newGame.Title = s1;
                         newGame.Discs = s2;
                         newGame.Publisher = s3;
+                        newGame.Developer = s3_5;
                         newGame.Alphatitle = s4;
                         try
                         {
@@ -535,6 +548,7 @@ namespace pbPSCReAlpha
             ClGameScraper clgs = new ClGameScraper(_docHtmlStr);
 
             tbGenePublisher.Text = clgs.Publisher;
+            tbGeneDeveloper.Text = clgs.Developer;
             tbGeneTitle.Text = clgs.Title;
             try
             {
@@ -780,6 +794,7 @@ namespace pbPSCReAlpha
                 tbGeneTitle.Text = newGame.Title;
                 tbGeneDiscs.Text = newGame.Discs;
                 tbGenePublisher.Text = newGame.Publisher;
+                tbGeneDeveloper.Text = newGame.Developer;
                 tbGeneAlphaTitle.Text = newGame.Alphatitle;
                 try
                 {
@@ -853,6 +868,13 @@ namespace pbPSCReAlpha
         private void lbGeneBigData_DoubleClick(object sender, EventArgs e)
         {
             btViewPage_Click(sender, e);
+        }
+
+        private void btExchangePublisherEditor_Click(object sender, EventArgs e)
+        {
+            String s = tbGeneDeveloper.Text;
+            tbGeneDeveloper.Text = tbGenePublisher.Text;
+            tbGenePublisher.Text = s;
         }
     }
 }

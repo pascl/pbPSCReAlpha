@@ -12,12 +12,14 @@ namespace pbPSCReAlpha
     {
         String _title;
         String _publisher;
+        String _developer;
         String _year = "1995";
         String _players = "1";
         String _imgUrl;
 
         public string Title { get => _title; set => _title = value; }
         public string Publisher { get => _publisher; set => _publisher = value; }
+        public string Developer { get => _developer; set => _developer = value; }
         public string Year { get => _year; set => _year = value; }
         public string Players { get => _players; set => _players = value; }
         public string ImgUrl { get => _imgUrl; set => _imgUrl = value; }
@@ -49,6 +51,7 @@ namespace pbPSCReAlpha
                     String sAdd = String.Empty;
                     bool bOfficialTitle = false;
                     bool bPublisher = false;
+                    bool bDeveloper = false;
                     bool bYear = false;
                     bool bPlayers = false;
                     bool bMultitap = false;
@@ -89,6 +92,27 @@ namespace pbPSCReAlpha
                                     }
                                     _publisher = sPub;
                                     bPublisher = false;
+                                    sAdd = String.Empty;
+                                }
+                            }
+                        }
+                        else
+                        if (bDeveloper)
+                        {
+                            sAdd += s;
+                            if (sAdd.IndexOf("</td>") > -1)
+                            {
+                                int ipos1 = sAdd.LastIndexOf("> ");
+                                int ipos2 = sAdd.IndexOf("</td>");
+                                if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                                {
+                                    String sDev = sAdd.Substring(ipos1 + 1, ipos2 - ipos1 - 1).Trim();
+                                    if (sDev.EndsWith("."))
+                                    {
+                                        sDev = sDev.Substring(0, sDev.Length - 1);
+                                    }
+                                    _developer = sDev;
+                                    bDeveloper = false;
                                     sAdd = String.Empty;
                                 }
                             }
@@ -204,6 +228,11 @@ namespace pbPSCReAlpha
                         if (s.StartsWith("Publisher"))
                         {
                             bPublisher = true;
+                        }
+                        else
+                        if (s.StartsWith("Developer"))
+                        {
+                            bDeveloper = true;
                         }
                         else
                         if (s.StartsWith("Date Released"))

@@ -30,8 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form23));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btIniReload = new System.Windows.Forms.Button();
-            this.btReloadTitleDiscs = new System.Windows.Forms.Button();
             this.lbCurrentGameIniFile = new System.Windows.Forms.Label();
             this.btSaveIni = new System.Windows.Forms.Button();
             this.btGeneCopyTitle = new System.Windows.Forms.Button();
@@ -63,28 +61,36 @@
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
             this.wbViewer = new System.Windows.Forms.WebBrowser();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btPictureReload = new System.Windows.Forms.Button();
             this.lbCurrentPngFile = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
             this.btSaveAs = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
-            this.pbCover = new System.Windows.Forms.PictureBox();
-            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
+            this.pbTmp = new System.Windows.Forms.PictureBox();
             this.btScrapeImg = new System.Windows.Forms.Button();
+            this.btPictureReload = new System.Windows.Forms.Button();
+            this.pbCover = new System.Windows.Forms.PictureBox();
             this.btScraper = new System.Windows.Forms.Button();
+            this.btExchangePublisherEditor = new System.Windows.Forms.Button();
+            this.btIniReload = new System.Windows.Forms.Button();
+            this.btReloadTitleDiscs = new System.Windows.Forms.Button();
+            this.tbGeneDeveloper = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.tbGeneDeveloper);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.btExchangePublisherEditor);
             this.groupBox1.Controls.Add(this.btIniReload);
             this.groupBox1.Controls.Add(this.btReloadTitleDiscs);
             this.groupBox1.Controls.Add(this.lbCurrentGameIniFile);
@@ -112,26 +118,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Game.ini";
-            // 
-            // btIniReload
-            // 
-            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btIniReload.Location = new System.Drawing.Point(121, 175);
-            this.btIniReload.Name = "btIniReload";
-            this.btIniReload.Size = new System.Drawing.Size(30, 23);
-            this.btIniReload.TabIndex = 37;
-            this.btIniReload.UseVisualStyleBackColor = true;
-            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
-            // 
-            // btReloadTitleDiscs
-            // 
-            this.btReloadTitleDiscs.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btReloadTitleDiscs.Location = new System.Drawing.Point(361, 19);
-            this.btReloadTitleDiscs.Name = "btReloadTitleDiscs";
-            this.btReloadTitleDiscs.Size = new System.Drawing.Size(30, 46);
-            this.btReloadTitleDiscs.TabIndex = 36;
-            this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
-            this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
             // 
             // lbCurrentGameIniFile
             // 
@@ -207,7 +193,7 @@
             // 
             // nuGeneYear
             // 
-            this.nuGeneYear.Location = new System.Drawing.Point(157, 149);
+            this.nuGeneYear.Location = new System.Drawing.Point(295, 151);
             this.nuGeneYear.Maximum = new decimal(new int[] {
             2007,
             0,
@@ -219,7 +205,7 @@
             0,
             0});
             this.nuGeneYear.Name = "nuGeneYear";
-            this.nuGeneYear.Size = new System.Drawing.Size(198, 20);
+            this.nuGeneYear.Size = new System.Drawing.Size(96, 20);
             this.nuGeneYear.TabIndex = 28;
             this.nuGeneYear.Value = new decimal(new int[] {
             1994,
@@ -230,7 +216,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(58, 151);
+            this.label6.Location = new System.Drawing.Point(260, 153);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 27;
@@ -238,7 +224,7 @@
             // 
             // nuGenePlayers
             // 
-            this.nuGenePlayers.Location = new System.Drawing.Point(157, 123);
+            this.nuGenePlayers.Location = new System.Drawing.Point(157, 151);
             this.nuGenePlayers.Maximum = new decimal(new int[] {
             8,
             0,
@@ -250,7 +236,7 @@
             0,
             0});
             this.nuGenePlayers.Name = "nuGenePlayers";
-            this.nuGenePlayers.Size = new System.Drawing.Size(198, 20);
+            this.nuGenePlayers.Size = new System.Drawing.Size(96, 20);
             this.nuGenePlayers.TabIndex = 26;
             this.nuGenePlayers.Value = new decimal(new int[] {
             1,
@@ -261,7 +247,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(58, 125);
+            this.label5.Location = new System.Drawing.Point(58, 153);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(41, 13);
             this.label5.TabIndex = 25;
@@ -461,16 +447,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Picture";
             // 
-            // btPictureReload
-            // 
-            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
-            this.btPictureReload.Name = "btPictureReload";
-            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
-            this.btPictureReload.TabIndex = 38;
-            this.btPictureReload.UseVisualStyleBackColor = true;
-            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
-            // 
             // lbCurrentPngFile
             // 
             this.lbCurrentPngFile.AutoSize = true;
@@ -511,31 +487,6 @@
             this.btLoad.UseVisualStyleBackColor = true;
             this.btLoad.Click += new System.EventHandler(this.btLoad_Click);
             // 
-            // pbCover
-            // 
-            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCover.Location = new System.Drawing.Point(6, 19);
-            this.pbCover.Name = "pbCover";
-            this.pbCover.Size = new System.Drawing.Size(150, 150);
-            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbCover.TabIndex = 26;
-            this.pbCover.TabStop = false;
-            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
-            this.pbCover.LocationChanged += new System.EventHandler(this.pbCover_LocationChanged);
-            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
-            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
-            // 
-            // pbTmp
-            // 
-            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbTmp.Location = new System.Drawing.Point(411, 390);
-            this.pbTmp.Name = "pbTmp";
-            this.pbTmp.Size = new System.Drawing.Size(25, 25);
-            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbTmp.TabIndex = 39;
-            this.pbTmp.TabStop = false;
-            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
-            // 
             // sfdGeneSaveImage
             // 
             this.sfdGeneSaveImage.DefaultExt = "png";
@@ -554,6 +505,17 @@
             this.ofdGeneLoadImage.ShowHelp = true;
             this.ofdGeneLoadImage.Title = "Load file";
             // 
+            // pbTmp
+            // 
+            this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbTmp.Location = new System.Drawing.Point(411, 390);
+            this.pbTmp.Name = "pbTmp";
+            this.pbTmp.Size = new System.Drawing.Size(25, 25);
+            this.pbTmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbTmp.TabIndex = 39;
+            this.pbTmp.TabStop = false;
+            this.pbTmp.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbTmp_LoadCompleted);
+            // 
             // btScrapeImg
             // 
             this.btScrapeImg.Enabled = false;
@@ -565,6 +527,30 @@
             this.btScrapeImg.UseVisualStyleBackColor = true;
             this.btScrapeImg.Click += new System.EventHandler(this.btScrapeImg_Click);
             // 
+            // btPictureReload
+            // 
+            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
+            this.btPictureReload.Name = "btPictureReload";
+            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
+            this.btPictureReload.TabIndex = 38;
+            this.btPictureReload.UseVisualStyleBackColor = true;
+            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
+            // 
+            // pbCover
+            // 
+            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCover.Location = new System.Drawing.Point(6, 19);
+            this.pbCover.Name = "pbCover";
+            this.pbCover.Size = new System.Drawing.Size(150, 150);
+            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbCover.TabIndex = 26;
+            this.pbCover.TabStop = false;
+            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
+            this.pbCover.LocationChanged += new System.EventHandler(this.pbCover_LocationChanged);
+            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
+            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
+            // 
             // btScraper
             // 
             this.btScraper.Enabled = false;
@@ -575,6 +561,52 @@
             this.btScraper.TabIndex = 30;
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
+            // 
+            // btExchangePublisherEditor
+            // 
+            this.btExchangePublisherEditor.Image = global::pbPSCReAlpha.Properties.Resources.arrow_switch;
+            this.btExchangePublisherEditor.Location = new System.Drawing.Point(9, 97);
+            this.btExchangePublisherEditor.Name = "btExchangePublisherEditor";
+            this.btExchangePublisherEditor.Size = new System.Drawing.Size(43, 46);
+            this.btExchangePublisherEditor.TabIndex = 38;
+            this.btExchangePublisherEditor.UseVisualStyleBackColor = true;
+            this.btExchangePublisherEditor.Click += new System.EventHandler(this.btExchangePublisherEditor_Click);
+            // 
+            // btIniReload
+            // 
+            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btIniReload.Location = new System.Drawing.Point(121, 175);
+            this.btIniReload.Name = "btIniReload";
+            this.btIniReload.Size = new System.Drawing.Size(30, 23);
+            this.btIniReload.TabIndex = 37;
+            this.btIniReload.UseVisualStyleBackColor = true;
+            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
+            // 
+            // btReloadTitleDiscs
+            // 
+            this.btReloadTitleDiscs.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btReloadTitleDiscs.Location = new System.Drawing.Point(361, 19);
+            this.btReloadTitleDiscs.Name = "btReloadTitleDiscs";
+            this.btReloadTitleDiscs.Size = new System.Drawing.Size(30, 46);
+            this.btReloadTitleDiscs.TabIndex = 36;
+            this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
+            this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
+            // 
+            // tbGeneDeveloper
+            // 
+            this.tbGeneDeveloper.Location = new System.Drawing.Point(157, 123);
+            this.tbGeneDeveloper.Name = "tbGeneDeveloper";
+            this.tbGeneDeveloper.Size = new System.Drawing.Size(198, 20);
+            this.tbGeneDeveloper.TabIndex = 40;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(58, 126);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(56, 13);
+            this.label9.TabIndex = 39;
+            this.label9.Text = "Developer";
             // 
             // Form23
             // 
@@ -604,8 +636,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -657,5 +689,8 @@
         private System.Windows.Forms.Button btIniReload;
         private System.Windows.Forms.Button btPictureReload;
         private System.Windows.Forms.PictureBox pbTmp;
+        private System.Windows.Forms.Button btExchangePublisherEditor;
+        private System.Windows.Forms.TextBox tbGeneDeveloper;
+        private System.Windows.Forms.Label label9;
     }
 }

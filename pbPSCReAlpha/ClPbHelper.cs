@@ -143,6 +143,7 @@ namespace pbPSCReAlpha
                     sw.WriteLine("Discs=" + dcInfos["discs"].Trim());
                     sw.WriteLine("Title=" + dcInfos["title"].Trim());
                     sw.WriteLine("Publisher=" + dcInfos["publisher"].Trim());
+                    sw.WriteLine("Developer=" + dcInfos["developer"].Trim());
                     sw.WriteLine("Players=" + dcInfos["players"].Trim());
                     sw.WriteLine("Year=" + dcInfos["year"].Trim());
                     if (!String.IsNullOrEmpty(dcInfos["alphatitle"].Trim()))

@@ -14,6 +14,7 @@ namespace pbPSCReAlpha
         private String _alphatitle = String.Empty;
         private String _discs = String.Empty;
         private String _publisher = String.Empty;
+        private String _developer = String.Empty;
         private String _year = String.Empty;
         private String _players = String.Empty;
         private Image _pictureFile;
@@ -165,11 +166,12 @@ namespace pbPSCReAlpha
             }
         }
 
-        public void setIniInfos(String title, String discs, String publisher, String year, String players, String alphatitle)
+        public void setIniInfos(String title, String discs, String publisher, String developer, String year, String players, String alphatitle)
         {
             _title = title;
             _discs = discs;
             _publisher = publisher;
+            _developer = developer;
             _year = year;
             _players = players;
             _alphatitle = alphatitle;
@@ -201,6 +203,7 @@ namespace pbPSCReAlpha
             if (b) { b &= (Alphatitle == cgs.Alphatitle); }
             if (b) { b &= (Discs == cgs.Discs); }
             if (b) { b &= (Publisher == cgs.Publisher); }
+            if (b) { b &= (Developer == cgs.Developer); }
             if (b) { b &= (Year == cgs.Year); }
             if (b) { b &= (Players == cgs.Players); }
             if (b) { b &= (GameDataMissing == cgs.GameDataMissing); }
@@ -248,6 +251,7 @@ namespace pbPSCReAlpha
         public String Alphatitle { get => _alphatitle; set => _alphatitle = value; }
         public String Discs { get => _discs; set => _discs = value; }
         public String Publisher { get => _publisher; set => _publisher = value; }
+        public String Developer { get => _developer; set => _developer = value; }
         public String Year { get => _year; set => _year = value; }
         public String Players { get => _players; set => _players = value; }
         public Image PictureFile { get => _pictureFile; }

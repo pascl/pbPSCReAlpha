@@ -250,6 +250,7 @@ namespace pbPSCReAlpha
                 String sAlphaTitle = String.Empty;
                 String sDiscs = String.Empty;
                 String sPublisher = String.Empty;
+                String sDeveloper = String.Empty;
                 String sYear = String.Empty;
                 String sPlayers = String.Empty;
                 String sPicture = String.Empty;
@@ -394,6 +395,13 @@ namespace pbPSCReAlpha
                                         uiGameIni++;
                                         sPublisher = s.Substring(10);
                                         sPublisher = ClPbHelper.RemoveQuotes(sPublisher);
+                                    }
+                                    else
+                                    if (s.StartsWith("Developer="))
+                                    {
+                                        uiGameIni++;
+                                        sDeveloper = s.Substring(10);
+                                        sDeveloper = ClPbHelper.RemoveQuotes(sDeveloper);
                                     }
                                     else
                                     if (s.StartsWith("Year="))
@@ -568,7 +576,7 @@ namespace pbPSCReAlpha
                 cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, bNameWithComma, !bPbpPresent, bBadPbpName, !bDiscCountMatchPbpCount, bBadDiscsName, iBleemsyncVersion);
                 if (bGameIniPresent)
                 {
-                    cgs.setIniInfos(sTitle, sDiscs, sPublisher, sYear, sPlayers, sAlphaTitle);
+                    cgs.setIniInfos(sTitle, sDiscs, sPublisher, sDeveloper, sYear, sPlayers, sAlphaTitle);
                 }
                 cgs.setFilesList(sFiles);
                 cgs.setPicture(bmPictureString, (Image)(new Bitmap(bmPicture)));
