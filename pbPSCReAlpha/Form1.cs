@@ -33,6 +33,7 @@ namespace pbPSCReAlpha
         int[] iSortAscOrDesc;
 
         bool bSavesAndGamesFoldersSeparated = false;
+        bool bNeedRecreateDB = false;
 
         public Form1(Dictionary<string, ClPS1Game> ps1games)
         {
@@ -768,6 +769,7 @@ namespace pbPSCReAlpha
                             refreshGameListFolders();
                         }
                     }
+                    bNeedRecreateDB = true;
                 }
             }
             slLogger.Trace("<< Refresh gamelist Click");
@@ -1312,6 +1314,7 @@ namespace pbPSCReAlpha
                     FlexibleMessageBox.Show("Correct the wrong detected folders (not numbered names, GameData or Game.ini missing).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Resort gamelist Click");
         }
 
@@ -1422,6 +1425,13 @@ namespace pbPSCReAlpha
             Properties.Settings.Default.iSortAsc4 = iSortAscOrDesc[3];
 
             Properties.Settings.Default.Save();
+            if(true == bNeedRecreateDB)
+            {
+                if (DialogResult.No == FlexibleMessageBox.Show("You did some modifications (or tried to), and you didn't update the database after that. Are you sur you want to close ?", "Warning...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
+                {
+                    e.Cancel = true;
+                }
+            }
             //slLogger.Trace("Saving parameters for next time. Bye.");
         }
 
@@ -1488,6 +1498,7 @@ namespace pbPSCReAlpha
                 }
                 refreshGameListFolders();
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Create new folder Click");
         }
 
@@ -1510,10 +1521,12 @@ namespace pbPSCReAlpha
                 ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
                 if(!cdbm.BDone)
                 {
+                    bNeedRecreateDB = true;
                     FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
+                    bNeedRecreateDB = false;
                     FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -1609,6 +1622,7 @@ namespace pbPSCReAlpha
             }
             f.ShowDialog();
             refreshOneFolder();
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Edit Game.ini Click");
         }
 
@@ -1629,6 +1643,7 @@ namespace pbPSCReAlpha
                 }
                 refreshOneFolder();
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Add pcsx.cfg Click");
         }
 
@@ -1644,6 +1659,7 @@ namespace pbPSCReAlpha
                 f.ShowDialog();
                 refreshOneFolder();
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Edit cue file Click");
         }
 
@@ -1736,6 +1752,7 @@ namespace pbPSCReAlpha
                 }
                 tmRefreshFolder.Enabled = true;
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Add Files Click");
         }
 
@@ -1785,6 +1802,7 @@ namespace pbPSCReAlpha
                 }
                 //refreshOneFolder(); // launched by activated timer
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Filename edit");
         }
 
@@ -1906,6 +1924,7 @@ namespace pbPSCReAlpha
             {
                 slLogger.Fatal(ex.Message);
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Dragdrop image");
         }
 
@@ -2111,6 +2130,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Cue AutoRename Click");
         }
 
@@ -2160,6 +2180,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Png AutoRename Click");
         }
 
@@ -2578,6 +2599,7 @@ namespace pbPSCReAlpha
                 {
                     slLogger.Fatal(ex.Message);
                 }
+                bNeedRecreateDB = true;
                 slLogger.Trace("<< Bin AutoRename Click");
             }
         }
@@ -2701,6 +2723,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Sbi AutoRename Click");
         }
 
@@ -3327,6 +3350,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< Pbp AutoRename Click");
         }
 
@@ -3485,6 +3509,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            bNeedRecreateDB = true;
             slLogger.Trace("<< M3U generate Click");
         }
 

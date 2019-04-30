@@ -82,6 +82,10 @@
             this.btUpgradeFolders = new System.Windows.Forms.Button();
             this.btDowngradeFolders = new System.Windows.Forms.Button();
             this.tabConfig = new System.Windows.Forms.TabPage();
+            this.lbCurrentSortOption4 = new System.Windows.Forms.Label();
+            this.lbCurrentSortOption3 = new System.Windows.Forms.Label();
+            this.lbCurrentSortOption2 = new System.Windows.Forms.Label();
+            this.lbCurrentSortOption1 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.btIniFileCopy = new System.Windows.Forms.Button();
@@ -90,6 +94,18 @@
             this.lbCurrentSimultaneousCopiedFiles = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbSortOption4Check = new System.Windows.Forms.CheckBox();
+            this.cbSortOption3Check = new System.Windows.Forms.CheckBox();
+            this.cbSortOption2Check = new System.Windows.Forms.CheckBox();
+            this.cbSortingOption4b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption3b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption2b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption1b = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption4 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption3 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption2 = new System.Windows.Forms.ComboBox();
+            this.cbSortingOption1 = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.btValidateCfg = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.cbSimultaneousCopiedFiles = new System.Windows.Forms.ComboBox();
@@ -109,22 +125,6 @@
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadDatabaseFile = new System.Windows.Forms.OpenFileDialog();
-            this.label7 = new System.Windows.Forms.Label();
-            this.cbSortingOption1 = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption2 = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption3 = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption4 = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption1b = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption2b = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption3b = new System.Windows.Forms.ComboBox();
-            this.cbSortingOption4b = new System.Windows.Forms.ComboBox();
-            this.cbSortOption2Check = new System.Windows.Forms.CheckBox();
-            this.cbSortOption3Check = new System.Windows.Forms.CheckBox();
-            this.cbSortOption4Check = new System.Windows.Forms.CheckBox();
-            this.lbCurrentSortOption1 = new System.Windows.Forms.Label();
-            this.lbCurrentSortOption2 = new System.Windows.Forms.Label();
-            this.lbCurrentSortOption3 = new System.Windows.Forms.Label();
-            this.lbCurrentSortOption4 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -785,6 +785,42 @@
             this.tabConfig.Text = "Configuration";
             this.tabConfig.UseVisualStyleBackColor = true;
             // 
+            // lbCurrentSortOption4
+            // 
+            this.lbCurrentSortOption4.Location = new System.Drawing.Point(458, 174);
+            this.lbCurrentSortOption4.Name = "lbCurrentSortOption4";
+            this.lbCurrentSortOption4.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption4.TabIndex = 18;
+            this.lbCurrentSortOption4.Text = "---";
+            this.lbCurrentSortOption4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lbCurrentSortOption3
+            // 
+            this.lbCurrentSortOption3.Location = new System.Drawing.Point(458, 147);
+            this.lbCurrentSortOption3.Name = "lbCurrentSortOption3";
+            this.lbCurrentSortOption3.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption3.TabIndex = 17;
+            this.lbCurrentSortOption3.Text = "---";
+            this.lbCurrentSortOption3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lbCurrentSortOption2
+            // 
+            this.lbCurrentSortOption2.Location = new System.Drawing.Point(458, 120);
+            this.lbCurrentSortOption2.Name = "lbCurrentSortOption2";
+            this.lbCurrentSortOption2.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption2.TabIndex = 16;
+            this.lbCurrentSortOption2.Text = "---";
+            this.lbCurrentSortOption2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // lbCurrentSortOption1
+            // 
+            this.lbCurrentSortOption1.Location = new System.Drawing.Point(458, 93);
+            this.lbCurrentSortOption1.Name = "lbCurrentSortOption1";
+            this.lbCurrentSortOption1.Size = new System.Drawing.Size(230, 18);
+            this.lbCurrentSortOption1.TabIndex = 15;
+            this.lbCurrentSortOption1.Text = "---";
+            this.lbCurrentSortOption1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -875,6 +911,157 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
+            // 
+            // cbSortOption4Check
+            // 
+            this.cbSortOption4Check.AutoSize = true;
+            this.cbSortOption4Check.Enabled = false;
+            this.cbSortOption4Check.Location = new System.Drawing.Point(221, 147);
+            this.cbSortOption4Check.Name = "cbSortOption4Check";
+            this.cbSortOption4Check.Size = new System.Drawing.Size(15, 14);
+            this.cbSortOption4Check.TabIndex = 14;
+            this.cbSortOption4Check.UseVisualStyleBackColor = true;
+            this.cbSortOption4Check.CheckedChanged += new System.EventHandler(this.cbSortOption4Check_CheckedChanged);
+            // 
+            // cbSortOption3Check
+            // 
+            this.cbSortOption3Check.AutoSize = true;
+            this.cbSortOption3Check.Enabled = false;
+            this.cbSortOption3Check.Location = new System.Drawing.Point(221, 120);
+            this.cbSortOption3Check.Name = "cbSortOption3Check";
+            this.cbSortOption3Check.Size = new System.Drawing.Size(15, 14);
+            this.cbSortOption3Check.TabIndex = 13;
+            this.cbSortOption3Check.UseVisualStyleBackColor = true;
+            this.cbSortOption3Check.CheckedChanged += new System.EventHandler(this.cbSortOption3Check_CheckedChanged);
+            // 
+            // cbSortOption2Check
+            // 
+            this.cbSortOption2Check.AutoSize = true;
+            this.cbSortOption2Check.Location = new System.Drawing.Point(221, 93);
+            this.cbSortOption2Check.Name = "cbSortOption2Check";
+            this.cbSortOption2Check.Size = new System.Drawing.Size(15, 14);
+            this.cbSortOption2Check.TabIndex = 12;
+            this.cbSortOption2Check.UseVisualStyleBackColor = true;
+            this.cbSortOption2Check.CheckedChanged += new System.EventHandler(this.cbSortOption2Check_CheckedChanged);
+            // 
+            // cbSortingOption4b
+            // 
+            this.cbSortingOption4b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption4b.Enabled = false;
+            this.cbSortingOption4b.FormattingEnabled = true;
+            this.cbSortingOption4b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption4b.Location = new System.Drawing.Point(369, 144);
+            this.cbSortingOption4b.Name = "cbSortingOption4b";
+            this.cbSortingOption4b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption4b.TabIndex = 11;
+            // 
+            // cbSortingOption3b
+            // 
+            this.cbSortingOption3b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption3b.Enabled = false;
+            this.cbSortingOption3b.FormattingEnabled = true;
+            this.cbSortingOption3b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption3b.Location = new System.Drawing.Point(369, 117);
+            this.cbSortingOption3b.Name = "cbSortingOption3b";
+            this.cbSortingOption3b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption3b.TabIndex = 10;
+            // 
+            // cbSortingOption2b
+            // 
+            this.cbSortingOption2b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption2b.Enabled = false;
+            this.cbSortingOption2b.FormattingEnabled = true;
+            this.cbSortingOption2b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption2b.Location = new System.Drawing.Point(369, 90);
+            this.cbSortingOption2b.Name = "cbSortingOption2b";
+            this.cbSortingOption2b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption2b.TabIndex = 9;
+            // 
+            // cbSortingOption1b
+            // 
+            this.cbSortingOption1b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption1b.FormattingEnabled = true;
+            this.cbSortingOption1b.Items.AddRange(new object[] {
+            "ASC",
+            "DESC"});
+            this.cbSortingOption1b.Location = new System.Drawing.Point(369, 63);
+            this.cbSortingOption1b.Name = "cbSortingOption1b";
+            this.cbSortingOption1b.Size = new System.Drawing.Size(68, 21);
+            this.cbSortingOption1b.TabIndex = 8;
+            // 
+            // cbSortingOption4
+            // 
+            this.cbSortingOption4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption4.Enabled = false;
+            this.cbSortingOption4.FormattingEnabled = true;
+            this.cbSortingOption4.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption4.Location = new System.Drawing.Point(242, 144);
+            this.cbSortingOption4.Name = "cbSortingOption4";
+            this.cbSortingOption4.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption4.TabIndex = 7;
+            // 
+            // cbSortingOption3
+            // 
+            this.cbSortingOption3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption3.Enabled = false;
+            this.cbSortingOption3.FormattingEnabled = true;
+            this.cbSortingOption3.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption3.Location = new System.Drawing.Point(242, 117);
+            this.cbSortingOption3.Name = "cbSortingOption3";
+            this.cbSortingOption3.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption3.TabIndex = 6;
+            // 
+            // cbSortingOption2
+            // 
+            this.cbSortingOption2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption2.Enabled = false;
+            this.cbSortingOption2.FormattingEnabled = true;
+            this.cbSortingOption2.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption2.Location = new System.Drawing.Point(242, 90);
+            this.cbSortingOption2.Name = "cbSortingOption2";
+            this.cbSortingOption2.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption2.TabIndex = 5;
+            // 
+            // cbSortingOption1
+            // 
+            this.cbSortingOption1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSortingOption1.FormattingEnabled = true;
+            this.cbSortingOption1.Items.AddRange(new object[] {
+            "Alphabetical",
+            "Publisher",
+            "Year",
+            "Players"});
+            this.cbSortingOption1.Location = new System.Drawing.Point(242, 63);
+            this.cbSortingOption1.Name = "cbSortingOption1";
+            this.cbSortingOption1.Size = new System.Drawing.Size(121, 21);
+            this.cbSortingOption1.TabIndex = 4;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 66);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Sorting Options:";
             // 
             // btValidateCfg
             // 
@@ -1058,193 +1245,6 @@
             this.ofdLoadDatabaseFile.FileName = "regional.db";
             this.ofdLoadDatabaseFile.Filter = "DB file|*.db";
             this.ofdLoadDatabaseFile.ShowHelp = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 66);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 13);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Sorting Options:";
-            // 
-            // cbSortingOption1
-            // 
-            this.cbSortingOption1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption1.FormattingEnabled = true;
-            this.cbSortingOption1.Items.AddRange(new object[] {
-            "Alphabetical",
-            "Publisher",
-            "Year",
-            "Players"});
-            this.cbSortingOption1.Location = new System.Drawing.Point(242, 63);
-            this.cbSortingOption1.Name = "cbSortingOption1";
-            this.cbSortingOption1.Size = new System.Drawing.Size(121, 21);
-            this.cbSortingOption1.TabIndex = 4;
-            // 
-            // cbSortingOption2
-            // 
-            this.cbSortingOption2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption2.Enabled = false;
-            this.cbSortingOption2.FormattingEnabled = true;
-            this.cbSortingOption2.Items.AddRange(new object[] {
-            "Alphabetical",
-            "Publisher",
-            "Year",
-            "Players"});
-            this.cbSortingOption2.Location = new System.Drawing.Point(242, 90);
-            this.cbSortingOption2.Name = "cbSortingOption2";
-            this.cbSortingOption2.Size = new System.Drawing.Size(121, 21);
-            this.cbSortingOption2.TabIndex = 5;
-            // 
-            // cbSortingOption3
-            // 
-            this.cbSortingOption3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption3.Enabled = false;
-            this.cbSortingOption3.FormattingEnabled = true;
-            this.cbSortingOption3.Items.AddRange(new object[] {
-            "Alphabetical",
-            "Publisher",
-            "Year",
-            "Players"});
-            this.cbSortingOption3.Location = new System.Drawing.Point(242, 117);
-            this.cbSortingOption3.Name = "cbSortingOption3";
-            this.cbSortingOption3.Size = new System.Drawing.Size(121, 21);
-            this.cbSortingOption3.TabIndex = 6;
-            // 
-            // cbSortingOption4
-            // 
-            this.cbSortingOption4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption4.Enabled = false;
-            this.cbSortingOption4.FormattingEnabled = true;
-            this.cbSortingOption4.Items.AddRange(new object[] {
-            "Alphabetical",
-            "Publisher",
-            "Year",
-            "Players"});
-            this.cbSortingOption4.Location = new System.Drawing.Point(242, 144);
-            this.cbSortingOption4.Name = "cbSortingOption4";
-            this.cbSortingOption4.Size = new System.Drawing.Size(121, 21);
-            this.cbSortingOption4.TabIndex = 7;
-            // 
-            // cbSortingOption1b
-            // 
-            this.cbSortingOption1b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption1b.FormattingEnabled = true;
-            this.cbSortingOption1b.Items.AddRange(new object[] {
-            "ASC",
-            "DESC"});
-            this.cbSortingOption1b.Location = new System.Drawing.Point(369, 63);
-            this.cbSortingOption1b.Name = "cbSortingOption1b";
-            this.cbSortingOption1b.Size = new System.Drawing.Size(68, 21);
-            this.cbSortingOption1b.TabIndex = 8;
-            // 
-            // cbSortingOption2b
-            // 
-            this.cbSortingOption2b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption2b.Enabled = false;
-            this.cbSortingOption2b.FormattingEnabled = true;
-            this.cbSortingOption2b.Items.AddRange(new object[] {
-            "ASC",
-            "DESC"});
-            this.cbSortingOption2b.Location = new System.Drawing.Point(369, 90);
-            this.cbSortingOption2b.Name = "cbSortingOption2b";
-            this.cbSortingOption2b.Size = new System.Drawing.Size(68, 21);
-            this.cbSortingOption2b.TabIndex = 9;
-            // 
-            // cbSortingOption3b
-            // 
-            this.cbSortingOption3b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption3b.Enabled = false;
-            this.cbSortingOption3b.FormattingEnabled = true;
-            this.cbSortingOption3b.Items.AddRange(new object[] {
-            "ASC",
-            "DESC"});
-            this.cbSortingOption3b.Location = new System.Drawing.Point(369, 117);
-            this.cbSortingOption3b.Name = "cbSortingOption3b";
-            this.cbSortingOption3b.Size = new System.Drawing.Size(68, 21);
-            this.cbSortingOption3b.TabIndex = 10;
-            // 
-            // cbSortingOption4b
-            // 
-            this.cbSortingOption4b.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSortingOption4b.Enabled = false;
-            this.cbSortingOption4b.FormattingEnabled = true;
-            this.cbSortingOption4b.Items.AddRange(new object[] {
-            "ASC",
-            "DESC"});
-            this.cbSortingOption4b.Location = new System.Drawing.Point(369, 144);
-            this.cbSortingOption4b.Name = "cbSortingOption4b";
-            this.cbSortingOption4b.Size = new System.Drawing.Size(68, 21);
-            this.cbSortingOption4b.TabIndex = 11;
-            // 
-            // cbSortOption2Check
-            // 
-            this.cbSortOption2Check.AutoSize = true;
-            this.cbSortOption2Check.Location = new System.Drawing.Point(221, 93);
-            this.cbSortOption2Check.Name = "cbSortOption2Check";
-            this.cbSortOption2Check.Size = new System.Drawing.Size(15, 14);
-            this.cbSortOption2Check.TabIndex = 12;
-            this.cbSortOption2Check.UseVisualStyleBackColor = true;
-            this.cbSortOption2Check.CheckedChanged += new System.EventHandler(this.cbSortOption2Check_CheckedChanged);
-            // 
-            // cbSortOption3Check
-            // 
-            this.cbSortOption3Check.AutoSize = true;
-            this.cbSortOption3Check.Enabled = false;
-            this.cbSortOption3Check.Location = new System.Drawing.Point(221, 120);
-            this.cbSortOption3Check.Name = "cbSortOption3Check";
-            this.cbSortOption3Check.Size = new System.Drawing.Size(15, 14);
-            this.cbSortOption3Check.TabIndex = 13;
-            this.cbSortOption3Check.UseVisualStyleBackColor = true;
-            this.cbSortOption3Check.CheckedChanged += new System.EventHandler(this.cbSortOption3Check_CheckedChanged);
-            // 
-            // cbSortOption4Check
-            // 
-            this.cbSortOption4Check.AutoSize = true;
-            this.cbSortOption4Check.Enabled = false;
-            this.cbSortOption4Check.Location = new System.Drawing.Point(221, 147);
-            this.cbSortOption4Check.Name = "cbSortOption4Check";
-            this.cbSortOption4Check.Size = new System.Drawing.Size(15, 14);
-            this.cbSortOption4Check.TabIndex = 14;
-            this.cbSortOption4Check.UseVisualStyleBackColor = true;
-            this.cbSortOption4Check.CheckedChanged += new System.EventHandler(this.cbSortOption4Check_CheckedChanged);
-            // 
-            // lbCurrentSortOption1
-            // 
-            this.lbCurrentSortOption1.Location = new System.Drawing.Point(458, 93);
-            this.lbCurrentSortOption1.Name = "lbCurrentSortOption1";
-            this.lbCurrentSortOption1.Size = new System.Drawing.Size(230, 18);
-            this.lbCurrentSortOption1.TabIndex = 15;
-            this.lbCurrentSortOption1.Text = "---";
-            this.lbCurrentSortOption1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // lbCurrentSortOption2
-            // 
-            this.lbCurrentSortOption2.Location = new System.Drawing.Point(458, 120);
-            this.lbCurrentSortOption2.Name = "lbCurrentSortOption2";
-            this.lbCurrentSortOption2.Size = new System.Drawing.Size(230, 18);
-            this.lbCurrentSortOption2.TabIndex = 16;
-            this.lbCurrentSortOption2.Text = "---";
-            this.lbCurrentSortOption2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // lbCurrentSortOption3
-            // 
-            this.lbCurrentSortOption3.Location = new System.Drawing.Point(458, 147);
-            this.lbCurrentSortOption3.Name = "lbCurrentSortOption3";
-            this.lbCurrentSortOption3.Size = new System.Drawing.Size(230, 18);
-            this.lbCurrentSortOption3.TabIndex = 17;
-            this.lbCurrentSortOption3.Text = "---";
-            this.lbCurrentSortOption3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // lbCurrentSortOption4
-            // 
-            this.lbCurrentSortOption4.Location = new System.Drawing.Point(458, 174);
-            this.lbCurrentSortOption4.Name = "lbCurrentSortOption4";
-            this.lbCurrentSortOption4.Size = new System.Drawing.Size(230, 18);
-            this.lbCurrentSortOption4.TabIndex = 18;
-            this.lbCurrentSortOption4.Text = "---";
-            this.lbCurrentSortOption4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Form1
             // 
