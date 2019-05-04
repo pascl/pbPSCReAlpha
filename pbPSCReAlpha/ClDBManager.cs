@@ -52,8 +52,15 @@ namespace pbPSCReAlpha
             private String _rating_image;
             private String _game_manual_qr_image;
             private String _link_game_id;
+
+            // bs1.0.0
             private int _position;
 
+            // ab0.6.0
+            private String _path;
+            private String _sspath;
+            private String _memcard;
+            
             public int Game_id { get => _game_id; set => _game_id = value; }
             public string Game_title_string { get => _game_title_string; set => _game_title_string = value; }
             public string Publisher_name { get => _publisher_name; set => _publisher_name = value; }
@@ -62,7 +69,12 @@ namespace pbPSCReAlpha
             public string Rating_image { get => _rating_image; set => _rating_image = value; }
             public string Game_manual_qr_image { get => _game_manual_qr_image; set => _game_manual_qr_image = value; }
             public string Link_game_id { get => _link_game_id; set => _link_game_id = value; }
+
             public int Position { get => _position; set => _position = value; }
+
+            public string Path { get => _path; set => _path = value; }
+            public string Sspath { get => _sspath; set => _sspath = value; }
+            public string Memcard { get => _memcard; set => _memcard = value; }
 
             public ClGameTable(ClGameStructure cgs)
             {
@@ -87,7 +99,12 @@ namespace pbPSCReAlpha
                 _rating_image = "CERO_A";
                 _game_manual_qr_image = "QR_Code_GM";
                 _link_game_id = String.Empty;
+
                 _position = 0;
+
+                _path = "/media/Games/" + cgs.FolderIndex + "/";
+                _sspath = "/media/Games/!SaveStates/" + cgs.FolderIndex + "/";
+                _memcard = "SONY";
             }
 
             public SQLiteCommand generateInsertCommand(SQLiteConnection conn, int bs_version)
@@ -119,6 +136,21 @@ namespace pbPSCReAlpha
                         s.Parameters.Add("@p6", System.Data.DbType.String).Value = _game_manual_qr_image;
                         s.Parameters.Add("@p7", System.Data.DbType.String).Value = _link_game_id;
                         s.Parameters.Add("@p8", System.Data.DbType.Int32).Value = _position;
+                        break;
+                    case 2:
+                        s = new SQLiteCommand("INSERT INTO GAME"
+                            + " (GAME_TITLE_STRING, PUBLISHER_NAME, RELEASE_YEAR, PLAYERS, RATING_IMAGE, GAME_MANUAL_QR_IMAGE, LINK_GAME_ID, PATH, SSPATH, MEMCARD)"
+                            + " VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10)", conn);
+                        s.Parameters.Add("@p1", System.Data.DbType.String).Value = _game_title_string;
+                        s.Parameters.Add("@p2", System.Data.DbType.String).Value = _publisher_name;
+                        s.Parameters.Add("@p3", System.Data.DbType.Int32).Value = _release_year;
+                        s.Parameters.Add("@p4", System.Data.DbType.Int32).Value = _players;
+                        s.Parameters.Add("@p5", System.Data.DbType.String).Value = _rating_image;
+                        s.Parameters.Add("@p6", System.Data.DbType.String).Value = _game_manual_qr_image;
+                        s.Parameters.Add("@p7", System.Data.DbType.String).Value = _link_game_id;
+                        s.Parameters.Add("@p8", System.Data.DbType.String).Value = _path;
+                        s.Parameters.Add("@p9", System.Data.DbType.String).Value = _sspath;
+                        s.Parameters.Add("@p10", System.Data.DbType.String).Value = _memcard;
                         break;
                 }
                 return s;
@@ -243,6 +275,7 @@ namespace pbPSCReAlpha
                 {
                     _release_date = "1995-01-01 05:12:00";
                 }
+                _developer = cgs.Developer;
                 _publisher = cgs.Publisher;
                 try
                 {
@@ -301,15 +334,111 @@ namespace pbPSCReAlpha
         public bool BDone { get => _bDone; set => _bDone = value; }
         SimpleLogger slLogger;
 
-        public void BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
+        public void AutoBleem_CreateFiles(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
         {
+            _bDone = false;
             try
             {
-                String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
-                String sFilename = sFolderBase + cvh.DbFolder + "\\" + "BleemSync.db";
-                if (!Directory.Exists(sFolderBase + cvh.DbFolder))
+                //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
+                //String sFilename = sFolderBase + cvh.DbFolder + "\\" + "BleemSync.db";
+                String sFilename1 = sFolderPath + cvh.CfgFolder + "\\" + "autobleem.prev";
+                String sFilename2 = sFolderPath + cvh.CfgFolder + "\\" + "autobleem.list";
+                if (!Directory.Exists(sFolderPath + cvh.CfgFolder))
                 {
-                    Directory.CreateDirectory(sFolderBase + cvh.DbFolder);
+                    Directory.CreateDirectory(sFolderPath + cvh.CfgFolder);
+                }
+                if (File.Exists(sFilename1))
+                {
+                    if (File.Exists(sFilename1 + ".bak"))
+                    {
+                        File.Delete(sFilename1 + ".bak");
+                        Thread.Sleep(100);
+                    }
+                    File.Move(sFilename1, sFilename1 + ".bak");
+                    Thread.Sleep(400);
+                }
+                if (File.Exists(sFilename2))
+                {
+                    if (File.Exists(sFilename2 + ".bak"))
+                    {
+                        File.Delete(sFilename2 + ".bak");
+                        Thread.Sleep(100);
+                    }
+                    File.Move(sFilename2, sFilename2 + ".bak");
+                    Thread.Sleep(400);
+                }
+                List<String> lsFolders = new List<string>();
+                DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                foreach (DirectoryInfo di in dirList)
+                {
+                    //slLogger.Debug("** Directory: " + di.FullName);
+                    String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                    if (sFolderIndex.StartsWith("\\"))
+                    {
+                        sFolderIndex = sFolderIndex.Substring(1);
+                    }
+                    String[] s2 = sFolderIndex.Split('\\');
+                    sFolderIndex = s2[0];
+                    if ((sFolderIndex != "!SaveStates") && (sFolderIndex != "!MemCards"))
+                    {
+                        lsFolders.Add(sFolderIndex);
+                    }
+                } // foreach
+                if (lsFolders.Count > 0)
+                {
+                    using (StreamWriter sw = new StreamWriter(sFilename1))
+                    {
+                        foreach (String s in lsFolders)
+                        {
+                            sw.Write(s + "\n");
+                        }
+                    }
+                    using (StreamWriter sw = new StreamWriter(sFilename2))
+                    {
+                        int i = 1;
+                        foreach (String s in lsFolders)
+                        {
+                            sw.Write(i.ToString() + ",/media/Games/" + s + ",/media/Games/!SaveStates/" + s + "\n");
+                            i++;
+                        }
+                    }
+                }
+                else
+                {
+                    using (StreamWriter sw = new StreamWriter(sFilename1))
+                    {
+                        sw.WriteLine("");
+                    }
+                    using (StreamWriter sw = new StreamWriter(sFilename2))
+                    {
+                        sw.WriteLine("");
+                    }
+                }
+                _bDone = true;
+            }
+            catch(Exception ex)
+            {
+                _bDone = false;
+                slLogger.Fatal(ex.Message);
+            }
+            finally
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+        }
+
+        public void BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
+        {
+            _bDone = false;
+            try
+            {
+                //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
+                //String sFilename = sFolderBase + cvh.DbFolder + "\\" + "BleemSync.db";
+                String sFilename = sFolderPath + cvh.DbFolder + "\\" + "BleemSync.db";
+                if (!Directory.Exists(sFolderPath + cvh.DbFolder))
+                {
+                    Directory.CreateDirectory(sFolderPath + cvh.DbFolder);
                 }
                 if (File.Exists(sFilename))
                 {
@@ -457,11 +586,12 @@ namespace pbPSCReAlpha
              */
             try
             {
-                String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
-                String sFilename = sFolderBase + cvh.DbFolder + "\\" + "regional.db";
-                if (!Directory.Exists(sFolderBase + cvh.DbFolder))
+                //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
+                //String sFilename = sFolderBase + cvh.DbFolder + "\\" + "regional.db";
+                String sFilename = sFolderPath + cvh.DbFolder + "\\" + "regional.db";
+                if (!Directory.Exists(sFolderPath + cvh.DbFolder))
                 {
-                    Directory.CreateDirectory(sFolderBase + cvh.DbFolder);
+                    Directory.CreateDirectory(sFolderPath + cvh.DbFolder);
                 }
                 if (File.Exists(sFilename))
                 {
@@ -487,15 +617,21 @@ namespace pbPSCReAlpha
                         {
                             switch (bleemsyncVersion)
                             {
-                                case 0:
+                                case 0: // bs0.4.1
                                     sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"GAME\" (\"GAME_ID\") ON DELETE CASCADE )";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
                                     sql = "CREATE TABLE \"GAME\" ( \"GAME_ID\" INTEGER NOT NULL CONSTRAINT \"PK_GAME\" PRIMARY KEY AUTOINCREMENT, \"GAME_TITLE_STRING\" TEXT NULL, \"PUBLISHER_NAME\" TEXT NULL, \"RELEASE_YEAR\" INTEGER NOT NULL, \"PLAYERS\" INTEGER NOT NULL, \"RATING_IMAGE\" TEXT NULL, \"GAME_MANUAL_QR_IMAGE\" TEXT NULL, \"LINK_GAME_ID\" TEXT NULL )";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
+                                    sql = "CREATE TABLE \"LANGUAGE_SPECIFIC\"( \"LANGUAGE_ID\" TEXT NOT NULL CONSTRAINT \"PK_LANGUAGE_SPECIFIC\" PRIMARY KEY, \"DEFAULT_VALUE\" TEXT NULL, \"VALUE\" TEXT NULL )";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
                                     break;
-                                case 1:
+                                case 1: // bs1.0.0
                                     sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"MENU_ENTRIES\" (\"GAME_ID\") ON DELETE CASCADE )";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
@@ -508,17 +644,28 @@ namespace pbPSCReAlpha
                                     sql = "CREATE VIEW GAME AS SELECT * FROM MENU_ENTRIES ORDER BY POSITION, GAME_TITLE_STRING";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
+                                    sql = "CREATE TABLE \"LANGUAGE_SPECIFIC\"( \"LANGUAGE_ID\" TEXT NOT NULL CONSTRAINT \"PK_LANGUAGE_SPECIFIC\" PRIMARY KEY, \"DEFAULT_VALUE\" TEXT NULL, \"VALUE\" TEXT NULL )";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    break;
+                                case 2: // ab0.6.0
+                                    sql = "CREATE TABLE DISC ( [GAME_ID] integer, [DISC_NUMBER] integer, [BASENAME] text, UNIQUE ([GAME_ID], [DISC_NUMBER]) )";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    sql = "CREATE TABLE GAME ( GAME_ID integer NOT NULL UNIQUE, GAME_TITLE_STRING text, PUBLISHER_NAME text, RELEASE_YEAR integer, PLAYERS integer, RATING_IMAGE text, GAME_MANUAL_QR_IMAGE text, LINK_GAME_ID integer, PATH text null, SSPATH text null, MEMCARD text null, PRIMARY KEY ( GAME_ID ) )";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    sql = "CREATE TABLE LANGUAGE_SPECIFIC ( [DEFAULT_VALUE] text, [LANGUAGE_ID] integer, [VALUE] text, UNIQUE ([DEFAULT_VALUE], [LANGUAGE_ID]) )";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    //CREATE TABLE DISC ( [GAME_ID] integer, [DISC_NUMBER] integer, [BASENAME] text, UNIQUE ([GAME_ID], [DISC_NUMBER]) )
+                                    //CREATE TABLE GAME ( GAME_ID integer NOT NULL UNIQUE, GAME_TITLE_STRING text, PUBLISHER_NAME text, RELEASE_YEAR integer, PLAYERS integer, RATING_IMAGE text, GAME_MANUAL_QR_IMAGE text, LINK_GAME_ID integer, PATH text null, SSPATH text null, MEMCARD text null, PRIMARY KEY ( GAME_ID ) )
+                                    //CREATE TABLE LANGUAGE_SPECIFIC ( [DEFAULT_VALUE] text, [LANGUAGE_ID] integer, [VALUE] text, UNIQUE ([DEFAULT_VALUE], [LANGUAGE_ID]) )
                                     break;
                             }
-                            sql = "CREATE TABLE \"LANGUAGE_SPECIFIC\"( \"LANGUAGE_ID\" TEXT NOT NULL CONSTRAINT \"PK_LANGUAGE_SPECIFIC\" PRIMARY KEY, \"DEFAULT_VALUE\" TEXT NULL, \"VALUE\" TEXT NULL )";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            /*sql = "CREATE TABLE sqlite_sequence(name,seq)";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();*/
-                            sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
 
                             tran.Commit();
                         }
@@ -533,6 +680,8 @@ namespace pbPSCReAlpha
                                     sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
+                                    break;
+                                case 2:
                                     break;
                             }
                             int iGame = 0;
@@ -577,6 +726,11 @@ namespace pbPSCReAlpha
                 {
                     // create the second db file
                     BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl);
+                }
+                if ((true == _bDone) && (2 == bleemsyncVersion))
+                {
+                    // create the second db file
+                    AutoBleem_CreateFiles(lcgs, sFolderPath, cvh, sl);
                 }
             }
             catch (Exception ex)

@@ -146,9 +146,45 @@ namespace pbPSCReAlpha
                     sw.WriteLine("Developer=" + dcInfos["developer"].Trim());
                     sw.WriteLine("Players=" + dcInfos["players"].Trim());
                     sw.WriteLine("Year=" + dcInfos["year"].Trim());
-                    if (!String.IsNullOrEmpty(dcInfos["alphatitle"].Trim()))
+                    if (dcInfos.ContainsKey("alphatitle"))
                     {
-                        sw.WriteLine("AlphaTitle=" + dcInfos["alphatitle"].Trim());
+                        if (!String.IsNullOrEmpty(dcInfos["alphatitle"].Trim()))
+                        {
+                            sw.WriteLine("AlphaTitle=" + dcInfos["alphatitle"].Trim());
+                        }
+                    }
+                    // Autobleem
+                    if (dcInfos.ContainsKey("automation"))
+                    {
+                        sw.WriteLine("Automation=" + dcInfos["automation"].Trim());
+                    }
+                    else
+                    {
+                        sw.WriteLine("Automation=0");
+                    }
+                    if (dcInfos.ContainsKey("highres"))
+                    {
+                        sw.WriteLine("Highres=" + dcInfos["highres"].Trim());
+                    }
+                    else
+                    {
+                        sw.WriteLine("Highres=0");
+                    }
+                    if (dcInfos.ContainsKey("imagetype"))
+                    {
+                        sw.WriteLine("Imagetype=" + dcInfos["imagetype"].Trim());
+                    }
+                    else
+                    {
+                        sw.WriteLine("Imagetype=0");
+                    }
+                    if (dcInfos.ContainsKey("memcard"))
+                    {
+                        sw.WriteLine("Memcard=" + dcInfos["memcard"].Trim());
+                    }
+                    else
+                    {
+                        sw.WriteLine("Memcard=SONY");
                     }
                 }
             }

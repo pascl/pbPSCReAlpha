@@ -86,7 +86,7 @@ namespace pbPSCReAlpha
                 if (args[0].Trim() == "-e")
                 {
                     bRunAForm = true;
-                    Application.Run(new Form23(Application.StartupPath, null, dcPs1Games, new ClVersionHelper("1.0.0", "", "\\.pcsx", "\\bleemsync\\etc\\bleemsync\\SYS\\databases", String.Empty)));
+                    Application.Run(new Form23(Application.StartupPath, null, dcPs1Games, new ClVersionHelper("BleemSync v1.0.0", "", String.Empty, "..\\bleemsync\\etc\\bleemsync\\SYS\\databases", String.Empty)));
                 }
                 else
                 if (args[0].Trim() == "-b")

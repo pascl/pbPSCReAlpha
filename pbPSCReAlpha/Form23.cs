@@ -268,6 +268,13 @@ namespace pbPSCReAlpha
                         dcTosave.Add("alphatitle", s4);
                         dcTosave.Add("players", i1.ToString());
                         dcTosave.Add("year", i2.ToString());
+                        if (null != newGame)
+                        {
+                            dcTosave.Add("automation", newGame.ABautomation);
+                            dcTosave.Add("highres", newGame.ABhighres);
+                            dcTosave.Add("imagetype", newGame.ABimagetype);
+                            dcTosave.Add("memcard", newGame.ABmemcard);
+                        }
                         ClPbHelper.SaveGameIni(sFileName, dcTosave, slLogger);
                         
                         _currentFilePathIni = sFileName;
@@ -430,6 +437,13 @@ namespace pbPSCReAlpha
                         dcTosave.Add("alphatitle", s4);
                         dcTosave.Add("players", i1.ToString());
                         dcTosave.Add("year", i2.ToString());
+                        if (null != newGame)
+                        {
+                            dcTosave.Add("automation", newGame.ABautomation);
+                            dcTosave.Add("highres", newGame.ABhighres);
+                            dcTosave.Add("imagetype", newGame.ABimagetype);
+                            dcTosave.Add("memcard", newGame.ABmemcard);
+                        }
                         ClPbHelper.SaveGameIni(sFileName, dcTosave, slLogger);
                         
                         _currentFilePathIni = sFileName;

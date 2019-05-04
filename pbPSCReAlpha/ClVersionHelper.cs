@@ -12,21 +12,21 @@ namespace pbPSCReAlpha
         String _gameDataFolder;
         String _saveFolder;
         String _dbFolder;
-        String _exeFolder;
+        String _cfgFolder;
 
-        public ClVersionHelper(String sVersion, String sFolderGamedata, String sFolderSave, String sFolderDb, String sFolderExe)
+        public ClVersionHelper(String sVersion, String sFolderGamedata, String sFolderSave, String sFolderDb, String sFolderCfg)
         {
             _versionstring = sVersion;
             _gameDataFolder = sFolderGamedata;
             _saveFolder = sFolderSave;
             _dbFolder = sFolderDb;
-            _exeFolder = sFolderExe;
+            _cfgFolder = sFolderCfg;
         }
 
         public string Versionstring { get => _versionstring; set => _versionstring = value; }
         public string GameDataFolder { get => _gameDataFolder; set => _gameDataFolder = value; }
         public string SaveFolder { get => _saveFolder; set => _saveFolder = value; }
         public string DbFolder { get => _dbFolder; set => _dbFolder = value; }
-        public string ExeFolder { get => _exeFolder; set => _exeFolder = value; }
+        public string CfgFolder { get => _cfgFolder; set => _cfgFolder = value; }
     }
 }

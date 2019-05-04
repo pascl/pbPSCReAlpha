@@ -125,6 +125,7 @@
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadDatabaseFile = new System.Windows.Forms.OpenFileDialog();
+            this.tsmiABv060 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -1217,34 +1218,44 @@
             // 
             this.tsmiBSVersionItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiBSv041,
-            this.tsmiBSv100});
+            this.tsmiBSv100,
+            this.tsmiABv060});
             this.tsmiBSVersionItem.Name = "tsmiBSVersionItem";
-            this.tsmiBSVersionItem.Size = new System.Drawing.Size(118, 20);
-            this.tsmiBSVersionItem.Text = "BleemSync version";
+            this.tsmiBSVersionItem.Size = new System.Drawing.Size(93, 20);
+            this.tsmiBSVersionItem.Text = "BS/AB Version";
             // 
             // tsmiBSv041
             // 
-            this.tsmiBSv041.Checked = true;
             this.tsmiBSv041.CheckOnClick = true;
-            this.tsmiBSv041.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsmiBSv041.Name = "tsmiBSv041";
-            this.tsmiBSv041.Size = new System.Drawing.Size(104, 22);
-            this.tsmiBSv041.Text = "v0.4.1";
+            this.tsmiBSv041.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBSv041.Text = "BleemSync v0.4.1";
             this.tsmiBSv041.CheckedChanged += new System.EventHandler(this.tsmiBSv041_CheckedChanged);
+            this.tsmiBSv041.Click += new System.EventHandler(this.tsmiBSv041_Click);
             // 
             // tsmiBSv100
             // 
             this.tsmiBSv100.CheckOnClick = true;
             this.tsmiBSv100.Name = "tsmiBSv100";
-            this.tsmiBSv100.Size = new System.Drawing.Size(104, 22);
-            this.tsmiBSv100.Text = "v1.0.0";
+            this.tsmiBSv100.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBSv100.Text = "BleemSync v1.0.0";
             this.tsmiBSv100.CheckedChanged += new System.EventHandler(this.tsmiBSv100_CheckedChanged);
+            this.tsmiBSv100.Click += new System.EventHandler(this.tsmiBSv100_Click);
             // 
             // ofdLoadDatabaseFile
             // 
             this.ofdLoadDatabaseFile.FileName = "regional.db";
             this.ofdLoadDatabaseFile.Filter = "DB file|*.db";
             this.ofdLoadDatabaseFile.ShowHelp = true;
+            // 
+            // tsmiABv060
+            // 
+            this.tsmiABv060.CheckOnClick = true;
+            this.tsmiABv060.Name = "tsmiABv060";
+            this.tsmiABv060.Size = new System.Drawing.Size(180, 22);
+            this.tsmiABv060.Text = "AutoBleem v0.6.0";
+            this.tsmiABv060.CheckedChanged += new System.EventHandler(this.tsmiABv060_CheckedChanged);
+            this.tsmiABv060.Click += new System.EventHandler(this.tsmiABv060_Click);
             // 
             // Form1
             // 
@@ -1380,6 +1391,7 @@
         private System.Windows.Forms.ComboBox cbSortingOption2;
         private System.Windows.Forms.ComboBox cbSortingOption1;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ToolStripMenuItem tsmiABv060;
     }
 }
 
