@@ -166,6 +166,7 @@ namespace pbPSCReAlpha
             _nanFolder = nanFolder;
             _gameDataMissing = gameDataMissing;
             _title = "ZZZZ" + folderIndex;
+            _iniMissing = true;
             _errorString = new List<String>();
             if (_nanFolder)
             {
@@ -174,6 +175,10 @@ namespace pbPSCReAlpha
             if(_gameDataMissing)
             {
                 this.ErrorString.Add("Folder .\\GameData\\ not found.");
+            }
+            if (_iniMissing)
+            {
+                this.ErrorString.Add("Game.ini not found in the folder.");
             }
         }
 

@@ -755,29 +755,36 @@ namespace pbPSCReAlpha
             }
         }
 
-        private void btRefresh_Click(object sender, EventArgs e)
+        private void refreshAndAskDBRead()
         {
-            slLogger.Trace(">> Refresh gamelist Click");
             refreshGameListFolders();
             // todo: if game.ini missing somewhere, ask for reading db !
             bool bAskReadDb = false;
             foreach (ClGameStructure cgs in lbGames.Items)
             {
-                if(cgs.IniMissing)
+                if (cgs.IniMissing)
                 {
                     bAskReadDb = true;
                 }
             }
-            if(true == bAskReadDb)
+            if (true == bAskReadDb)
             {
-                if (DialogResult.Yes == FlexibleMessageBox.Show("Some game.ini are missing, can I read the database to auto-generate them (if it is possible) ? (Existing files won't be affected)", "Ini missing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                String sQuestion = "!!! IMPORTANT !!!"
+                    + "\n\n" 
+                    + "Your folders are supposed to have " + currentUsedVersion.Versionstring + " structure, and so on your database." 
+                    + "\n\n" 
+                    + "If not, SAY NO !!!! Change the option in the top-left corner for the right version." 
+                    + "\n\n" 
+                    + " ------------------------------------------------- "
+                    + "Detected that some game.ini are missing, can I read the database to auto-generate them (if it is possible) ? (Existing files won't be affected)";
+                if (DialogResult.Yes == FlexibleMessageBox.Show(sQuestion, "Ini missing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                 {
                     String sFolderPath = tbFolderPath.Text;
                     if (sFolderPath.EndsWith("\\"))
                     {
                         sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
                     }
-                    ClVersionHelper srcVersion = bleemsyncVersions[iBleemsyncVersion];
+                    ClVersionHelper srcVersion = currentUsedVersion;
 
                     //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
                     String sFilePath = sFolderPath + srcVersion.DbFolder;
@@ -815,7 +822,7 @@ namespace pbPSCReAlpha
                             }
                             dirList = null;
                         }
-                        if(bAtLeastOneCreated)
+                        if (bAtLeastOneCreated)
                         {
                             refreshGameListFolders();
                         }
@@ -823,6 +830,12 @@ namespace pbPSCReAlpha
                     bNeedRecreateDB = true;
                 }
             }
+        }
+
+        private void btRefresh_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Refresh gamelist Click");
+            refreshAndAskDBRead();
             slLogger.Trace("<< Refresh gamelist Click");
         }
 
@@ -2917,6 +2930,7 @@ namespace pbPSCReAlpha
                         slLogger.Fatal(ex.Message);
                     }
                 } // foreach
+                refreshGameListFolders();
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update BS1.0.0 folders to BS0.4.1 Click");
@@ -2933,67 +2947,71 @@ namespace pbPSCReAlpha
                 ClVersionHelper dstVersion = bleemsyncVersions[1];
                 foreach (DirectoryInfo di in dirList)
                 {
-                    try
+                    if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
                     {
-                        slLogger.Debug("** Directory: " + di.FullName);
-                        String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
-                        if (sFolderIndex.StartsWith("\\"))
+                        try
                         {
-                            sFolderIndex = sFolderIndex.Substring(1);
-                        }
-                        String[] s2 = sFolderIndex.Split('\\');
-                        sFolderIndex = s2[0];
-                        if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
-                        {
-                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
+                            slLogger.Debug("** Directory: " + di.FullName);
+                            String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                            if (sFolderIndex.StartsWith("\\"))
                             {
-                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                sFolderIndex = sFolderIndex.Substring(1);
                             }
-                            if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                            String[] s2 = sFolderIndex.Split('\\');
+                            sFolderIndex = s2[0];
+                            if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
                             {
-                                /*
-                                NO WAY
-                                slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
-                                Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
-                                */
-                                // file by file, folder .pcsx has to stay here
-                                FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
-                                foreach (FileInfo fi in inDirfileList)
+                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
                                 {
-                                    String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
-                                    String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
-                                    if (sSubFolders.Length > 1)
+                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                }
+                                if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                                {
+                                    /*
+                                    NO WAY
+                                    slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
+                                    Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
+                                    */
+                                    // file by file, folder .pcsx has to stay here
+                                    FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                                    foreach (FileInfo fi in inDirfileList)
                                     {
-                                        for (int i = 0; i < sSubFolders.Length - 1; i++)
+                                        String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
+                                        String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
+                                        if (sSubFolders.Length > 1)
                                         {
-                                            String sSubs = String.Empty;
-                                            int j = 0;
-                                            while (j < i)
+                                            for (int i = 0; i < sSubFolders.Length - 1; i++)
                                             {
-                                                sSubs += "\\" + sSubFolders[j];
-                                                j++;
-                                            }
-                                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
-                                            {
-                                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                String sSubs = String.Empty;
+                                                int j = 0;
+                                                while (j < i)
+                                                {
+                                                    sSubs += "\\" + sSubFolders[j];
+                                                    j++;
+                                                }
+                                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
+                                                {
+                                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                }
                                             }
                                         }
+                                        slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
+                                        File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
                                     }
-                                    slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
-                                    File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
-                                }
-                                if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
-                                {
-                                    Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                                    {
+                                        Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    }
                                 }
                             }
                         }
-                    }
-                    catch(Exception ex)
-                    {
-                        slLogger.Fatal(ex.Message);
+                        catch (Exception ex)
+                        {
+                            slLogger.Fatal(ex.Message);
+                        }
                     }
                 } // foreach
+                refreshGameListFolders();
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update BS0.4.1 folders to BS1.0.0 Click");
@@ -3609,7 +3627,7 @@ namespace pbPSCReAlpha
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
-            refreshGameListFolders();
+            refreshAndAskDBRead();
         }
 
         private void tsmiBSv100_Click(object sender, EventArgs e)
@@ -3629,7 +3647,7 @@ namespace pbPSCReAlpha
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
-            refreshGameListFolders();
+            refreshAndAskDBRead();
         }
 
         private void tsmiABv060_Click(object sender, EventArgs e)
@@ -3648,7 +3666,7 @@ namespace pbPSCReAlpha
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
-            refreshGameListFolders();
+            refreshAndAskDBRead();
         }
 
         private void btUpdateFoldersBS041toAB060_Click(object sender, EventArgs e)
@@ -3667,93 +3685,97 @@ namespace pbPSCReAlpha
                 ClVersionHelper dstVersion = bleemsyncVersions[2];
                 foreach (DirectoryInfo di in dirList)
                 {
-                    try
+                    if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
                     {
-                        slLogger.Debug("** Directory: " + di.FullName);
-                        String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
-                        if (sFolderIndex.StartsWith("\\"))
+                        try
                         {
-                            sFolderIndex = sFolderIndex.Substring(1);
-                        }
-                        String[] s2 = sFolderIndex.Split('\\');
-                        sFolderIndex = s2[0];
-                        if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
-                        {
-                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
+                            slLogger.Debug("** Directory: " + di.FullName);
+                            String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                            if (sFolderIndex.StartsWith("\\"))
                             {
-                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                sFolderIndex = sFolderIndex.Substring(1);
                             }
-                            if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                            String[] s2 = sFolderIndex.Split('\\');
+                            sFolderIndex = s2[0];
+                            if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
                             {
-                                /*
-                                NO WAY
-                                slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
-                                Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
-                                */
-                                // file by file, folder .pcsx has to stay here
-                                FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
-                                foreach (FileInfo fi in inDirfileList)
+                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
                                 {
-                                    String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
-                                    String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
-                                    if (sSubFolders.Length > 1)
+                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                }
+                                if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                                {
+                                    /*
+                                    NO WAY
+                                    slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
+                                    Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
+                                    */
+                                    // file by file, folder .pcsx has to stay here
+                                    FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                                    foreach (FileInfo fi in inDirfileList)
                                     {
-                                        for (int i = 0; i < sSubFolders.Length - 1; i++)
+                                        String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
+                                        String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
+                                        if (sSubFolders.Length > 1)
                                         {
-                                            String sSubs = String.Empty;
-                                            int j = 0;
-                                            while (j < i)
+                                            for (int i = 0; i < sSubFolders.Length - 1; i++)
                                             {
-                                                sSubs += "\\" + sSubFolders[j];
-                                                j++;
-                                            }
-                                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
-                                            {
-                                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                String sSubs = String.Empty;
+                                                int j = 0;
+                                                while (j < i)
+                                                {
+                                                    sSubs += "\\" + sSubFolders[j];
+                                                    j++;
+                                                }
+                                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
+                                                {
+                                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                }
                                             }
                                         }
+                                        slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
+                                        File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
                                     }
-                                    slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
-                                    File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
+                                    if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                                    {
+                                        Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    }
                                 }
-                                if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                            }
+                            // game dir done, let's do savegames
+                            if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
+                            {
+                                if (!Directory.Exists(sFolderPath + dstVersion.SaveFolder))
                                 {
-                                    Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    Directory.CreateDirectory(sFolderPath + dstVersion.SaveFolder);
+                                }
+                                int ibak = 0;
+                                bool bExisted = false;
+                                if (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex))
+                                {
+                                    bExisted = true;
+                                    while (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()))
+                                    {
+                                        ibak++;
+                                    }
+                                    Directory.Move((sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()));
+                                }
+                                fixFoldersInFilenameTexts(di.FullName + "\\" + ".pcsx");
+                                slLogger.Debug("Moving dir " + (di.FullName + "\\" + ".pcsx") + " to " + (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
+                                Directory.Move((di.FullName + "\\" + ".pcsx"), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
+                                if (true == bExisted)
+                                {
+                                    FlexibleMessageBox.Show("The directory " + sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + " already existed. The old one was renamed for " + sFolderIndex + "_bak" + ibak.ToString(), "Problem...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                             }
                         }
-                        // game dir done, let's do savegames
-                        if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
+                        catch (Exception ex)
                         {
-                            if (!Directory.Exists(sFolderPath + dstVersion.SaveFolder))
-                            {
-                                Directory.CreateDirectory(sFolderPath + dstVersion.SaveFolder);
-                            }
-                            int ibak = 0;
-                            bool bExisted = false;
-                            if (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex))
-                            {
-                                bExisted = true;
-                                while (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()))
-                                {
-                                    ibak++;
-                                }
-                                Directory.Move((sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()));
-                            }
-                            fixFoldersInFilenameTexts(di.FullName + "\\" + ".pcsx");
-                            slLogger.Debug("Moving dir " + (di.FullName + "\\" + ".pcsx") + " to " + (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
-                            Directory.Move((di.FullName + "\\" + ".pcsx"), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
-                            if (true == bExisted)
-                            {
-                                FlexibleMessageBox.Show("The directory " + sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + " already existed. The old one was renamed for " + sFolderIndex + "_bak" + ibak.ToString(), "Problem...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            slLogger.Fatal(ex.Message);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        slLogger.Fatal(ex.Message);
                     }
                 } // foreach
+                refreshGameListFolders();
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update BS0.4.1 folders to AB0.6.0 Click");
@@ -3775,93 +3797,97 @@ namespace pbPSCReAlpha
                 ClVersionHelper dstVersion = bleemsyncVersions[2];
                 foreach (DirectoryInfo di in dirList)
                 {
-                    try
+                    if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
                     {
-                        slLogger.Debug("** Directory: " + di.FullName);
-                        String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
-                        if (sFolderIndex.StartsWith("\\"))
+                        try
                         {
-                            sFolderIndex = sFolderIndex.Substring(1);
-                        }
-                        String[] s2 = sFolderIndex.Split('\\');
-                        sFolderIndex = s2[0];
-                        if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
-                        {
-                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
+                            slLogger.Debug("** Directory: " + di.FullName);
+                            String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                            if (sFolderIndex.StartsWith("\\"))
                             {
-                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                sFolderIndex = sFolderIndex.Substring(1);
                             }
-                            if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                            String[] s2 = sFolderIndex.Split('\\');
+                            sFolderIndex = s2[0];
+                            if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
                             {
-                                /*
-                                NO WAY
-                                slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
-                                Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
-                                */
-                                // file by file, folder .pcsx has to stay here
-                                FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
-                                foreach (FileInfo fi in inDirfileList)
+                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
                                 {
-                                    String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
-                                    String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
-                                    if (sSubFolders.Length > 1)
+                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                }
+                                if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                                {
+                                    /*
+                                    NO WAY
+                                    slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
+                                    Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
+                                    */
+                                    // file by file, folder .pcsx has to stay here
+                                    FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                                    foreach (FileInfo fi in inDirfileList)
                                     {
-                                        for (int i = 0; i < sSubFolders.Length - 1; i++)
+                                        String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
+                                        String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
+                                        if (sSubFolders.Length > 1)
                                         {
-                                            String sSubs = String.Empty;
-                                            int j = 0;
-                                            while (j < i)
+                                            for (int i = 0; i < sSubFolders.Length - 1; i++)
                                             {
-                                                sSubs += "\\" + sSubFolders[j];
-                                                j++;
-                                            }
-                                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
-                                            {
-                                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                String sSubs = String.Empty;
+                                                int j = 0;
+                                                while (j < i)
+                                                {
+                                                    sSubs += "\\" + sSubFolders[j];
+                                                    j++;
+                                                }
+                                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
+                                                {
+                                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                }
                                             }
                                         }
+                                        slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
+                                        File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
                                     }
-                                    slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
-                                    File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
+                                    if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                                    {
+                                        Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    }
                                 }
-                                if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                            }
+                            // game dir done, let's do savegames
+                            if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
+                            {
+                                if (!Directory.Exists(sFolderPath + dstVersion.SaveFolder))
                                 {
-                                    Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    Directory.CreateDirectory(sFolderPath + dstVersion.SaveFolder);
+                                }
+                                int ibak = 0;
+                                bool bExisted = false;
+                                if (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex))
+                                {
+                                    bExisted = true;
+                                    while (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()))
+                                    {
+                                        ibak++;
+                                    }
+                                    Directory.Move((sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()));
+                                }
+                                fixFoldersInFilenameTexts(di.FullName + "\\" + ".pcsx");
+                                slLogger.Debug("Moving dir " + (di.FullName + "\\" + ".pcsx") + " to " + (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
+                                Directory.Move((di.FullName + "\\" + ".pcsx"), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
+                                if (true == bExisted)
+                                {
+                                    FlexibleMessageBox.Show("The directory " + sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + " already existed. The old one was renamed for " + sFolderIndex + "_bak" + ibak.ToString(), "Problem...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                             }
                         }
-                        // game dir done, let's do savegames
-                        if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
+                        catch (Exception ex)
                         {
-                            if (!Directory.Exists(sFolderPath + dstVersion.SaveFolder))
-                            {
-                                Directory.CreateDirectory(sFolderPath + dstVersion.SaveFolder);
-                            }
-                            int ibak = 0;
-                            bool bExisted = false;
-                            if (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex))
-                            {
-                                bExisted = true;
-                                while (Directory.Exists(sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()))
-                                {
-                                    ibak++;
-                                }
-                                Directory.Move((sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()));
-                            }
-                            fixFoldersInFilenameTexts(di.FullName + "\\" + ".pcsx");
-                            slLogger.Debug("Moving dir " + (di.FullName + "\\" + ".pcsx") + " to " + (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
-                            Directory.Move((di.FullName + "\\" + ".pcsx"), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
-                            if (true == bExisted)
-                            {
-                                FlexibleMessageBox.Show("The directory " + sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + " already existed. The old one was renamed for " + sFolderIndex + "_bak" + ibak.ToString(), "Problem...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            slLogger.Fatal(ex.Message);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        slLogger.Fatal(ex.Message);
                     }
                 } // foreach
+                refreshGameListFolders();
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update BS1.0.0 folders to AB0.6.0 Click");
@@ -4003,6 +4029,7 @@ namespace pbPSCReAlpha
                         slLogger.Fatal(ex.Message);
                     }
                 } // foreach
+                refreshGameListFolders();
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update AB0.6.0 folders to BS0.4.1 Click");
@@ -4024,89 +4051,93 @@ namespace pbPSCReAlpha
                 ClVersionHelper dstVersion = bleemsyncVersions[1];
                 foreach (DirectoryInfo di in dirList)
                 {
-                    try
+                    if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
                     {
-                        slLogger.Debug("** Directory: " + di.FullName);
-                        String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
-                        if (sFolderIndex.StartsWith("\\"))
+                        try
                         {
-                            sFolderIndex = sFolderIndex.Substring(1);
-                        }
-                        String[] s2 = sFolderIndex.Split('\\');
-                        sFolderIndex = s2[0];
-                        if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
-                        {
-                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
+                            slLogger.Debug("** Directory: " + di.FullName);
+                            String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                            if (sFolderIndex.StartsWith("\\"))
                             {
-                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                sFolderIndex = sFolderIndex.Substring(1);
                             }
-                            if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                            String[] s2 = sFolderIndex.Split('\\');
+                            sFolderIndex = s2[0];
+                            if (Directory.Exists(di.FullName + srcVersion.GameDataFolder))
                             {
-                                /*
-                                NO WAY
-                                slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
-                                Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
-                                */
-                                // file by file, folder .pcsx has to stay here
-                                FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
-                                foreach (FileInfo fi in inDirfileList)
+                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder))
                                 {
-                                    String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
-                                    String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
-                                    if (sSubFolders.Length > 1)
+                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder);
+                                }
+                                if ((di.FullName + srcVersion.GameDataFolder) != (di.FullName + dstVersion.GameDataFolder))
+                                {
+                                    /*
+                                    NO WAY
+                                    slLogger.Debug("Moving dir " + (di.FullName + srcVersion.GameDataFolder) + " to " + (di.FullName + dstVersion.GameDataFolder));
+                                    Directory.Move((di.FullName + srcVersion.GameDataFolder), (di.FullName + dstVersion.GameDataFolder));
+                                    */
+                                    // file by file, folder .pcsx has to stay here
+                                    FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + srcVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
+                                    foreach (FileInfo fi in inDirfileList)
                                     {
-                                        for (int i = 0; i < sSubFolders.Length - 1; i++)
+                                        String sPath = fi.FullName.Substring((di.FullName + srcVersion.GameDataFolder).Length);
+                                        String[] sSubFolders = sPath.Split(new char[] { '\\' }, StringSplitOptions.None);
+                                        if (sSubFolders.Length > 1)
                                         {
-                                            String sSubs = String.Empty;
-                                            int j = 0;
-                                            while (j < i)
+                                            for (int i = 0; i < sSubFolders.Length - 1; i++)
                                             {
-                                                sSubs += "\\" + sSubFolders[j];
-                                                j++;
-                                            }
-                                            if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
-                                            {
-                                                Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                String sSubs = String.Empty;
+                                                int j = 0;
+                                                while (j < i)
+                                                {
+                                                    sSubs += "\\" + sSubFolders[j];
+                                                    j++;
+                                                }
+                                                if (!Directory.Exists(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]))
+                                                {
+                                                    Directory.CreateDirectory(di.FullName + dstVersion.GameDataFolder + sSubs + "\\" + sSubFolders[i]);
+                                                }
                                             }
                                         }
+                                        slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
+                                        File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
                                     }
-                                    slLogger.Debug("Moving file " + fi.FullName + " to " + di.FullName + dstVersion.GameDataFolder);
-                                    File.Move(di.FullName + srcVersion.GameDataFolder + "\\" + sPath, di.FullName + dstVersion.GameDataFolder + "\\" + sPath);
+                                    if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                                    {
+                                        Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    }
                                 }
-                                if ((Directory.GetFiles(di.FullName + srcVersion.GameDataFolder).Length == 0) && (Directory.GetDirectories(di.FullName + srcVersion.GameDataFolder).Length == 0))
+                            }
+                            // game dir done, let's do savegames
+                            if (Directory.Exists(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex))
+                            {
+                                int ibak = 0;
+                                bool bExisted = false;
+                                if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
                                 {
-                                    Directory.Delete(di.FullName + srcVersion.GameDataFolder);
+                                    bExisted = true;
+                                    while (Directory.Exists(di.FullName + "\\" + ".pcsx" + "_bak" + ibak.ToString()))
+                                    {
+                                        ibak++;
+                                    }
+                                    Directory.Move((di.FullName + "\\" + ".pcsx"), (di.FullName + "\\" + ".pcsx" + "_bak" + ibak.ToString()));
+                                }
+                                fixFoldersInFilenameTexts(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex);
+                                slLogger.Debug("Moving dir " + (sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex) + " to " + (di.FullName + "\\" + ".pcsx"));
+                                Directory.Move((sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex), (di.FullName + "\\" + ".pcsx"));
+                                if (true == bExisted)
+                                {
+                                    FlexibleMessageBox.Show("The directory " + di.FullName + "\\" + ".pcsx" + " already existed. The old one was renamed for " + ".pcsx" + "_bak" + ibak.ToString(), "Problem...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 }
                             }
                         }
-                        // game dir done, let's do savegames
-                        if (Directory.Exists(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex))
+                        catch (Exception ex)
                         {
-                            int ibak = 0;
-                            bool bExisted = false;
-                            if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
-                            {
-                                bExisted = true;
-                                while (Directory.Exists(di.FullName + "\\" + ".pcsx" + "_bak" + ibak.ToString()))
-                                {
-                                    ibak++;
-                                }
-                                Directory.Move((di.FullName + "\\" + ".pcsx"), (di.FullName + "\\" + ".pcsx" + "_bak" + ibak.ToString()));
-                            }
-                            fixFoldersInFilenameTexts(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex);
-                            slLogger.Debug("Moving dir " + (sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex) + " to " + (di.FullName + "\\" + ".pcsx"));
-                            Directory.Move((sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex), (di.FullName + "\\" + ".pcsx"));
-                            if (true == bExisted)
-                            {
-                                FlexibleMessageBox.Show("The directory " + di.FullName + "\\" + ".pcsx" + " already existed. The old one was renamed for " + ".pcsx" + "_bak" + ibak.ToString(), "Problem...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
+                            slLogger.Fatal(ex.Message);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        slLogger.Fatal(ex.Message);
                     }
                 } // foreach
+                refreshGameListFolders();
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update AB0.6.0 folders to BS1.0.0 Click");
