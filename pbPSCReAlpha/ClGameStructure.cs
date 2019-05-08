@@ -53,6 +53,7 @@ namespace pbPSCReAlpha
         private long _size;
         private int _bleemSyncVersion;
 
+        
         public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, bool bNeededSbiMissing, bool bNameWithComma, bool bPbpMissing, bool badPbpName, bool pbpCountMisMatchdiscsCount, bool badDiscsName, int iBleemSyncVersion)
         {
             _folderIndex = folderIndex;

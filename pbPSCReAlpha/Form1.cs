@@ -305,7 +305,7 @@ namespace pbPSCReAlpha
                 List<String> lsBinPresent = new List<string>();
                 List<String> lsSbiPresent = new List<string>();
                 List<String> lsPbpPresent = new List<string>();
-                List<string> sFiles = new List<string>();
+                List<String> sFiles = new List<string>();
                 FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + currentUsedVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
                 long lSizeFolder = 0;
                 foreach (FileInfo fi in inDirfileList)
@@ -506,7 +506,7 @@ namespace pbPSCReAlpha
                             bPngMatchDisc = true;
                         }
                     }
-                    if((iBleemsyncVersion == 1) && (bPbpPresent))
+                    if(((iBleemsyncVersion == 1) || (iBleemsyncVersion == 2)) && (bPbpPresent))
                     {
                         if (iNbPbp == iNbDiscs)
                         {
@@ -3475,13 +3475,14 @@ namespace pbPSCReAlpha
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
-            Form8 f = new Form8(sFolderPath);
+            Form8 f = new Form8(sFolderPath + currentUsedVersion.SaveFolder);
             f.ShowDialog();
         }
 
         private void btIniFileCopy_Click(object sender, EventArgs e)
         {
-            if(1 == iBleemsyncVersion)
+            slLogger.Trace(">> BleemSync ini copy Click");
+            if (1 == iBleemsyncVersion)
             {
                 String sFolderPath = tbFolderPath.Text;
                 if (sFolderPath.EndsWith("\\"))
@@ -3502,6 +3503,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                 }
             }
+            slLogger.Trace("<< BleemSync ini copy Click");
         }
 
         private void btM3uGenerate_Click(object sender, EventArgs e)
@@ -3920,8 +3922,8 @@ namespace pbPSCReAlpha
                                 s_arr[0] = "/data/AppData/sony/title/" + s_arr[0].Substring(s_arr[0].LastIndexOf('/') + 1);
                                 using (StreamWriter sw = new StreamWriter(fi.FullName))
                                 {
-                                    sw.Write(s_arr[0] + "\n");
-                                    sw.Write(s_arr[1] + "\n");
+                                    sw.Write(s_arr[0] + "\n"); // writeline puts \r\n
+                                    sw.Write(s_arr[1] + "\n"); // writeline puts \r\n
                                 }
                             }
                         }

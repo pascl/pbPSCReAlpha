@@ -390,7 +390,7 @@ namespace pbPSCReAlpha
                     {
                         foreach (String s in lsFolders)
                         {
-                            sw.Write(s + "\n");
+                            sw.Write(s + "\n"); // writeline puts \r\n
                         }
                     }
                     using (StreamWriter sw = new StreamWriter(sFilename2))
@@ -398,7 +398,7 @@ namespace pbPSCReAlpha
                         int i = 1;
                         foreach (String s in lsFolders)
                         {
-                            sw.Write(i.ToString() + ",/media/Games/" + s + ",/media/Games/!SaveStates/" + s + "\n");
+                            sw.Write(i.ToString() + ",/media/Games/" + s + ",/media/Games/!SaveStates/" + s + "\n"); // writeline puts \r\n
                             i++;
                         }
                     }
