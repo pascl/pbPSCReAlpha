@@ -254,6 +254,17 @@
     <None Include="Resources\draw-arrow-forward.png" />
     <None Include="Resources\edit-4.png" />
     <None Include="Resources\arrow-switch.png" />
+    <None Include="Resources\gbr-arrow-up-double.png" />
+    <None Include="Resources\grb-arrow-up-double.png" />
+    <None Include="Resources\brg-arrow-up-double.png" />
+    <None Include="Resources\bgr-arrow-up-double.png" />
+    <None Include="Resources\rbg-arrow-up-double.png" />
+    <None Include="Resources\arrow-up-double.png" />
+    <None Include="Resources\gbr-arrow-right.png" />
+    <None Include="Resources\grb-arrow-right.png" />
+    <None Include="Resources\brg-arrow-right.png" />
+    <None Include="Resources\bgr-arrow-right.png" />
+    <None Include="Resources\rbg-arrow-right.png" />
     <Content Include="sbigames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

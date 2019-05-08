@@ -203,6 +203,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap arrow_up_double {
+            get {
+                object obj = ResourceManager.GetObject("arrow-up-double", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap arrow_up_double_3 {
             get {
                 object obj = ResourceManager.GetObject("arrow-up-double-3", resourceCulture);
@@ -213,9 +223,49 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bgr_arrow_right {
+            get {
+                object obj = ResourceManager.GetObject("bgr-arrow-right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bgr_arrow_up_double {
+            get {
+                object obj = ResourceManager.GetObject("bgr-arrow-up-double", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bleem_logo48 {
             get {
                 object obj = ResourceManager.GetObject("bleem_logo48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap brg_arrow_right {
+            get {
+                object obj = ResourceManager.GetObject("brg-arrow-right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap brg_arrow_up_double {
+            get {
+                object obj = ResourceManager.GetObject("brg-arrow-up-double", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -343,6 +393,46 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gbr_arrow_right {
+            get {
+                object obj = ResourceManager.GetObject("gbr-arrow-right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gbr_arrow_up_double {
+            get {
+                object obj = ResourceManager.GetObject("gbr-arrow-up-double", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap grb_arrow_right {
+            get {
+                object obj = ResourceManager.GetObject("grb-arrow-right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap grb_arrow_up_double {
+            get {
+                object obj = ResourceManager.GetObject("grb-arrow-up-double", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap inode_blockdevice {
             get {
                 object obj = ResourceManager.GetObject("inode-blockdevice", resourceCulture);
@@ -406,6 +496,26 @@ namespace pbPSCReAlpha.Properties {
         internal static System.Drawing.Bitmap pictures {
             get {
                 object obj = ResourceManager.GetObject("pictures", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rbg_arrow_right {
+            get {
+                object obj = ResourceManager.GetObject("rbg-arrow-right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap rbg_arrow_up_double {
+            get {
+                object obj = ResourceManager.GetObject("rbg-arrow-up-double", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
