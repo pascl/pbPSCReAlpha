@@ -167,6 +167,13 @@ namespace pbPSCReAlpha
                 st = sr.ReadToEnd();
             }
             wbReadme.DocumentText = Markdown.ToHtml(st);
+
+            st = String.Empty;
+            using (StreamReader sr = new StreamReader(Application.StartupPath + "\\" + "FAQ.md"))
+            {
+                st = sr.ReadToEnd();
+            }
+            wbFaq.DocumentText = Markdown.ToHtml(st);
         }
 
         private string sortOptionToString(int v1, int v2)
