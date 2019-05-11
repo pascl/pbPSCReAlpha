@@ -384,6 +384,10 @@ namespace pbPSCReAlpha
                         lsFolders.Add(sFolderIndex);
                     }
                 } // foreach
+                using (NaturalComparer comparer = new NaturalComparer())
+                {
+                    lsFolders.Sort(comparer);
+                }
                 if (lsFolders.Count > 0)
                 {
                     using (StreamWriter sw = new StreamWriter(sFilename1))

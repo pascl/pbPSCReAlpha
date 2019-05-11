@@ -3754,6 +3754,10 @@ namespace pbPSCReAlpha
                             // game dir done, let's do savegames
                             if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
                             {
+                                if (!Directory.Exists(sFolderPath + "\\" + "!MemCards"))
+                                {
+                                    Directory.CreateDirectory(sFolderPath + "\\" + "!MemCards");
+                                }
                                 if (!Directory.Exists(sFolderPath + dstVersion.SaveFolder))
                                 {
                                     Directory.CreateDirectory(sFolderPath + dstVersion.SaveFolder);
@@ -3770,6 +3774,7 @@ namespace pbPSCReAlpha
                                     Directory.Move((sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()));
                                 }
                                 fixFoldersInFilenameTexts(di.FullName + "\\" + ".pcsx");
+                                editSSFileNames(di.FullName + "\\" + ".pcsx", 0, 2);
                                 slLogger.Debug("Moving dir " + (di.FullName + "\\" + ".pcsx") + " to " + (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
                                 Directory.Move((di.FullName + "\\" + ".pcsx"), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
                                 if (true == bExisted)
@@ -3788,6 +3793,113 @@ namespace pbPSCReAlpha
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Update BS0.4.1 folders to AB0.6.0 Click");
+        }
+
+        void fileMoveSavingExisting(String srcfile, String dstfile)
+        {
+            if (dstfile != srcfile)
+            {
+                if (File.Exists(dstfile))
+                {
+                    int ibak = 0;
+                    while (File.Exists(dstfile + ".bak" + ibak.ToString()))
+                    {
+                        ibak++;
+                    }
+                    File.Move(dstfile, dstfile + ".bak" + ibak.ToString());
+                }
+                File.Move(srcfile, dstfile);
+            }
+        }
+
+        private void editSSFileNames(string dir, int srcversion, int dstversion)
+        {
+            List<String> lsSrcFiles = new List<string>();
+            switch (srcversion)
+            {
+                case 0:
+                case 1:
+                    lsSrcFiles.Add("filename.txt.res");
+                    break;
+                case 2:
+                    lsSrcFiles.Add("filename.0.txt.res");
+                    lsSrcFiles.Add("filename.1.txt.res");
+                    lsSrcFiles.Add("filename.2.txt.res");
+                    lsSrcFiles.Add("filename.3.txt.res");
+                    break;
+            }
+            int index = 0;
+            bool bFound = false;
+            foreach (String s in lsSrcFiles)
+            {
+                if (File.Exists(dir + "\\" + s))
+                {
+                    String[] s_arr = new String[2];
+                    int i = 0;
+                    using (StreamReader sr = new StreamReader(dir + "\\" + s))
+                    {
+                        String s1 = String.Empty;
+                        while (((s1 = sr.ReadLine()) != null) && (i < 2))
+                        {
+                            s_arr[i] = s1.Trim();
+                            i++;
+                        }
+                    }
+                    if (i == 2)
+                    {
+                        String sBaseName = s_arr[1];
+                        switch(srcversion)
+                        {
+                            case 0:
+                            case 1:
+                                {
+                                    String srcFile1 = dir + "\\" + "filename.txt.res";
+                                    String srcFile2 = dir + "\\sstates\\" + sBaseName + ".000.res";
+                                    String srcFile3 = dir + "\\screenshots\\" + sBaseName + ".png.res";
+                                    if ((File.Exists(srcFile2)) && (File.Exists(srcFile3)))
+                                    {
+                                        // ok -> rename pour ab
+                                        String dstFile1 = dir + "\\" + "filename.0.txt.res";
+                                        String dstFile2 = dir + "\\sstates\\" + sBaseName + ".000.res";
+                                        String dstFile3 = dir + "\\screenshots\\" + sBaseName + ".png.res";
+                                        fileMoveSavingExisting(srcFile1, dstFile1);
+                                        fileMoveSavingExisting(srcFile2, dstFile2);
+                                        fileMoveSavingExisting(srcFile3, dstFile3);
+                                        bFound = true;
+                                    }
+                                }
+                                break;
+                            case 2:
+                                { 
+                                    String srcFile1 = dir + "\\" + "filename." + index.ToString() + ".txt.res";
+                                    String srcFile2 = dir + "\\sstates\\" + sBaseName + ".00" + index.ToString() + ".res";
+                                    String srcFile3 = dir + "\\screenshots\\" + sBaseName + ".png.res";
+                                    if(index > 0)
+                                    {
+                                        srcFile3 = dir + "\\screenshots\\" + sBaseName + "." + index.ToString() + ".png.res";
+                                    }
+                                    if ((File.Exists(srcFile2)) && (File.Exists(srcFile3)))
+                                    {
+                                        // ok -> rename pour bs
+                                        String dstFile1 = dir + "\\" + "filename.txt.res";
+                                        String dstFile2 = dir + "\\sstates\\" + sBaseName + ".000.res";
+                                        String dstFile3 = dir + "\\screenshots\\" + sBaseName + ".png.res";
+                                        fileMoveSavingExisting(srcFile1, dstFile1);
+                                        fileMoveSavingExisting(srcFile2, dstFile2);
+                                        fileMoveSavingExisting(srcFile3, dstFile3);
+                                        bFound = true;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                index++;
+                if(bFound)
+                {
+                    break;
+                }
+            }
         }
 
         private void btUpdateFoldersBS100toAB060_Click(object sender, EventArgs e)
@@ -3866,6 +3978,10 @@ namespace pbPSCReAlpha
                             // game dir done, let's do savegames
                             if (Directory.Exists(di.FullName + "\\" + ".pcsx"))
                             {
+                                if (!Directory.Exists(sFolderPath + "\\" + "!MemCards"))
+                                {
+                                    Directory.CreateDirectory(sFolderPath + "\\" + "!MemCards");
+                                }
                                 if (!Directory.Exists(sFolderPath + dstVersion.SaveFolder))
                                 {
                                     Directory.CreateDirectory(sFolderPath + dstVersion.SaveFolder);
@@ -3882,6 +3998,7 @@ namespace pbPSCReAlpha
                                     Directory.Move((sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex + "_bak" + ibak.ToString()));
                                 }
                                 fixFoldersInFilenameTexts(di.FullName + "\\" + ".pcsx");
+                                editSSFileNames(di.FullName + "\\" + ".pcsx", 1, 2);
                                 slLogger.Debug("Moving dir " + (di.FullName + "\\" + ".pcsx") + " to " + (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
                                 Directory.Move((di.FullName + "\\" + ".pcsx"), (sFolderPath + dstVersion.SaveFolder + "\\" + sFolderIndex));
                                 if (true == bExisted)
@@ -4025,6 +4142,7 @@ namespace pbPSCReAlpha
                                 Directory.Move((di.FullName + "\\" + ".pcsx"), (di.FullName + "\\" + ".pcsx" + "_bak" + ibak.ToString()));
                             }
                             fixFoldersInFilenameTexts(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex);
+                            editSSFileNames(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex, 2, 0);
                             slLogger.Debug("Moving dir " + (sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex) + " to " + (di.FullName + "\\" + ".pcsx"));
                             Directory.Move((sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex), (di.FullName + "\\" + ".pcsx"));
                             if (true == bExisted)
@@ -4132,6 +4250,7 @@ namespace pbPSCReAlpha
                                     Directory.Move((di.FullName + "\\" + ".pcsx"), (di.FullName + "\\" + ".pcsx" + "_bak" + ibak.ToString()));
                                 }
                                 fixFoldersInFilenameTexts(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex);
+                                editSSFileNames(sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex, 2, 1);
                                 slLogger.Debug("Moving dir " + (sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex) + " to " + (di.FullName + "\\" + ".pcsx"));
                                 Directory.Move((sFolderPath + srcVersion.SaveFolder + "\\" + sFolderIndex), (di.FullName + "\\" + ".pcsx"));
                                 if (true == bExisted)
