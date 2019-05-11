@@ -27,23 +27,29 @@ namespace pbPSCReAlpha
             lbResultBinFindSerial.Text = "Running...";
             tbSerialFound.Text = String.Empty;
             lbGameFound.Text = String.Empty;
+
             try
             { 
                 using (FileStream fs = new FileStream(tbBinFile.Text, FileMode.Open))
                 {
                     List<String> lsSerialStart = new List<string>() { "SCUS", "SLUS", "SCES", "SLES", "SCPS", "SLPS", "SCPM", "SLPM"};
+                    String sInfoSearch1 = "CD001";
+                    String sInfoSearch2 = "PLAYSTATION";
                     long len1 = fs.Length;
-                    int len2 = 12;
+                    int len2 = 20;
                     bool bFound = false;
+                    bool bFound2 = false;
                     byte[] bSearchSerial = new byte[len2];
+                    byte[] bSearchInfo = new byte[53];
                     String s = String.Empty;
+                    String s1 = String.Empty;
                     for (int index=0;index<len1;index+= len2)
                     {
                         fs.Seek(index, SeekOrigin.Begin);
                         fs.Read(bSearchSerial, 0, len2);
                         for(int i=0;i< len2; i++)
                         {
-                            if(bSearchSerial[i] == (byte)('S'))
+                            if((!bFound) && (bSearchSerial[i] == (byte)('S')))
                             {
                                 index += i;
                                 fs.Seek(index, SeekOrigin.Begin);
@@ -59,12 +65,37 @@ namespace pbPSCReAlpha
                                     }
                                 }
                             }
-                            if (bFound)
+                            else
+                            if ((!bFound2) && (bSearchSerial[i] == (byte)('C')) && (i < len1-1) && (bSearchSerial[1+i] == (byte)('D')))
+                            {
+                                index += i;
+                                fs.Seek(index, SeekOrigin.Begin);
+                                fs.Read(bSearchSerial, 0, 5);
+                                bSearchSerial[5] = 0;
+                                s = Encoding.UTF8.GetString(bSearchSerial);
+                                if (s.IndexOf(sInfoSearch1) == 0)
+                                {
+                                    index += 7;
+                                    fs.Seek(index, SeekOrigin.Begin);
+                                    fs.Read(bSearchSerial, 0, 11);
+                                    bSearchSerial[11] = 0;
+                                    s = Encoding.UTF8.GetString(bSearchSerial);
+                                    if (s.IndexOf(sInfoSearch2) == 0)
+                                    {
+                                        index += 11;
+                                        fs.Seek(index, SeekOrigin.Begin);
+                                        fs.Read(bSearchInfo, 0, 53);
+                                        s1 = Encoding.UTF8.GetString(bSearchInfo);
+                                        bFound2 = true;
+                                    }
+                                }
+                            }
+                            if (bFound && bFound2)
                             {
                                 break;
                             }
                         }
-                        if (bFound)
+                        if (bFound && bFound2)
                         {
                             break;
                         }
@@ -73,6 +104,14 @@ namespace pbPSCReAlpha
                     {
                         lbResultBinFindSerial.Text = String.Empty; // "Serial found ->";
                         tbSerialFound.Text = s;
+                        if(!String.IsNullOrEmpty(s1))
+                        {
+                            lbGameInfoFound.Text = s1.Trim();
+                        }
+                        else
+                        {
+                            lbGameInfoFound.Text = String.Empty;
+                        }
                         foreach (KeyValuePair<string, ClPS1Game> pair in dcPs1Games)
                         {
                             ClPS1Game c1 = pair.Value;

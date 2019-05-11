@@ -35,9 +35,10 @@
             this.btBinFindSerial = new System.Windows.Forms.Button();
             this.btBack = new System.Windows.Forms.Button();
             this.gbBinFiles = new System.Windows.Forms.GroupBox();
+            this.lbGameFound = new System.Windows.Forms.Label();
             this.lbResultBinFindSerial = new System.Windows.Forms.Label();
             this.tbSerialFound = new System.Windows.Forms.TextBox();
-            this.lbGameFound = new System.Windows.Forms.Label();
+            this.lbGameInfoFound = new System.Windows.Forms.Label();
             this.gbBinFiles.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,6 +104,15 @@
             this.gbBinFiles.TabStop = false;
             this.gbBinFiles.Text = "Select a bin file";
             // 
+            // lbGameFound
+            // 
+            this.lbGameFound.AutoSize = true;
+            this.lbGameFound.Location = new System.Drawing.Point(87, 74);
+            this.lbGameFound.Name = "lbGameFound";
+            this.lbGameFound.Size = new System.Drawing.Size(13, 13);
+            this.lbGameFound.TabIndex = 7;
+            this.lbGameFound.Text = "--";
+            // 
             // lbResultBinFindSerial
             // 
             this.lbResultBinFindSerial.AutoSize = true;
@@ -119,14 +129,13 @@
             this.tbSerialFound.Size = new System.Drawing.Size(75, 20);
             this.tbSerialFound.TabIndex = 4;
             // 
-            // lbGameFound
+            // lbGameInfoFound
             // 
-            this.lbGameFound.AutoSize = true;
-            this.lbGameFound.Location = new System.Drawing.Point(87, 74);
-            this.lbGameFound.Name = "lbGameFound";
-            this.lbGameFound.Size = new System.Drawing.Size(13, 13);
-            this.lbGameFound.TabIndex = 7;
-            this.lbGameFound.Text = "--";
+            this.lbGameInfoFound.AutoSize = true;
+            this.lbGameInfoFound.Location = new System.Drawing.Point(15, 122);
+            this.lbGameInfoFound.Name = "lbGameInfoFound";
+            this.lbGameInfoFound.Size = new System.Drawing.Size(0, 13);
+            this.lbGameInfoFound.TabIndex = 8;
             // 
             // Form7
             // 
@@ -134,6 +143,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btBack;
             this.ClientSize = new System.Drawing.Size(351, 145);
+            this.Controls.Add(this.lbGameInfoFound);
             this.Controls.Add(this.gbBinFiles);
             this.Controls.Add(this.btBack);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -145,6 +155,7 @@
             this.gbBinFiles.ResumeLayout(false);
             this.gbBinFiles.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -159,5 +170,6 @@
         private System.Windows.Forms.Label lbResultBinFindSerial;
         private System.Windows.Forms.TextBox tbSerialFound;
         private System.Windows.Forms.Label lbGameFound;
+        private System.Windows.Forms.Label lbGameInfoFound;
     }
 }
