@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace pbPSCReAlpha
@@ -45,6 +46,7 @@ namespace pbPSCReAlpha
         private bool _pbpCountMisMatchDiscsCount;
         private bool _neededSbiMissing;
         private bool _commaInFilename;
+        private bool _specialCharsInFilename;
         private List<String> _errorString;
         private List<String> _filesBinOk;
         private List<String> _filesCueOk;
@@ -204,8 +206,19 @@ namespace pbPSCReAlpha
 
         public void setFilesList(List<String> sList)
         {
+            _specialCharsInFilename = false;
             _filenames = sList;
             _filenames.Sort();
+            foreach(String s in _filenames)
+            {
+                String sTest = Regex.Replace(s, @"[^a-zA-Z0-9_\-\s\.\(\[\)\]\']", "");
+                if(sTest != s)
+                {
+                    _specialCharsInFilename = true;
+                    this.ErrorString.Add("Files cannot contain some special characters.");
+                    break;
+                }
+            }
         }
 
         public void setPicture(String imgFileName, Image imgFile)
@@ -307,6 +320,7 @@ namespace pbPSCReAlpha
         public bool BadPbpName { get => _badPbpName; set => _badPbpName = value; }
         public bool PbpCountMisMatchDiscsCount { get => _pbpCountMisMatchDiscsCount; set => _pbpCountMisMatchDiscsCount = value; }
         public bool BadDiscsName { get => _badDiscsName; set => _badDiscsName = value; }
+        public bool SpecialCharsInFilename { get => _specialCharsInFilename; set => _specialCharsInFilename = value; }
 
         public string ABautomation { get => _ABautomation; set => _ABautomation = value; }
         public string ABhighres { get => _ABhighres; set => _ABhighres = value; }
@@ -319,9 +333,10 @@ namespace pbPSCReAlpha
         public bool SbiErrors { get => _neededSbiMissing; }
         public bool PngErrors { get => _pngMissing || _pngMismatch || _pngMultiple; }
         public bool IniErrors { get => _iniMissing || _iniIncomplete; }
-        public bool FileErrors { get => (((_bleemSyncVersion == 0) || (_bleemSyncVersion == 1)) && (_nanFolder)) || ((_bleemSyncVersion == 0) && (_cfgMissing)) || _gameDataMissing || _commaInFilename; }
+        public bool FileErrors { get => (((_bleemSyncVersion == 0) || (_bleemSyncVersion == 1)) && (_nanFolder)) || ((_bleemSyncVersion == 0) && (_cfgMissing)) || _gameDataMissing || _commaInFilename || _specialCharsInFilename; }
 
         public bool GeneralError { get => PbpErrors || CueErrors || BinErrors || SbiErrors || PngErrors || IniErrors || FileErrors; }
-        public bool GeneralWarning { get => _badDiscsName || (((_bleemSyncVersion == 1) || (_bleemSyncVersion == 2)) && (!_cfgMissing)); }
+        public bool GeneralWarning { get => BadDiscsName || (((_bleemSyncVersion == 1) || (_bleemSyncVersion == 2)) && (!_cfgMissing)); }
+        
     }
 }
