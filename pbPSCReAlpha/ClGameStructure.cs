@@ -96,13 +96,13 @@ namespace pbPSCReAlpha
             {
                 this.ErrorString.Add("Game.ini not found in the folder.");
             }
-            if ((_bleemSyncVersion == 0) && (_cfgMissing))
+            if (((_bleemSyncVersion == 0) || (_bleemSyncVersion == 2)) && (_cfgMissing))
             {
                 this.ErrorString.Add("pcsx.cfg not found in the folder.");
             }
-            if (((_bleemSyncVersion == 1) || (_bleemSyncVersion == 2)) && (!_cfgMissing))
+            if ((_bleemSyncVersion == 1) && (!_cfgMissing))
             {
-                this.ErrorString.Add("!! pcsx.cfg is not necessary anymore in the folder with BleemSync1.0 or AutoBleem0.6.");
+                this.ErrorString.Add("!! pcsx.cfg is not necessary anymore in the folder with BleemSync1.0.");
             }
             if (_pngMissing)
             {
@@ -333,10 +333,10 @@ namespace pbPSCReAlpha
         public bool SbiErrors { get => _neededSbiMissing; }
         public bool PngErrors { get => _pngMissing || _pngMismatch || _pngMultiple; }
         public bool IniErrors { get => _iniMissing || _iniIncomplete; }
-        public bool FileErrors { get => (((_bleemSyncVersion == 0) || (_bleemSyncVersion == 1)) && (_nanFolder)) || ((_bleemSyncVersion == 0) && (_cfgMissing)) || _gameDataMissing || _commaInFilename || _specialCharsInFilename; }
+        public bool FileErrors { get => (((_bleemSyncVersion == 0) || (_bleemSyncVersion == 1)) && (_nanFolder)) || (((_bleemSyncVersion == 0) || (_bleemSyncVersion == 2)) && (_cfgMissing)) || _gameDataMissing || _commaInFilename || _specialCharsInFilename; }
 
         public bool GeneralError { get => PbpErrors || CueErrors || BinErrors || SbiErrors || PngErrors || IniErrors || FileErrors; }
-        public bool GeneralWarning { get => BadDiscsName || (((_bleemSyncVersion == 1) || (_bleemSyncVersion == 2)) && (!_cfgMissing)); }
+        public bool GeneralWarning { get => BadDiscsName || ((_bleemSyncVersion == 1) && (!_cfgMissing)); }
         
     }
 }

@@ -390,32 +390,46 @@ namespace pbPSCReAlpha
                 }
                 if (lsFolders.Count > 0)
                 {
-                    using (StreamWriter sw = new StreamWriter(sFilename1))
+                    try
                     {
-                        foreach (String s in lsFolders)
+                        using (StreamWriter sw = new StreamWriter(sFilename1))
                         {
-                            sw.Write(s + "\n"); // writeline puts \r\n
+                            foreach (String s in lsFolders)
+                            {
+                                sw.Write(s + "\n"); // writeline puts \r\n
+                            }
+                        }
+                        using (StreamWriter sw = new StreamWriter(sFilename2))
+                        {
+                            int i = 1;
+                            foreach (String s in lsFolders)
+                            {
+                                sw.Write(i.ToString() + ",/media/Games/" + s + ",/media/Games/!SaveStates/" + s + "\n"); // writeline puts \r\n
+                                i++;
+                            }
                         }
                     }
-                    using (StreamWriter sw = new StreamWriter(sFilename2))
+                    catch (Exception ex)
                     {
-                        int i = 1;
-                        foreach (String s in lsFolders)
-                        {
-                            sw.Write(i.ToString() + ",/media/Games/" + s + ",/media/Games/!SaveStates/" + s + "\n"); // writeline puts \r\n
-                            i++;
-                        }
+                        slLogger.Fatal(ex.Message);
                     }
                 }
                 else
                 {
-                    using (StreamWriter sw = new StreamWriter(sFilename1))
+                    try
                     {
-                        sw.WriteLine("");
+                        using (StreamWriter sw = new StreamWriter(sFilename1))
+                        {
+                            sw.WriteLine("");
+                        }
+                        using (StreamWriter sw = new StreamWriter(sFilename2))
+                        {
+                            sw.WriteLine("");
+                        }
                     }
-                    using (StreamWriter sw = new StreamWriter(sFilename2))
+                    catch (Exception ex)
                     {
-                        sw.WriteLine("");
+                        slLogger.Fatal(ex.Message);
                     }
                 }
                 _bDone = true;
@@ -654,6 +668,9 @@ namespace pbPSCReAlpha
                                     sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
+                                    sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
                                     break;
                                 case 2: // ab0.6.0
                                     sql = "CREATE TABLE DISC ( [GAME_ID] integer, [DISC_NUMBER] integer, [BASENAME] text, UNIQUE ([GAME_ID], [DISC_NUMBER]) )";
@@ -670,24 +687,10 @@ namespace pbPSCReAlpha
                                     //CREATE TABLE LANGUAGE_SPECIFIC ( [DEFAULT_VALUE] text, [LANGUAGE_ID] integer, [VALUE] text, UNIQUE ([DEFAULT_VALUE], [LANGUAGE_ID]) )
                                     break;
                             }
-
-                            tran.Commit();
+                            /*tran.Commit();
                         }
                         using (var tran = m_dbConnection.BeginTransaction())
-                        {
-                            String sTableUsedForGames = String.Empty;
-                            switch (bleemsyncVersion)
-                            {
-                                case 0:
-                                    break;
-                                case 1:
-                                    sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
-                                    command = new SQLiteCommand(sql, m_dbConnection);
-                                    command.ExecuteNonQuery();
-                                    break;
-                                case 2:
-                                    break;
-                            }
+                        {*/
                             int iGame = 0;
                             foreach (ClGameStructure cgs in lcgs)
                             {

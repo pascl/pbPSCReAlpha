@@ -1048,7 +1048,7 @@ namespace pbPSCReAlpha
                         btEditCue.Enabled = true;
                         btEditCue.Visible = true;
                     }
-                    if ((iBleemsyncVersion == 0) && (cgs.CfgMissing))
+                    if (((iBleemsyncVersion == 0) || (iBleemsyncVersion == 2)) && (cgs.CfgMissing))
                     {
                         btAddPcsxCfg.Enabled = true;
                         btAddPcsxCfg.Visible = true;
@@ -1497,6 +1497,10 @@ namespace pbPSCReAlpha
                     {
                         int iCount = lsFolders.Count;
                         int iNext = 1 + iCount;
+                        if(iBleemsyncVersion == 2)
+                        {
+                            iNext += 20; // not to care about 1-20 folders in savestates
+                        }
                         while (Directory.Exists(sFolderPath + "\\" + iNext.ToString()))
                         {
                             iNext++;
@@ -1506,9 +1510,20 @@ namespace pbPSCReAlpha
                         {
                             Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder);
                         }
-                        if (iBleemsyncVersion == 0)
+                        if ((iBleemsyncVersion == 0) || (iBleemsyncVersion == 2))
                         {
                             File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
+                        }
+                        if(iBleemsyncVersion == 2)
+                        {
+                            if (!Directory.Exists(sFolderPath + currentUsedVersion.SaveFolder))
+                            {
+                                Directory.CreateDirectory(sFolderPath + currentUsedVersion.SaveFolder);
+                            }
+                            if (!Directory.Exists(sFolderPath + currentUsedVersion.SaveFolder + "\\" + iNext.ToString()))
+                            {
+                                Directory.CreateDirectory(sFolderPath + currentUsedVersion.SaveFolder + "\\" + iNext.ToString());
+                            }
                         }
                     }
                     catch (Exception ex)
