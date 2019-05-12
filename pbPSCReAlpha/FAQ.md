@@ -34,7 +34,7 @@
 * You can copy/paste files by drag and drop
 * You can change the picture by drag and drop.
 * Auto-rename buttons can rename files according to the "Discs" field in the Game.ini file. A user confirmation is necessary.
-* Use the "Edit Game.ini + picture" button to edit information. You can look for it on Internet.
+* Use the "Edit Game.ini + picture" button to edit information. You will be able to look for it on Internet directly.
 
 ### [if AutoBleem0.6.0 or BleemSync1.0.0 selected] When I click on Sort, the list order is modified as I want in the app. But it is not visible plugged in my PSC.
 * [AutoBleem0.6.0] The EvolutionUI sorts games alphabetically. And the alphatitle information is not used.
@@ -43,6 +43,22 @@
 ### When can I click on Recreate DataBase ?
 * Once you did wished modifications, you have to regenerate the database. Be sure you have selected the right mod version before clicking on it.
 * Then, unplug properly your USB drive, and plug it in your PSC.
+
+#### Game.ini editor
+
+### Is there an automated scraper ?
+* Not automatic.
+
+### Is there an easy way to add information in Game.ini ?
+* Yes.
+* Write the title you want in the Search field, then press ENTER (or click on Search).
+* In the listbox below, you will find the different matching games. Double-click on one (or select one and click on View page here) to display the matching page on psxdatacenter.com on the right-side.
+* Warning! Selecting a game in this list can change the two first fields in this window.
+* Once loaded, the blue arrows in the middle of the screen can copy information from the webpage to the fields for the fist one, the second one copies the boxart.
+* The curved arrows can go back to the saved information.
+* The crossed arrows on the left-side of the fields can swap publisher and developer field contents.
+* The Alphatitle, if not empty, is used instead of the title for alphabetical sorting. Clicking on the arrow next to this field copies the title field.
+* Click on "Save" (if the file already exists) or "Save as" to save modifications.
 
 #### Transformer Tab
 
@@ -54,11 +70,36 @@
 * Usually, you don't need those buttons. You have already been asked to do that on clicking on Refresh if there is a missing Game.ini file.
 * It becomes necessary only if your folders (or your current db) are in mess. Read a previously saved db file to regenerate the Game.ini files.
 
+### Before converting something...
+* It is recommended to do a save of your USB key before any action.
+* It is recommended to have already used AutoBleem and/or BleemSync. They create some folders at first start, that this tool doesn't create and assumes they exist. So, when you convert, don't copy from the release pack, but from another usb drive already used.
+
+### I have an AutoBleem0.6 USB key, how can I convert for BleemSync1.0 ?
+* First, be sure you don't have any detected errors by the app.
+* Go in you explorer and remove all folders in your drive except games. And copy-paste folders from a BleemSync drive.
+* Go to Transformer Tab, and click on "AB0.6.0 to BS1.0.0 folders".
+* Go back to Explorer Tab, select BleemSync1.0.0 in the top-left corner.
+* Click on Sort: all folders will be renamed from 1 to X.
+* Click on Recreate Database et unplug your drive.
+
+### I have a BleemSync1.0 USB key, how can I convert for AutoBleem0.6 ?
+* First, be sure you don't have any detected errors by the app. If you have some missing Game.ini files, you can try reading the database clicking on the "Read a BS1.0 database" button.
+* Go in you explorer and remove all folders in your drive except games. And copy-paste folders from an AutoBleem drive.
+* Go to Transformer Tab, and click on "BS1.0.0 to AB0.6.0 folders".
+* Go back to Explorer Tab, select AutoBleem0.6.0 in the top-left corner.
+* Click on Sort: all folders will be renamed from 21 to X.
+* Click on Recreate Database et unplug your drive.
+
+### Savegames are also converted ?
+* The save folders are moved at the default place for each mod.
+* Savestate files are edited to be used with the two mods.
+* BleemSync has only one savestate slot while AutoBleem has 4 ones. From BleemSync to AutoBleem, the BS savestate becomes the first AB savestate. From AutoBleem to BleemSync, the first existaing savestate becomes the BS savestate.
+
 #### Configuration Tab
 
 ### What are the parameters for ?
 * "Maximum files to be copied simultaneously": you have a queue when you copy files in the app. You can select a number between 1 and 6. Small-sized files bypass the queue and are copied directly.
-* "Sorting Options": Alphabetic, Year, Publisher or Players, and ASCending or DEScending are the 4 possible options.
+* "Sorting Options": Alphabetic, Year, Publisher or Players are the 4 possible options, selecting ASCending or DEScending for each.
 * Modifications have to be validated by clicking on OK.
 
 ### What is the Check Bin button for ?
