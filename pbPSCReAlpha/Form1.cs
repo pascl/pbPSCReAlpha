@@ -102,7 +102,7 @@ namespace pbPSCReAlpha
             tbFolderPath.Text = sFolderPath;
             bleemsyncVersions = new ClVersionHelper[3];
             bleemsyncVersions[0] = new ClVersionHelper("BleemSync v0.4.1", "\\GameData", String.Empty, "\\..\\System\\Databases", String.Empty);
-            bleemsyncVersions[1] = new ClVersionHelper("BleemSync v1.0.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG");
+            bleemsyncVersions[1] = new ClVersionHelper("BleemSync v1.0.0/1.1.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG");
             bleemsyncVersions[2] = new ClVersionHelper("AutoBleem v0.6.0", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem");
             iBleemsyncVersion = Properties.Settings.Default.iVersionBleemSync;
             switch(iBleemsyncVersion)

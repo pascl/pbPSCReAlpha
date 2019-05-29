@@ -3,7 +3,7 @@
 A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync. Plug your USB drive on your computer to add/edit/delete games with this app.
 
 
-Last version: 1.2
+Last version: 1.21
 
 ![Preview](https://i.imgur.com/pRvmx85.png)
 
@@ -23,7 +23,7 @@ In the games folder, some numeroted folders (one per game) containing:
 * sbi file(s) necessary fo some PAL games
 * game.ini file or not, depending on the bleemsync version (or if you have already run this app).
 
-For BleemSync1.0.0 users : This app needs a Game.ini file for each game. These files were necessary in the older versions of bleemsync but not present anymore since 1.0 version. This software can create these files by reading the database file on the usb drive (after a click on Refresh or in the Tranformer tab).
+For BleemSync1.0.0/1.1.0 users : This app needs a Game.ini file for each game. These files were necessary in the older versions of bleemsync but not present anymore since 1.0 version. This software can create these files by reading the database file on the usb drive (after a click on Refresh or in the Tranformer tab).
 
 After modifications in the app, you have to click on Recreate database to have these modifications available on the PSC.
 
@@ -32,7 +32,7 @@ After modifications in the app, you have to click on Recreate database to have t
 
 ### View
 1. Select your "Games" directory with the textfield or the Browse button.
-2. In the top-left corner, select the used mod by clicking on "Currently use ...". You can choose BleemSync0.4.1, BleemSync1.0.0 or AutoBleem0.6.0.
+2. In the top-left corner, select the used mod by clicking on "Currently use ...". You can choose BleemSync0.4.1, BleemSync1.0.0/1.1.0 or AutoBleem0.6.0.
 3. Or click on Refresh.
 4. If a game.ini is missing in a folder, ask user to read database and create these files (if possible).
 5. Click on a game in the left-hand list (found errors are marked here with a star).
@@ -41,7 +41,7 @@ After modifications in the app, you have to click on Recreate database to have t
 #### Detected errors and/or warnings
 * Folder name is not a numeric value.
 * GameData folder is missing.
-* pcsx.cfg is missing. (Only a warning if a BleemSync1.0.0 drive is used)
+* pcsx.cfg is missing. (Only a warning if a BleemSync1.0.0/1.1.0 drive is used)
 * Game.ini is missing.
 * Game.ini is incomplete.
 * No cue (or pbp) files in the folder.
@@ -159,9 +159,9 @@ Open Windows explorer directly in this folder.
 
 ## Tranformer Tab
 ![Preview](https://i.imgur.com/9yd7e2t.png)
-1. The folder structures are different between BleemSync0.4.1, BleemSync1.0.0 and AutoBleem0.6.0.
+1. The folder structures are different between BleemSync0.4.1, BleemSync1.0.0/1.1.0 and AutoBleem0.6.0.
 2. You can read the database files regional.db. If you want to read a database in the same version you are using, the default directory is supposed to be the right one.
-3. If you are using BleemSync1.0 and BleemSyncUI, you need to read the BS1.0.0 database to (re-)create Game.ini files. If a Game.ini is present and different, the next window will appear to choose a file or merge data.
+3. If you are using BleemSync1.0/1.1 and BleemSyncUI, you need to read the BS1.0.0/1.1.0 database to (re-)create Game.ini files. If a Game.ini is present and different, the next window will appear to choose a file or merge data.
 ![Preview](https://i.imgur.com/ZpjKCoL.png)
 
 ## Configuration Tab
