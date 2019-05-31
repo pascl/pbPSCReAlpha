@@ -515,36 +515,39 @@ namespace pbPSCReAlpha
 
                             tran.Commit();
                         }
-                        using (var tran = m_dbConnection.BeginTransaction())
+                        if (lcgs.Count > 0)
                         {
-                            // INSERT INTO GameManagerFiles Name Game.ini Path /media/games/1/Game.ini NodeId 1
-                            // INSERT INTO GameManagerNodes Name Chrono Cross SortName Chrono Cross ReleaseDate 2000-01-01 00:00:00 Players 1 Publisher Squaresoft Type 1 Position 0
-
-                            int iGame = 0;
-                            foreach (ClGameStructure cgs in lcgs)
+                            using (var tran = m_dbConnection.BeginTransaction())
                             {
-                                int iNode = int.Parse(cgs.FolderIndex);
-                                foreach (String s in cgs.Filenames)
+                                // INSERT INTO GameManagerFiles Name Game.ini Path /media/games/1/Game.ini NodeId 1
+                                // INSERT INTO GameManagerNodes Name Chrono Cross SortName Chrono Cross ReleaseDate 2000-01-01 00:00:00 Players 1 Publisher Squaresoft Type 1 Position 0
+
+                                int iGame = 0;
+                                foreach (ClGameStructure cgs in lcgs)
                                 {
-                                    ClGameManagerFiles cgmf = new ClGameManagerFiles(s, "/media/games/" + iNode.ToString() + "/" + s, iNode);
-                                    command = cgmf.generateInsertCommand(m_dbConnection);
+                                    int iNode = int.Parse(cgs.FolderIndex);
+                                    foreach (String s in cgs.Filenames)
+                                    {
+                                        ClGameManagerFiles cgmf = new ClGameManagerFiles(s, "/media/games/" + iNode.ToString() + "/" + s, iNode);
+                                        command = cgmf.generateInsertCommand(m_dbConnection);
+                                        command.ExecuteNonQuery();
+                                    }
+                                    iGame++;
+                                    ClGameManagerNodes cgmn = new ClGameManagerNodes(cgs);
+                                    cgmn.Position = iGame;
+                                    command = cgmn.generateInsertCommand(m_dbConnection);
                                     command.ExecuteNonQuery();
                                 }
-                                iGame++;
-                                ClGameManagerNodes cgmn = new ClGameManagerNodes(cgs);
-                                cgmn.Position = iGame;
-                                command = cgmn.generateInsertCommand(m_dbConnection);
+
+                                sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116023850_Seed', '2.1.1-rtm-30846')";
+                                command = new SQLiteCommand(sql, m_dbConnection);
                                 command.ExecuteNonQuery();
+                                sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116024555_AddOrderingPosition', '2.1.1-rtm-30846')";
+                                command = new SQLiteCommand(sql, m_dbConnection);
+                                command.ExecuteNonQuery();
+
+                                tran.Commit();
                             }
-
-                            sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116023850_Seed', '2.1.1-rtm-30846')";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-                            sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116024555_AddOrderingPosition', '2.1.1-rtm-30846')";
-                            command = new SQLiteCommand(sql, m_dbConnection);
-                            command.ExecuteNonQuery();
-
-                            tran.Commit();
                         }
                         m_dbConnection.Close();
                         slLogger.Debug("Creating DB2 ok");
@@ -687,27 +690,26 @@ namespace pbPSCReAlpha
                                     //CREATE TABLE LANGUAGE_SPECIFIC ( [DEFAULT_VALUE] text, [LANGUAGE_ID] integer, [VALUE] text, UNIQUE ([DEFAULT_VALUE], [LANGUAGE_ID]) )
                                     break;
                             }
-                            /*tran.Commit();
-                        }
-                        using (var tran = m_dbConnection.BeginTransaction())
-                        {*/
                             int iGame = 0;
-                            foreach (ClGameStructure cgs in lcgs)
+                            if (lcgs.Count > 0)
                             {
-                                iGame++;
-                                ClGameTable cgt = new ClGameTable(cgs);
-                                cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
-                                command = cgt.generateInsertCommand(m_dbConnection, bleemsyncVersion);
-                                command.ExecuteNonQuery();
-                                String[] sDiscSplit = cgs.Discs.Split(',');
-                                int iDiscCount = sDiscSplit.Length;
-                                int iDisc = 1;
-                                foreach (String disc in sDiscSplit)
+                                foreach (ClGameStructure cgs in lcgs)
                                 {
-                                    ClDiscTable cdt = new ClDiscTable(iGame, iDisc, disc);
-                                    command = cdt.generateInsertCommand(m_dbConnection);
+                                    iGame++;
+                                    ClGameTable cgt = new ClGameTable(cgs);
+                                    cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
+                                    command = cgt.generateInsertCommand(m_dbConnection, bleemsyncVersion);
                                     command.ExecuteNonQuery();
-                                    iDisc++;
+                                    String[] sDiscSplit = cgs.Discs.Split(',');
+                                    int iDiscCount = sDiscSplit.Length;
+                                    int iDisc = 1;
+                                    foreach (String disc in sDiscSplit)
+                                    {
+                                        ClDiscTable cdt = new ClDiscTable(iGame, iDisc, disc);
+                                        command = cdt.generateInsertCommand(m_dbConnection);
+                                        command.ExecuteNonQuery();
+                                        iDisc++;
+                                    }
                                 }
                             }
                             tran.Commit();
