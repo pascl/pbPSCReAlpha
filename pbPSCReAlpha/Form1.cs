@@ -1569,23 +1569,52 @@ namespace pbPSCReAlpha
             }
             if (Directory.Exists(sFolderPath))
             {
-                //
-                List<ClGameStructure> lcgs = new List<ClGameStructure>();
-                foreach(ClGameStructure cgs in lbGames.Items)
+                bool bCanContinue = true;
+
+                // force refresh without updating display, reupdate at the end
+                Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
+                if (lsFolders.Count > 0)
                 {
-                    lcgs.Add(cgs);
-                }
-                ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
-                if(!cdbm.BDone)
-                {
-                    bNeedRecreateDB = true;
-                    FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    try
+                    { 
+                        List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                        foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                        {
+                            ClGameStructure c1 = pair.Value;
+                            lcgs.Add(c1);
+                            bCanContinue &= (!c1.GeneralError);
+                        }
+
+                        if (bCanContinue)
+                        {
+                            ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                            if (!cdbm.BDone)
+                            {
+                                bNeedRecreateDB = true;
+                                FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            }
+                            else
+                            {
+                                bNeedRecreateDB = false;
+                                FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                        }
+                        else
+                        {
+                            FlexibleMessageBox.Show("Errors detected. Fix them before recreating database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        slLogger.Fatal(ex.Message);
+                        FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
                 }
                 else
                 {
-                    bNeedRecreateDB = false;
-                    FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // useful ?
                 }
+                refreshGameListFolders();
             }
             slLogger.Trace("<< Recreate database Click");
             /*slLogger.Trace(">> Launch BleemSync Click");
