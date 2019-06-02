@@ -443,6 +443,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap inode_blockdevice1 {
+            get {
+                object obj = ResourceManager.GetObject("inode-blockdevice1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap jpflag {
             get {
                 object obj = ResourceManager.GetObject("jpflag", resourceCulture);

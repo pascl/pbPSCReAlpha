@@ -1567,6 +1567,7 @@ namespace pbPSCReAlpha
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
+            
             if (Directory.Exists(sFolderPath))
             {
                 bool bCanContinue = true;
@@ -1576,27 +1577,37 @@ namespace pbPSCReAlpha
                 if (lsFolders.Count > 0)
                 {
                     try
-                    { 
+                    {
                         List<ClGameStructure> lcgs = new List<ClGameStructure>();
-                        foreach (KeyValuePair<String, ClGameStructure> pair in dcGames)
+                        foreach (string s in lsFolders)
                         {
-                            ClGameStructure c1 = pair.Value;
-                            lcgs.Add(c1);
-                            bCanContinue &= (!c1.GeneralError);
+                            if (dcGames.ContainsKey(s))
+                            {
+                                lcgs.Add(dcGames[s]);
+                                bCanContinue &= (!dcGames[s].GeneralError);
+                            }
                         }
-
+                        
                         if (bCanContinue)
                         {
-                            ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
-                            if (!cdbm.BDone)
+                            if (Control.ModifierKeys == Keys.Shift)
                             {
-                                bNeedRecreateDB = true;
-                                FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                Form9 f = new Form9(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                                f.ShowDialog();
                             }
                             else
                             {
-                                bNeedRecreateDB = false;
-                                FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                                if (!cdbm.BDone)
+                                {
+                                    bNeedRecreateDB = true;
+                                    FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                }
+                                else
+                                {
+                                    bNeedRecreateDB = false;
+                                    FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
                             }
                         }
                         else
