@@ -1,11 +1,11 @@
 # pbPSCReAlpha
 
-A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync. Plug your USB drive on your computer to add/edit/delete games with this app.
+A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync or autobleem. Plug your USB drive on your computer to add/edit/delete games with this app.
 
+Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
+Last version: 1.3
 
-Last version: 1.21
-
-![Preview](https://i.imgur.com/pRvmx85.png)
+![Preview](https://i.imgur.com/TuyKEQA.png)
 
 ## General
 
@@ -53,7 +53,7 @@ After modifications in the app, you have to click on Recreate database to have t
 * Cue (or Pbp) filenames and Discs information in Game.ini mismatch.
 * Cue content and Bin filenames mismatch.
 * For some PAL games, Sbi files are needed and you can be warned for that (if you keep Discs information like SLES-abcde).
-* Comma in filenames are forbidden. Several special characters are also forbidden. **NEW 1.2** 
+* Comma in filenames are forbidden. Several special characters are also forbidden.
 * Detection of a 'p', 'u' or 'e' in the 3rd position which can start a wrong bios in the PSC (only a warning, maybe you did it intentionnaly).
 
 An error is symbolized by a '*' before the folder number and the title in the left-side list. A warning is symbolized by a '!' before the folder number and the title in the left-side list.
@@ -88,6 +88,18 @@ In case it is still locked somewhere, try to rename the locked folder in an expl
 ### Compress png files
 * Launch pngquant from this button in order to compress all .PNG files in your folders. Resize the files in 226*226 in the same time.
 
+### Recreate database
+* **NEW 1.3** A refresh is now done by clicking on this button. You can't regenerate database if errors are detected.
+* **NEW 1.3** You have now 2 options to re-generate the database:
+   * click on the button as in the previous versions. You will be warned if all is ok or not after a few seconds.
+   * [if you have a drive with a **modded BleemSync1.1**] with the **Shift key** pressed, click on the button to go to the advanced options.
+     * You can choose different options to generate several DB files in order to be used in different folders.
+	 * An empty DB file is generated too, if you don't want any ps1 games in a folder.
+     * Going to this advanced form if you have another version, or a not-modified BleemSync 1.1 version, only the first option will do something useful for you.
+	 ![Preview](https://i.imgur.com/9CJbYA8.png)
+
+PS: For the modded BleemSync1.1, go to https://github.com/pascl/BleemSync_Mods
+   
 ## Editor
 
 ### Direct edition
@@ -157,6 +169,7 @@ If a game.ini is missing in a folder, ask user to read database and create these
 ### Open folder
 Open Windows explorer directly in this folder.
 
+
 ## Tranformer Tab
 ![Preview](https://i.imgur.com/9yd7e2t.png)
 1. The folder structures are different between BleemSync0.4.1, BleemSync1.0.0/1.1.0 and AutoBleem0.6.0.
@@ -217,4 +230,4 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 * System.Data.SQLite.EF6.dll
 * System.Data.SQLite.Linq.dll
 * bleemsync_cfg.INI
-* FAQ.md - **NEW 1.2** 
+* FAQ.md -
