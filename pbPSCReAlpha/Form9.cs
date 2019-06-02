@@ -18,8 +18,9 @@ namespace pbPSCReAlpha
         List<ClGameStructure> m_lcgs;
         String m_sFolderPath;
         ClVersionHelper m_cvh;
+        Form1 m_frmParent;
 
-        public Form9(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl)
+        public Form9(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl, Form1 frm)
         {
             InitializeComponent();
             slLogger = sl;
@@ -28,116 +29,231 @@ namespace pbPSCReAlpha
             m_lcgs = lcgs;
             m_sFolderPath = sFolderPath;
             m_cvh = cvh;
+            m_frmParent = frm;
             manageRadioButton();
+        }
+
+        private void addInListOrAnother(bool bSelectList, String sToAdd, List<String> lsIfTrue, List<String> lsIfFalse)
+        {
+            if(bSelectList)
+            {
+                lsIfTrue.Add(sToAdd);
+            }
+            else
+            {
+                lsIfFalse.Add(sToAdd);
+            }
         }
 
         private void btGenerateDB_Click(object sender, EventArgs e)
         {
-            if (0 == m_lcgs.Count)
+            List<String> lsFilesOk = new List<string>();
+            List<String> lsFilesKo = new List<string>();
+            bool bOkForDB = false;
+            try
             {
-                ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger);
-            }
-            else
-            {
-                int iInternalGamesCount = 20; // in a variable, in case changes one day
-                int iCurrentIndex = 0;
-                switch (m_SelectionDBCreation)
+                if (0 == m_lcgs.Count)
                 {
-                    case 2:
-                        {
-                            int iMaxPage = (int)(nudMaxGamesPerFolder.Value);
-                            int iCountPageWanted = (int)(Math.Ceiling((decimal)((float)(iInternalGamesCount + m_lcgs.Count) / (float)iMaxPage)));
-                            int iFinalCountPerPage = (int)(Math.Ceiling((decimal)((float)(iInternalGamesCount + m_lcgs.Count) / (float)iCountPageWanted)));
-                            iFinalCountPerPage = Math.Max(iFinalCountPerPage, 20); // not less than 20
-                            for (int i = 0; i < iCountPageWanted; i++)
+                    List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                    ClDBManager cdbm1 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
+                    addInListOrAnother(cdbm1.BDone, "empty.db", lsFilesOk, lsFilesKo);
+                    bOkForDB = cdbm1.BDone;
+                    ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger);
+                    addInListOrAnother(cdbm.BDone, "regional.db", lsFilesOk, lsFilesKo);
+                    bOkForDB &= cdbm.BDone;
+                }
+                else
+                {
+                    int iInternalGamesCount = 20; // in a variable, in case changes one day
+                    int iCurrentIndex = 0;
+                    switch (m_SelectionDBCreation)
+                    {
+                        case 2:
                             {
-                                int iNbGames = iFinalCountPerPage;
-                                if (0 == i)
+                                int iMaxPage = (int)(nudMaxGamesPerFolder.Value);
+                                int iCountPageWanted = (int)(Math.Ceiling((decimal)((float)(iInternalGamesCount + m_lcgs.Count) / (float)iMaxPage)));
+                                int iFinalCountPerPage = (int)(Math.Ceiling((decimal)((float)(iInternalGamesCount + m_lcgs.Count) / (float)iCountPageWanted)));
+                                iFinalCountPerPage = Math.Max(iFinalCountPerPage, 20); // not less than 20
+                                for (int i = 0; i < iCountPageWanted; i++)
                                 {
-                                    iNbGames -= iInternalGamesCount;
-                                    if(iNbGames < 0)
+                                    int iNbGames = iFinalCountPerPage;
+                                    if (0 == i)
                                     {
-                                        iNbGames = 0;
+                                        iNbGames -= iInternalGamesCount;
+                                        if (iNbGames < 0)
+                                        {
+                                            iNbGames = 0;
+                                        }
                                     }
-                                }
-                                List<ClGameStructure> lcgs = new List<ClGameStructure>();
-                                ClDBManager cdbm20 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
-                                for (int j = iCurrentIndex; j < Math.Min((iCurrentIndex + iNbGames), m_lcgs.Count); j++)
-                                {
-                                    lcgs.Add(m_lcgs[j]);
-                                }
-                                if (0 == i)
-                                {
-                                    ClDBManager cdbm2 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional.db", iCurrentIndex);
-                                }
-                                else
-                                {
-                                    ClDBManager cdbm2 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional" + i.ToString() + ".db", iCurrentIndex);
-                                }
-                                iCurrentIndex += iNbGames;
-                            }
-                        }
-                        break;
-                    case 3:
-                        {
-                            int iMaxPage = (int)(nudMaxGamesPerFolder.Value);
-                            int iCountPageWanted = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)(iMaxPage))));
-                            int iFinalCountPerPage = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)(iCountPageWanted))));
-                            iFinalCountPerPage = Math.Max(iFinalCountPerPage, 20); // not less than 20
-                            iCountPageWanted++;
-                            for (int i = 0; i < iCountPageWanted; i++)
-                            {
-                                int iNbGames = iFinalCountPerPage;
-                                List<ClGameStructure> lcgs = new List<ClGameStructure>();
-                                if (0 == i)
-                                {
-                                    ClDBManager cdbm30 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
-                                    ClDBManager cdbm31 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional.db");
-                                }
-                                else
-                                {
+                                    List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                                    ClDBManager cdbm20 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
+                                    addInListOrAnother(cdbm20.BDone, "empty.db", lsFilesOk, lsFilesKo);
+                                    bOkForDB = cdbm20.BDone;
                                     for (int j = iCurrentIndex; j < Math.Min((iCurrentIndex + iNbGames), m_lcgs.Count); j++)
                                     {
                                         lcgs.Add(m_lcgs[j]);
                                     }
-                                    ClDBManager cdbm3 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional" + i.ToString() + ".db", iCurrentIndex);
+                                    if (0 == i)
+                                    {
+                                        ClDBManager cdbm2 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional.db", iCurrentIndex);
+                                        addInListOrAnother(cdbm2.BDone, "regional.db", lsFilesOk, lsFilesKo);
+                                        bOkForDB &= cdbm2.BDone;
+                                    }
+                                    else
+                                    {
+                                        ClDBManager cdbm2 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional" + i.ToString() + ".db", iCurrentIndex);
+                                        addInListOrAnother(cdbm2.BDone, "regional" + i.ToString() + ".db", lsFilesOk, lsFilesKo);
+                                        bOkForDB &= cdbm2.BDone;
+                                    }
                                     iCurrentIndex += iNbGames;
                                 }
                             }
-                        }
-                        break;
-                    case 4:
-                        {
-                            int iMaxPage = (int)(nudMaxGamesPerFolder.Value);
-                            int iCountPageWanted = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)iMaxPage)));
-                            int iFinalCountPerPage = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)iCountPageWanted)));
-                            iFinalCountPerPage = Math.Max(iFinalCountPerPage, 20); // not less than 20
-                            for (int i = 0; i < iCountPageWanted; i++)
+                            break;
+                        case 3:
                             {
-                                int iNbGames = iFinalCountPerPage;
+                                int iMaxPage = (int)(nudMaxGamesPerFolder.Value);
+                                int iCountPageWanted = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)(iMaxPage))));
+                                int iFinalCountPerPage = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)(iCountPageWanted))));
+                                iFinalCountPerPage = Math.Max(iFinalCountPerPage, 20); // not less than 20
+                                iCountPageWanted++;
+                                for (int i = 0; i < iCountPageWanted; i++)
+                                {
+                                    int iNbGames = iFinalCountPerPage;
+                                    List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                                    if (0 == i)
+                                    {
+                                        ClDBManager cdbm30 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
+                                        addInListOrAnother(cdbm30.BDone, "empty.db", lsFilesOk, lsFilesKo);
+                                        bOkForDB = cdbm30.BDone;
+                                        ClDBManager cdbm31 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional.db");
+                                        addInListOrAnother(cdbm31.BDone, "regional.db", lsFilesOk, lsFilesKo);
+                                        bOkForDB &= cdbm31.BDone;
+                                    }
+                                    else
+                                    {
+                                        for (int j = iCurrentIndex; j < Math.Min((iCurrentIndex + iNbGames), m_lcgs.Count); j++)
+                                        {
+                                            lcgs.Add(m_lcgs[j]);
+                                        }
+                                        ClDBManager cdbm3 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional" + i.ToString() + ".db", iCurrentIndex);
+                                        addInListOrAnother(cdbm3.BDone, "regional" + i.ToString() + ".db", lsFilesOk, lsFilesKo);
+                                        bOkForDB &= cdbm3.BDone;
+                                        iCurrentIndex += iNbGames;
+                                    }
+                                }
+                            }
+                            break;
+                        case 4:
+                            {
+                                int iMaxPage = (int)(nudMaxGamesPerFolder.Value);
+                                int iCountPageWanted = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)iMaxPage)));
+                                int iFinalCountPerPage = (int)(Math.Ceiling((decimal)((float)(m_lcgs.Count) / (float)iCountPageWanted)));
+                                iFinalCountPerPage = Math.Max(iFinalCountPerPage, 20); // not less than 20
+                                for (int i = 0; i < iCountPageWanted; i++)
+                                {
+                                    int iNbGames = iFinalCountPerPage;
 
+                                    List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                                    ClDBManager cdbm40 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
+                                    addInListOrAnother(cdbm40.BDone, "empty.db", lsFilesOk, lsFilesKo);
+                                    bOkForDB = cdbm40.BDone;
+                                    for (int j = iCurrentIndex; j < Math.Min((iCurrentIndex + iNbGames), m_lcgs.Count); j++)
+                                    {
+                                        lcgs.Add(m_lcgs[j]);
+                                    }
+                                    if (0 == i)
+                                    {
+                                        ClDBManager cdbm4 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional.db", iCurrentIndex);
+                                        addInListOrAnother(cdbm4.BDone, "regional.db", lsFilesOk, lsFilesKo);
+                                        bOkForDB &= cdbm4.BDone;
+                                    }
+                                    else
+                                    {
+                                        ClDBManager cdbm4 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional" + i.ToString() + ".db", iCurrentIndex);
+                                        addInListOrAnother(cdbm4.BDone, "regional" + i.ToString() + ".db", lsFilesOk, lsFilesKo);
+                                        bOkForDB &= cdbm4.BDone;
+                                    }
+                                    iCurrentIndex += iNbGames;
+                                }
+                            }
+                            break;
+                        default: // also case 1:
+                            {
                                 List<ClGameStructure> lcgs = new List<ClGameStructure>();
-                                ClDBManager cdbm40 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
-                                for (int j = iCurrentIndex; j < Math.Min((iCurrentIndex + iNbGames), m_lcgs.Count); j++)
-                                {
-                                    lcgs.Add(m_lcgs[j]);
-                                }
-                                if (0 == i)
-                                {
-                                    ClDBManager cdbm4 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional.db", iCurrentIndex);
-                                }
-                                else
-                                {
-                                    ClDBManager cdbm4 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "regional" + i.ToString() + ".db", iCurrentIndex);
-                                }
-                                iCurrentIndex += iNbGames;
+                                ClDBManager cdbm1 = new ClDBManager(lcgs, m_sFolderPath, m_bsversion, slLogger, m_sFolderPath + m_cvh.DbFolder + "\\" + "empty.db");
+                                addInListOrAnother(cdbm1.BDone, "empty.db", lsFilesOk, lsFilesKo);
+                                bOkForDB = cdbm1.BDone;
+                                ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger);
+                                addInListOrAnother(cdbm.BDone, "regional.db", lsFilesOk, lsFilesKo);
+                                bOkForDB &= cdbm.BDone;
+                            }
+                            break;
+                    }
+                    if(bOkForDB)
+                    {
+                        if (m_SelectionDBCreation != 1) // already done if 1
+                        {
+                            if (1 == m_bsversion)
+                            {
+                                // create the second db file
+                                ClDBManager.BleemSyncUI_AddDB(m_lcgs, m_sFolderPath, m_cvh, slLogger);
+                            }
+                            if (2 == m_bsversion)
+                            {
+                                // create the files for autobleem in order to prevent a scan at start
+                                ClDBManager.AutoBleem_CreateFiles(m_lcgs, m_sFolderPath, m_cvh, slLogger);
                             }
                         }
-                        break;
-                    default: // also case 1:
-                        ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger);
-                        break;
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                bOkForDB = false;
+                slLogger.Fatal(ex.Message);
+            }
+            m_frmParent.bNeedRecreateDB = !bOkForDB;
+            if (!bOkForDB)
+            {
+                String sMsg = "There is a problem during database creation";
+                if (lsFilesKo.Count > 0)
+                {
+                    sMsg += Environment.NewLine + "---------------" + Environment.NewLine + "Files ko:";
+                    foreach (String sFile in lsFilesKo)
+                    {
+                        sMsg += Environment.NewLine + " -> " + sFile;
+                    }
+                }
+                if (lsFilesOk.Count > 0)
+                {
+                    sMsg += Environment.NewLine + "---------------" + Environment.NewLine + "Files ok:";
+                    foreach (String sFile in lsFilesOk)
+                    {
+                        sMsg += Environment.NewLine + " -> " + sFile;
+                    }
+                }
+                FlexibleMessageBox.Show(sMsg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                String sMsg = "Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.";
+                if (lsFilesOk.Count > 0)
+                {
+                    sMsg += Environment.NewLine + "---------------" + Environment.NewLine + "Files ok:";
+                    foreach (String sFile in lsFilesOk)
+                    {
+                        sMsg += Environment.NewLine + " -> " + sFile;
+                    }
+                }
+                if (lsFilesKo.Count > 0)
+                {
+                    sMsg += Environment.NewLine + "---------------" + Environment.NewLine + "Files ko:";
+                    foreach (String sFile in lsFilesKo)
+                    {
+                        sMsg += Environment.NewLine + " -> " + sFile;
+                    }
+                }
+                FlexibleMessageBox.Show(sMsg, "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

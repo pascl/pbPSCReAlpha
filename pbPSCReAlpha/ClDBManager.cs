@@ -338,9 +338,9 @@ namespace pbPSCReAlpha
         public bool BDone { get => _bDone; set => _bDone = value; }
         SimpleLogger slLogger;
 
-        public void AutoBleem_CreateFiles(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
+        public static bool AutoBleem_CreateFiles(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
         {
-            _bDone = false;
+            bool bDone = false;
             try
             {
                 //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
@@ -359,7 +359,7 @@ namespace pbPSCReAlpha
                         Thread.Sleep(100);
                     }
                     File.Move(sFilename1, sFilename1 + ".bak");
-                    Thread.Sleep(400);
+                    Thread.Sleep(100);
                 }
                 if (File.Exists(sFilename2))
                 {
@@ -369,7 +369,7 @@ namespace pbPSCReAlpha
                         Thread.Sleep(100);
                     }
                     File.Move(sFilename2, sFilename2 + ".bak");
-                    Thread.Sleep(400);
+                    Thread.Sleep(100);
                 }
                 List<String> lsFolders = new List<string>();
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
@@ -390,7 +390,7 @@ namespace pbPSCReAlpha
                 } // foreach
                 using (NaturalComparer comparer = new NaturalComparer())
                 {
-                    lsFolders.Sort(comparer);
+                    lsFolders.Sort(comparer); // really useful here ?
                 }
                 if (lsFolders.Count > 0)
                 {
@@ -415,7 +415,7 @@ namespace pbPSCReAlpha
                     }
                     catch (Exception ex)
                     {
-                        slLogger.Fatal(ex.Message);
+                        sl.Fatal(ex.Message);
                     }
                 }
                 else
@@ -433,26 +433,27 @@ namespace pbPSCReAlpha
                     }
                     catch (Exception ex)
                     {
-                        slLogger.Fatal(ex.Message);
+                        sl.Fatal(ex.Message);
                     }
                 }
-                _bDone = true;
+                bDone = true;
             }
             catch(Exception ex)
             {
-                _bDone = false;
-                slLogger.Fatal(ex.Message);
+                bDone = false;
+                sl.Fatal(ex.Message);
             }
             finally
             {
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+            return bDone;
         }
 
-        public void BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
+        public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
         {
-            _bDone = false;
+            bool bDone = false;
             try
             {
                 //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
@@ -470,7 +471,7 @@ namespace pbPSCReAlpha
                         Thread.Sleep(100);
                     }
                     File.Move(sFilename, sFilename + ".bak");
-                    Thread.Sleep(400);
+                    Thread.Sleep(100);
                 }
                 SQLiteConnection.CreateFile(sFilename);
                 using (SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFilename + ";Version=3;"))
@@ -554,13 +555,13 @@ namespace pbPSCReAlpha
                             }
                         }
                         m_dbConnection.Close();
-                        slLogger.Debug("Creating DB2 ok");
-                        _bDone = true;
+                        sl.Debug("Creating DB2 ok");
+                        bDone = true;
                     }
                     catch (Exception ex)
                     {
-                        _bDone = false;
-                        slLogger.Fatal(ex.Message);
+                        bDone = false;
+                        sl.Fatal(ex.Message);
                     }
                     finally
                     {
@@ -573,9 +574,10 @@ namespace pbPSCReAlpha
             }
             catch (Exception ex)
             {
-                _bDone = false;
-                slLogger.Fatal(ex.Message);
+                bDone = false;
+                sl.Fatal(ex.Message);
             }
+            return bDone;
         }
 
         private void doBackupExistingFile(String sFilename)
@@ -678,7 +680,15 @@ namespace pbPSCReAlpha
                     {
                         foreach (ClGameStructure cgs in lcgs)
                         {
-                            iGame++;
+                            int iG1 = 1+iGame;
+                            if (int.TryParse(cgs.FolderIndex, out iG1))
+                            {
+                                iGame = iG1;
+                            }
+                            else
+                            {
+                                iGame++;
+                            }
                             ClGameTable cgt = new ClGameTable(cgs);
                             cgt.Position = iGame; // can't order in bleemsyncui if other than 0 for now
                             cmd = cgt.generateInsertCommand(sqlconn, bleemsyncVersion, iGame);
@@ -749,15 +759,18 @@ namespace pbPSCReAlpha
                         GC.WaitForPendingFinalizers();
                     }
                 }
-                if ((true == _bDone) && (1 == bleemsyncVersion))
+                if (true == _bDone)
                 {
-                    // create the second db file
-                    BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl);
-                }
-                if ((true == _bDone) && (2 == bleemsyncVersion))
-                {
-                    // create the files for autobleem in order to prevent a scan at start
-                    AutoBleem_CreateFiles(lcgs, sFolderPath, cvh, sl);
+                    if (1 == bleemsyncVersion)
+                    {
+                        // create the second db file
+                        _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl);
+                    }
+                    if (2 == bleemsyncVersion)
+                    {
+                        // create the files for autobleem in order to prevent a scan at start
+                        _bDone = AutoBleem_CreateFiles(lcgs, sFolderPath, cvh, sl);
+                    }
                 }
             }
             catch (Exception ex)
@@ -768,49 +781,9 @@ namespace pbPSCReAlpha
         }
 
         public ClDBManager(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, SimpleLogger sl, String sFullFileName)
+            : this(lcgs, sFolderPath, bleemsyncVersion, sl, sFullFileName, 0)
         {
-            // with a filename (with path), in order to have multi db files for folders
-            slLogger = sl;
-            try
-            {
-                doBackupExistingFile(sFullFileName);
-
-                SQLiteConnection.CreateFile(sFullFileName);
-                using (SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=" + sFullFileName + ";Version=3;"))
-                {
-                    try
-                    {
-                        m_dbConnection.Open();
-
-                        String sql = String.Empty;
-                        _bDone = doDBStructure(bleemsyncVersion, m_dbConnection);
-                        if (_bDone)
-                        {
-                            _bDone = doAddGamesInDB(lcgs, bleemsyncVersion, m_dbConnection, 0);
-                        }
-                        m_dbConnection.Close();
-                        if (_bDone)
-                            slLogger.Debug("Creating DB " + sFullFileName + " ok");
-                    }
-                    catch (Exception ex)
-                    {
-                        _bDone = false;
-                        slLogger.Fatal(ex.Message);
-                    }
-                    finally
-                    {
-                        m_dbConnection.Dispose();
-                        SQLiteConnection.ClearAllPools();
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                slLogger.Fatal(ex.Message);
-                _bDone = false;
-            }
+            
         }
 
         public ClDBManager(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, SimpleLogger sl, String sFullFileName, int iStart)

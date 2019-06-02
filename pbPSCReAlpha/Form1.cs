@@ -32,7 +32,7 @@ namespace pbPSCReAlpha
         int[] iSortOptions;
         int[] iSortAscOrDesc;
         
-        bool bNeedRecreateDB = false;
+        public bool bNeedRecreateDB = false;
 
         public Form1(Dictionary<string, ClPS1Game> ps1games)
         {
@@ -1592,7 +1592,7 @@ namespace pbPSCReAlpha
                         {
                             if (Control.ModifierKeys == Keys.Shift)
                             {
-                                Form9 f = new Form9(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                                Form9 f = new Form9(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger, this);
                                 f.ShowDialog();
                             }
                             else
