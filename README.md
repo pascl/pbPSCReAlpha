@@ -3,6 +3,7 @@
 A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync or autobleem. Plug your USB drive on your computer to add/edit/delete games with this app.
 
 Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
+
 Last version: 1.3
 
 ![Preview](https://i.imgur.com/TuyKEQA.png)
@@ -96,6 +97,7 @@ In case it is still locked somewhere, try to rename the locked folder in an expl
      * You can choose different options to generate several DB files in order to be used in different folders.
 	 * An empty DB file is generated too, if you don't want any ps1 games in a folder.
      * Going to this advanced form if you have another version, or a not-modified BleemSync 1.1 version, only the first option will do something useful for you.
+	 
 	 ![Preview](https://i.imgur.com/9CJbYA8.png)
 
 PS: For the modded BleemSync1.1, go to https://github.com/pascl/BleemSync_Mods
