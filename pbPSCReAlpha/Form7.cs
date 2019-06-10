@@ -61,7 +61,7 @@ namespace pbPSCReAlpha
                                     if (lsSerialStart.IndexOf(s.Substring(0, 4)) > -1)
                                     {
                                         bFound = true;
-                                        s = (s.Substring(0, 4) + "-" + s.Substring(4, 5)).ToUpper();
+                                        s = (s.Substring(0, 4) + "-" + (s.Substring(4, 6)).Replace("P", "").Substring(0, 5)).ToUpper();
                                     }
                                 }
                             }
