@@ -113,7 +113,8 @@ namespace pbPSCReAlpha
                 SQLiteCommand s = null;
                 switch (bs_version)
                 {
-                    case 0:
+                    case Constant.iBLEEMSYNC_V041:
+                    case Constant.iSTRUCT_INTERNAL:
                         s = new SQLiteCommand("INSERT INTO GAME"
                             + " (GAME_ID, GAME_TITLE_STRING, PUBLISHER_NAME, RELEASE_YEAR, PLAYERS, RATING_IMAGE, GAME_MANUAL_QR_IMAGE, LINK_GAME_ID)"
                             + " VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7)", conn);
@@ -126,7 +127,7 @@ namespace pbPSCReAlpha
                         s.Parameters.Add("@p6", System.Data.DbType.String).Value = _game_manual_qr_image;
                         s.Parameters.Add("@p7", System.Data.DbType.String).Value = _link_game_id;
                         break;
-                    case 1:
+                    case Constant.iBLEEMSYNC_V100:
                         s = new SQLiteCommand("INSERT INTO MENU_ENTRIES"
                             + " (GAME_ID, GAME_TITLE_STRING, PUBLISHER_NAME, RELEASE_YEAR, PLAYERS, RATING_IMAGE, GAME_MANUAL_QR_IMAGE, LINK_GAME_ID, POSITION)"
                             + " VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8)", conn);
@@ -140,7 +141,7 @@ namespace pbPSCReAlpha
                         s.Parameters.Add("@p7", System.Data.DbType.String).Value = _link_game_id;
                         s.Parameters.Add("@p8", System.Data.DbType.Int32).Value = _position;
                         break;
-                    case 2:
+                    case Constant.iAUTOBLEEM_V06:
                         s = new SQLiteCommand("INSERT INTO GAME"
                             + " (GAME_ID, GAME_TITLE_STRING, PUBLISHER_NAME, RELEASE_YEAR, PLAYERS, RATING_IMAGE, GAME_MANUAL_QR_IMAGE, LINK_GAME_ID, PATH, SSPATH, MEMCARD)"
                             + " VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10)", conn);
@@ -605,7 +606,8 @@ namespace pbPSCReAlpha
                     SQLiteCommand cmd;
                     switch (bleemsyncVersion)
                     {
-                        case 0: // bs0.4.1
+                        case Constant.iBLEEMSYNC_V041: // bs0.4.1
+                        case Constant.iSTRUCT_INTERNAL:
                             sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"GAME\" (\"GAME_ID\") ON DELETE CASCADE )";
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
@@ -619,7 +621,7 @@ namespace pbPSCReAlpha
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
                             break;
-                        case 1: // bs1.0.0
+                        case Constant.iBLEEMSYNC_V100: // bs1.0.0
                             sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"MENU_ENTRIES\" (\"GAME_ID\") ON DELETE CASCADE )";
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
@@ -642,7 +644,7 @@ namespace pbPSCReAlpha
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
                             break;
-                        case 2: // ab0.6.0
+                        case Constant.iAUTOBLEEM_V06: // ab0.6.0
                             sql = "CREATE TABLE DISC ( [GAME_ID] integer, [DISC_NUMBER] integer, [BASENAME] text, UNIQUE ([GAME_ID], [DISC_NUMBER]) )";
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
@@ -761,12 +763,12 @@ namespace pbPSCReAlpha
                 }
                 if (true == _bDone)
                 {
-                    if (1 == bleemsyncVersion)
+                    if (Constant.iBLEEMSYNC_V100 == bleemsyncVersion)
                     {
                         // create the second db file
                         _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl);
                     }
-                    if (2 == bleemsyncVersion)
+                    if (Constant.iAUTOBLEEM_V06 == bleemsyncVersion)
                     {
                         // create the files for autobleem in order to prevent a scan at start
                         _bDone = AutoBleem_CreateFiles(lcgs, sFolderPath, cvh, sl);

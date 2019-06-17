@@ -31,7 +31,13 @@ namespace pbPSCReAlpha
         ClVersionHelper[] bleemsyncVersions;
         int[] iSortOptions;
         int[] iSortAscOrDesc;
-        
+
+        ClVersionHelper internalVersion;
+        bool bInternalAffairs;
+        String sFolderUpGames;
+        long lInternalSize;
+        int iCheckFlagBackupDone;
+
         public bool bNeedRecreateDB = false;
 
         public Form1(Dictionary<string, ClPS1Game> ps1games)
@@ -101,19 +107,26 @@ namespace pbPSCReAlpha
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
             bleemsyncVersions = new ClVersionHelper[3];
-            bleemsyncVersions[0] = new ClVersionHelper("BleemSync v0.4.1", "\\GameData", String.Empty, "\\..\\System\\Databases", String.Empty);
-            bleemsyncVersions[1] = new ClVersionHelper("BleemSync v1.0.0/1.1.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG");
-            bleemsyncVersions[2] = new ClVersionHelper("AutoBleem v0.6.0", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem");
+            bleemsyncVersions[Constant.iBLEEMSYNC_V041] = new ClVersionHelper("BleemSync v0.4.1", "\\GameData", String.Empty, "\\..\\System\\Databases", String.Empty);
+            bleemsyncVersions[Constant.iBLEEMSYNC_V100] = new ClVersionHelper("BleemSync v1.0.0/1.1.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG");
+            bleemsyncVersions[Constant.iAUTOBLEEM_V06] = new ClVersionHelper("AutoBleem v0.6.0", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem");
+
+            internalVersion = new ClVersionHelper("internal", "", String.Empty, "\\databases", String.Empty);
+
             iBleemsyncVersion = Properties.Settings.Default.iVersionBleemSync;
+            if(iBleemsyncVersion > bleemsyncVersions.Length)
+            {
+                iBleemsyncVersion = Constant.iBLEEMSYNC_V100;
+            }
             switch(iBleemsyncVersion)
             {
-                case 0:
+                case Constant.iBLEEMSYNC_V041:
                     tsmiBSv041.Checked = true;
                     break;
-                case 1:
+                case Constant.iBLEEMSYNC_V100:
                     tsmiBSv100.Checked = true;
                     break;
-                case 2:
+                case Constant.iAUTOBLEEM_V06:
                     tsmiABv060.Checked = true;
                     break;
             }
@@ -174,6 +187,10 @@ namespace pbPSCReAlpha
                 st = sr.ReadToEnd();
             }
             wbFaq.DocumentText = Markdown.ToHtml(st);
+
+            bInternalAffairs = false;
+            lInternalSize = 0;
+            iCheckFlagBackupDone = -1;
         }
 
         private string sortOptionToString(int v1, int v2)
@@ -224,6 +241,11 @@ namespace pbPSCReAlpha
             {
                 long lSpace = GetAvailableFreeSpace(sFolderPath.Substring(0, sFolderPath.IndexOf('\\') + 1));
                 lbFreeSpace.Text = "(" + ClPbHelper.FormatBytes(lSpace) + ")";
+                if(bInternalAffairs)
+                {
+                    long lInternalFreeSpace = lInternalSize - ClPbHelper.GetDirectorySize(returnGamePath());
+                    lbInternalFreeSpace.Text = "(" + ClPbHelper.FormatBytes(lInternalFreeSpace) + ")";
+                }
             }
             catch (Exception ex)
             {
@@ -513,7 +535,7 @@ namespace pbPSCReAlpha
                             bPngMatchDisc = true;
                         }
                     }
-                    if(((iBleemsyncVersion == 1) || (iBleemsyncVersion == 2)) && (bPbpPresent))
+                    if(((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bPbpPresent))
                     {
                         if (iNbPbp == iNbDiscs)
                         {
@@ -623,7 +645,7 @@ namespace pbPSCReAlpha
                         }
                     }
                 }
-                /*if(1 == iBleemsyncVersion)
+                /*if(Constant.iBLEEMSYNC_V100 == iBleemsyncVersion)
                 {
                     // facultative for 1.0.0
                     bPcsxFilePresent = true;
@@ -689,7 +711,7 @@ namespace pbPSCReAlpha
                     }
                     String[] s2 = sFolderIndex.Split('\\');
                     sFolderIndex = s2[0];
-                    if ((sFolderIndex != "!SaveStates") && (sFolderIndex != "!MemCards"))
+                    if ((sFolderIndex != "!SaveStates") && (sFolderIndex != "!MemCards") && (sFolderIndex != "databases"))
                     {
                         ClGameStructure cgs = manageFolder(sFolderIndex, di, ref lsFolders, ref lsTitles);
                         if (cgs != null)
@@ -720,6 +742,16 @@ namespace pbPSCReAlpha
             return dcGames;
         }
 
+        private String returnGamePath()
+        {
+            String s = tbFolderPath.Text;
+            if(bInternalAffairs)
+            {
+                s = sFolderUpGames + "\\" + "replaced_games";
+            }
+            return s;
+        }
+
         private void refreshGameListFolders()
         {
             btReSort.Enabled = false;
@@ -733,7 +765,7 @@ namespace pbPSCReAlpha
                 cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
             }
             lbGames.Items.Clear();
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
             if (lsFolders.Count > 0)
             {
@@ -760,6 +792,64 @@ namespace pbPSCReAlpha
             {
                 btNewFolder.Enabled = true;
             }
+            if(bInternalAffairs)
+            {
+                lbNbInternalGames.Text = "[" + lsFolders.Count.ToString() + "/25]";
+            }
+            String sFolderUpp = sFolderPath;
+            if (sFolderUpp.EndsWith("\\"))
+            {
+                sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
+            }
+            int iUp = sFolderUpp.LastIndexOf("\\");
+            if(iUp > 0)
+            {
+                sFolderUpp = sFolderUpp.Substring(0, iUp);
+            }
+            bool bInternButtonDisplay = true;
+            if(!Directory.Exists(sFolderUpp + "\\" + "games_backup"))
+            {
+                bInternButtonDisplay = false;
+            }
+            else
+            {
+                // folder exists, assume it is a full backup
+            }
+            if (!File.Exists(sFolderUpp + "\\" + "df.log"))
+            {
+                bInternButtonDisplay = false;
+            }
+            else
+            {
+                // find available size - 200 MB (for saves)
+
+            }
+            if (!File.Exists(sFolderUpp + "\\" + "copiedfiles.log"))
+            {
+                bInternButtonDisplay = false;
+            }
+            else
+            {
+                // just a log of copied files by the backup
+            }
+            if (!File.Exists(sFolderUpp + "\\" + "backupdone.log"))
+            {
+                bInternButtonDisplay = false;
+            }
+            else
+            {
+                // last created file by the launcher, a value is inside
+            }
+            if(bInternButtonDisplay)
+            {
+                btSwitchToInternal.Enabled = true;
+                btSwitchToInternal.Visible = true;
+            }
+            else
+            {
+                btSwitchToInternal.Enabled = false;
+                btSwitchToInternal.Visible = false;
+            }
         }
 
         private void refreshAndAskDBRead()
@@ -767,74 +857,77 @@ namespace pbPSCReAlpha
             refreshGameListFolders();
             // todo: if game.ini missing somewhere, ask for reading db !
             bool bAskReadDb = false;
-            foreach (ClGameStructure cgs in lbGames.Items)
+            if (!bInternalAffairs)
             {
-                if (cgs.IniMissing)
+                foreach (ClGameStructure cgs in lbGames.Items)
                 {
-                    bAskReadDb = true;
-                }
-            }
-            if (true == bAskReadDb)
-            {
-                String sQuestion = "!!! IMPORTANT !!!"
-                    + "\n\n" 
-                    + "Your folders are supposed to have " + currentUsedVersion.Versionstring + " structure, and so on your database." 
-                    + "\n\n" 
-                    + "If not, SAY NO !!!! Change the option in the top-left corner for the right version." 
-                    + "\n\n" 
-                    + " ------------------------------------------------- "
-                    + "Detected that some game.ini are missing, can I read the database to auto-generate them (if it is possible) ? (Existing files won't be affected)";
-                if (DialogResult.Yes == FlexibleMessageBox.Show(sQuestion, "Ini missing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
-                {
-                    String sFolderPath = tbFolderPath.Text;
-                    if (sFolderPath.EndsWith("\\"))
+                    if (cgs.IniMissing)
                     {
-                        sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+                        bAskReadDb = true;
                     }
-                    ClVersionHelper srcVersion = currentUsedVersion;
-
-                    //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
-                    String sFilePath = sFolderPath + srcVersion.DbFolder;
-                    String sFileName = "regional.db";
-                    if (File.Exists(sFilePath + "\\" + sFileName))
+                }
+                if (true == bAskReadDb)
+                {
+                    String sQuestion = "!!! IMPORTANT !!!"
+                        + "\n\n"
+                        + "Your folders are supposed to have " + currentUsedVersion.Versionstring + " structure, and so on your database."
+                        + "\n\n"
+                        + "If not, SAY NO !!!! Change the option in the top-left corner for the right version."
+                        + "\n\n"
+                        + " ------------------------------------------------- "
+                        + "Detected that some game.ini are missing, can I read the database to auto-generate them (if it is possible) ? (Existing files won't be affected)";
+                    if (DialogResult.Yes == FlexibleMessageBox.Show(sQuestion, "Ini missing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                     {
-                        // read db file
-                        // search in folders if there is a game.ini file
-                        // if not, create it
-                        // if yes, do nothing
-                        Dictionary<String, Dictionary<String, String>> dcListFromDB = ReadDB(sFilePath + "\\" + sFileName, iBleemsyncVersion);
-                        bool bAtLeastOneCreated = false;
-
-                        if (Directory.Exists(sFolderPath))
+                        String sFolderPath = returnGamePath();
+                        if (sFolderPath.EndsWith("\\"))
                         {
-                            DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                            foreach (DirectoryInfo di in dirList)
+                            sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+                        }
+                        ClVersionHelper srcVersion = currentUsedVersion;
+
+                        //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
+                        String sFilePath = sFolderPath + srcVersion.DbFolder;
+                        String sFileName = "regional.db";
+                        if (File.Exists(sFilePath + "\\" + sFileName))
+                        {
+                            // read db file
+                            // search in folders if there is a game.ini file
+                            // if not, create it
+                            // if yes, do nothing
+                            Dictionary<String, Dictionary<String, String>> dcListFromDB = ReadDB(sFilePath + "\\" + sFileName, iBleemsyncVersion);
+                            bool bAtLeastOneCreated = false;
+
+                            if (Directory.Exists(sFolderPath))
                             {
-                                String sDir = di.Name;
-                                String sMyIniFile = di.FullName + currentUsedVersion.GameDataFolder + "\\" + "Game.ini";
-                                if (File.Exists(sMyIniFile))
+                                DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                                foreach (DirectoryInfo di in dirList)
                                 {
-                                    // do nothing here
-                                }
-                                else
-                                {
-                                    // game.ini doesn't exist, create it
-                                    if (dcListFromDB.ContainsKey(sDir))
+                                    String sDir = di.Name;
+                                    String sMyIniFile = di.FullName + currentUsedVersion.GameDataFolder + "\\" + "Game.ini";
+                                    if (File.Exists(sMyIniFile))
                                     {
-                                        slLogger.Debug("Creating Game.ini file in folder " + sDir);
-                                        ClPbHelper.SaveGameIni(sMyIniFile, dcListFromDB[sDir], slLogger);
-                                        bAtLeastOneCreated = true;
+                                        // do nothing here
+                                    }
+                                    else
+                                    {
+                                        // game.ini doesn't exist, create it
+                                        if (dcListFromDB.ContainsKey(sDir))
+                                        {
+                                            slLogger.Debug("Creating Game.ini file in folder " + sDir);
+                                            ClPbHelper.SaveGameIni(sMyIniFile, dcListFromDB[sDir], slLogger);
+                                            bAtLeastOneCreated = true;
+                                        }
                                     }
                                 }
+                                dirList = null;
                             }
-                            dirList = null;
+                            if (bAtLeastOneCreated)
+                            {
+                                refreshGameListFolders();
+                            }
                         }
-                        if (bAtLeastOneCreated)
-                        {
-                            refreshGameListFolders();
-                        }
+                        bNeedRecreateDB = true;
                     }
-                    bNeedRecreateDB = true;
                 }
             }
         }
@@ -1048,7 +1141,7 @@ namespace pbPSCReAlpha
                         btEditCue.Enabled = true;
                         btEditCue.Visible = true;
                     }
-                    if (((iBleemsyncVersion == 0) || (iBleemsyncVersion == 2)) && (cgs.CfgMissing))
+                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V041) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iSTRUCT_INTERNAL)) && (cgs.CfgMissing))
                     {
                         btAddPcsxCfg.Enabled = true;
                         btAddPcsxCfg.Visible = true;
@@ -1103,7 +1196,7 @@ namespace pbPSCReAlpha
                     btAddPcsxCfg.Visible = false;
                     btAddPcsxCfg.Enabled = false;
 
-                    if((cgs.Discs.Split(',')).Length > 1)
+                    if((iBleemsyncVersion != Constant.iSTRUCT_INTERNAL) && ((cgs.Discs.Split(',')).Length > 1))
                     {
                         btM3uGenerate.Enabled = true;
                         btM3uGenerate.Visible = true;
@@ -1117,50 +1210,66 @@ namespace pbPSCReAlpha
             }
             else
             {
-                lbFolderSize.Visible = false;
-                lbFolderSizeLabel.Visible = false;
-
-                btAddFiles.Enabled = false;
-                btAddFiles.Visible = false;
-
-                btAddPcsxCfg.Visible = false;
-                btAddPcsxCfg.Enabled = false;
-
-                btEditCue.Visible = false;
-                btEditCue.Enabled = false;
-
-                btRefreshFolderOnly.Enabled = false;
-                btRefreshFolderOnly.Visible = false;
-
-                btM3uGenerate.Visible = false;
-                btM3uGenerate.Enabled = false;
-
-                btOpenFolder.Enabled = false;
-                btOpenFolder.Visible = false;
-
-                pbExploreImage.AllowDrop = false;
-
-                gbAutoRename.Visible = false;
-                
-                btPbpRename.Enabled = false;
-                btBinRename.Enabled = false;
-                btCueRename.Enabled = false;
-                btPngRename.Enabled = false;
-                btSbiRename.Enabled = false;
+                purgeRightInfos();
             }
             //slLogger.Trace("<< Game Selection changed in gamelist");
+        }
+
+        private void purgeRightInfos()
+        {
+            lbFolderSize.Visible = false;
+            lbFolderSizeLabel.Visible = false;
+
+            btAddFiles.Enabled = false;
+            btAddFiles.Visible = false;
+
+            btAddPcsxCfg.Visible = false;
+            btAddPcsxCfg.Enabled = false;
+
+            btEditCue.Visible = false;
+            btEditCue.Enabled = false;
+
+            btRefreshFolderOnly.Enabled = false;
+            btRefreshFolderOnly.Visible = false;
+
+            btM3uGenerate.Visible = false;
+            btM3uGenerate.Enabled = false;
+
+            btOpenFolder.Enabled = false;
+            btOpenFolder.Visible = false;
+
+            pbExploreImage.AllowDrop = false;
+
+            gbAutoRename.Visible = false;
+
+            btPbpRename.Enabled = false;
+            btBinRename.Enabled = false;
+            btCueRename.Enabled = false;
+            btPngRename.Enabled = false;
+            btSbiRename.Enabled = false;
+            
+            lbExploreTitle.Text = "";
+            lbExploreDiscs.Text = "";
+            lbExplorePlayers.Text = "";
+            lbExplorePublisher.Text = "";
+            lbExploreYear.Text = "";
+            lbExploreAlphaTitle.Text = "";
+            gbAutoRename.Visible = false;
+            pbExploreImage.Image = null;
+            lvFiles.Items.Clear();
+            tbErrString.Clear();
         }
 
         private void btReSort_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Resort gamelist Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             if (sFolderPath.EndsWith("\\"))
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
             String sFolderSavePath = String.Empty; // empty if in the same directory
-            if (iBleemsyncVersion == 2)
+            if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
             {
                 sFolderSavePath = sFolderPath + currentUsedVersion.SaveFolder;
             }
@@ -1203,9 +1312,9 @@ namespace pbPSCReAlpha
                         }
                         
                         int iNewIndex = 1;
-                        if (iBleemsyncVersion == 2)
+                        if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
                         {
-                            iNewIndex = 21;
+                            iNewIndex = 1 + Constant.iSTART_AUTOBLEEM; // was 21, now 31, just to be sure being out of internal games possible (limit 25)
                         }
                         int iPrevIndex = iNewIndex;
                         List<String> lsFoldersDone = new List<String>();
@@ -1454,7 +1563,27 @@ namespace pbPSCReAlpha
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.sFolderPath = tbFolderPath.Text;
-            Properties.Settings.Default.iVersionBleemSync = iBleemsyncVersion;
+            if (iBleemsyncVersion > bleemsyncVersions.Length)
+            {
+                int iTmpBSVersion = Constant.iBLEEMSYNC_V100;
+                if (tsmiBSv041.Checked)
+                {
+                    iTmpBSVersion = Constant.iBLEEMSYNC_V041;
+                }
+                else if (tsmiBSv100.Checked)
+                {
+                    iTmpBSVersion = Constant.iBLEEMSYNC_V100;
+                }
+                else if (tsmiABv060.Checked)
+                {
+                    iTmpBSVersion = Constant.iAUTOBLEEM_V06;
+                }
+                Properties.Settings.Default.iVersionBleemSync = iTmpBSVersion;
+            }
+            else
+            {
+                Properties.Settings.Default.iVersionBleemSync = iBleemsyncVersion;
+            }
             Properties.Settings.Default.iSimultaneous = iSimultaneous;
 
             Properties.Settings.Default.iSortOption1 = iSortOptions[0];
@@ -1480,7 +1609,7 @@ namespace pbPSCReAlpha
         private void btNewFolder_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Create new folder Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             // refresh without updating display, reupdate at the end
             Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
             if (lsFolders.Count > 0)
@@ -1497,9 +1626,9 @@ namespace pbPSCReAlpha
                     {
                         int iCount = lsFolders.Count;
                         int iNext = 1 + iCount;
-                        if(iBleemsyncVersion == 2)
+                        if(iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
                         {
-                            iNext += 20; // not to care about 1-20 folders in savestates
+                            iNext += Constant.iSTART_AUTOBLEEM; // not to care about 1-20 folders in savestates // move to 30 finally after 1.4
                         }
                         while (Directory.Exists(sFolderPath + "\\" + iNext.ToString()))
                         {
@@ -1510,11 +1639,11 @@ namespace pbPSCReAlpha
                         {
                             Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder);
                         }
-                        if ((iBleemsyncVersion == 0) || (iBleemsyncVersion == 2))
+                        if ((iBleemsyncVersion == Constant.iBLEEMSYNC_V041) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iSTRUCT_INTERNAL))
                         {
                             File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
                         }
-                        if(iBleemsyncVersion == 2)
+                        if(iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
                         {
                             if (!Directory.Exists(sFolderPath + currentUsedVersion.SaveFolder))
                             {
@@ -1562,7 +1691,7 @@ namespace pbPSCReAlpha
         private void btLaunchBleemsync_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Recreate database Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             if (sFolderPath.EndsWith("\\"))
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
@@ -1587,15 +1716,38 @@ namespace pbPSCReAlpha
                                 bCanContinue &= (!dcGames[s].GeneralError);
                             }
                         }
+                        int iFolderCount = lsFolders.Count;
+                        long lCurrentSize = ClPbHelper.GetDirectorySize(sFolderPath);
+                        List<String> lsErr = new List<String>();
+                        if (bInternalAffairs)
+                        {
+                            if (iFolderCount > 25)
+                            {
+                                bCanContinue = false;
+                                lsErr.Add("Maximum number of internal games is 25, you have currently " + iFolderCount.ToString() + " games.");
+                            }
+                            if(lCurrentSize > lInternalSize)
+                            {
+                                bCanContinue = false;
+                                lsErr.Add("Maximum possible size " + ClPbHelper.FormatBytes(lInternalSize) + ", you have currently " + ClPbHelper.FormatBytes(lCurrentSize));
+                            }
+                        }
                         
                         if (bCanContinue)
                         {
-                            if (Control.ModifierKeys == Keys.Shift)
+                            if((!bInternalAffairs) && (Control.ModifierKeys == Keys.Shift))
                             {
                                 Form9 f = new Form9(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger, this);
                                 f.ShowDialog();
                             }
                             else
+                            /*if (Control.ModifierKeys == Keys.Control)
+                            {
+                                //ClVersionHelper cvh = new ClVersionHelper("internal", "", String.Empty, "\\databases", String.Empty);
+                                //ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, 0, cvh, slLogger);
+                                ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                            }
+                            else*/
                             {
                                 ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
                                 if (!cdbm.BDone)
@@ -1606,13 +1758,32 @@ namespace pbPSCReAlpha
                                 else
                                 {
                                     bNeedRecreateDB = false;
-                                    FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    if (bInternalAffairs)
+                                    {
+                                        using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                                        {
+                                            sw.Write("2" + "\n");
+                                        }
+                                        FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC. Run the appropriate launcher to edit internal games.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
+                                    else
+                                    {
+                                        FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
                                 }
                             }
                         }
                         else
                         {
-                            FlexibleMessageBox.Show("Errors detected. Fix them before recreating database.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            String sMsg = "Errors detected. Fix them before recreating database.";
+                            if ((bInternalAffairs) && (lsErr.Count > 0))
+                            {
+                                foreach(String s in lsErr)
+                                {
+                                    sMsg += Environment.NewLine + s;
+                                }
+                            }
+                            FlexibleMessageBox.Show(sMsg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                     }
                     catch (Exception ex)
@@ -1629,7 +1800,7 @@ namespace pbPSCReAlpha
             }
             slLogger.Trace("<< Recreate database Click");
             /*slLogger.Trace(">> Launch BleemSync Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             if (sFolderPath.EndsWith("\\"))
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
@@ -1706,7 +1877,7 @@ namespace pbPSCReAlpha
         private void btEditGameIni_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Edit Game.ini Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             Form23 f = null;
             if (lbGames.SelectedIndex > -1)
             {
@@ -1726,7 +1897,7 @@ namespace pbPSCReAlpha
         private void btAddPcsxCfg_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Add pcsx.cfg Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             if (lbGames.SelectedIndex > -1)
             {
                 try
@@ -1747,7 +1918,7 @@ namespace pbPSCReAlpha
         private void btEditCue_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Edit cue file Click");
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             Form4 f = null;
             if (lbGames.SelectedIndex > -1)
             {
@@ -1802,7 +1973,7 @@ namespace pbPSCReAlpha
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     if (!cgs.GameDataMissing)
                     {
-                        String sFolderPath = tbFolderPath.Text;
+                        String sFolderPath = returnGamePath();
                         String[] sFileList = (String[])e.Data.GetData(DataFormats.FileDrop, false);
                         String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder;
                         pbCopyFiles(sFileList, sPath);
@@ -1831,7 +2002,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder;
                     if (Directory.Exists(sFolderPath))
                     {
@@ -1865,7 +2036,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                     char[] invalidFileChars = Path.GetInvalidFileNameChars();
                     if (cgs.Filenames[e.Item] != e.Label)
@@ -1922,7 +2093,7 @@ namespace pbPSCReAlpha
                         try
                         {
                             ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                            String sFolderPath = tbFolderPath.Text;
+                            String sFolderPath = returnGamePath();
                             String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                             int iFound = cgs.Filenames.IndexOf(lvFiles.SelectedItems[0].Text);
                             if (iFound > -1)
@@ -1965,7 +2136,7 @@ namespace pbPSCReAlpha
                             try
                             {
                                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                                String sFolderPath = tbFolderPath.Text;
+                                String sFolderPath = returnGamePath();
                                 String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                                 if (!String.IsNullOrEmpty(cgs.PictureFileName))
                                 {
@@ -2038,7 +2209,7 @@ namespace pbPSCReAlpha
             if (iIndex > -1)
             {
                 cgsSave = (ClGameStructure)(lbGames.Items[iIndex]);
-                String sFolderPath = tbFolderPath.Text;
+                String sFolderPath = returnGamePath();
                 String sFolder = sFolderPath + "\\" + cgsSave.FolderIndex;
 
                 int iFileIndex = -1;
@@ -2085,7 +2256,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex;
                     if (!cgs.GameDataMissing)
                     {
@@ -2136,7 +2307,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.CueMissing) && (!cgs.CueCountMisMatchDiscsCount) && (cgs.BadCueName))
                     {
@@ -2239,7 +2410,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.PngMissing) && (!cgs.PngMultiple) && (cgs.PngMismatch))
                     {
@@ -2289,7 +2460,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + currentUsedVersion.GameDataFolder + "\\";
                     String[] sDisc = cgs.Discs.Split(',');
                     List<String> sFilesOrigine = new List<string>();
@@ -2709,7 +2880,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete))
                     {
@@ -2828,7 +2999,7 @@ namespace pbPSCReAlpha
         {
             slLogger.Trace(">> Compress all PNG Click");
             String sList = String.Empty;
-            String sFolderPath = tbFolderPath.Text;
+            String sFolderPath = returnGamePath();
             var fileList = new DirectoryInfo(sFolderPath).GetFiles("*.png", SearchOption.AllDirectories);
             if (fileList.Length > 0)
             {
@@ -2866,13 +3037,13 @@ namespace pbPSCReAlpha
                     try
                     {
                         ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                        String sFolderPath = tbFolderPath.Text;
+                        String sFolderPath = returnGamePath();
                         if (sFolderPath.EndsWith("\\"))
                         {
                             sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
                         }
                         String sFolderSavePath = String.Empty; // empty if in the same directory
-                        if (iBleemsyncVersion == 2)
+                        if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
                         {
                             sFolderSavePath = sFolderPath + currentUsedVersion.SaveFolder;
                         }
@@ -2927,8 +3098,8 @@ namespace pbPSCReAlpha
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want upgrade your folders from BS1.0.0 to BS0.4.1 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                ClVersionHelper srcVersion = bleemsyncVersions[1];
-                ClVersionHelper dstVersion = bleemsyncVersions[0];
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V100];
+                ClVersionHelper dstVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V041];
                 foreach (DirectoryInfo di in dirList)
                 {
                     try
@@ -3005,8 +3176,8 @@ namespace pbPSCReAlpha
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to update your folders from BS0.4.1 to BS1.0.0 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                ClVersionHelper srcVersion = bleemsyncVersions[0];
-                ClVersionHelper dstVersion = bleemsyncVersions[1];
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V041];
+                ClVersionHelper dstVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V100];
                 foreach (DirectoryInfo di in dirList)
                 {
                     if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
@@ -3110,13 +3281,13 @@ namespace pbPSCReAlpha
                     }
                     switch (bleemsyncVersion)
                     {
-                        case 0:
+                        case Constant.iBLEEMSYNC_V041:
                             stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
                             break;
-                        case 1:
+                        case Constant.iBLEEMSYNC_V100:
                             stm = "SELECT * FROM MENU_ENTRIES ORDER BY GAME_ID ASC";
                             break;
-                        case 2:
+                        case Constant.iAUTOBLEEM_V06:
                             stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
                             break;
                         default:
@@ -3222,7 +3393,7 @@ namespace pbPSCReAlpha
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
-            ClVersionHelper srcVersion = bleemsyncVersions[0];
+            ClVersionHelper srcVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V041];
 
             //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
             String sFilePath = sFolderPath + srcVersion.DbFolder;
@@ -3295,7 +3466,7 @@ namespace pbPSCReAlpha
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
-            ClVersionHelper srcVersion = bleemsyncVersions[1];
+            ClVersionHelper srcVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V100];
 
             //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
             String sFilePath = sFolderPath + srcVersion.DbFolder;
@@ -3369,7 +3540,7 @@ namespace pbPSCReAlpha
                 try
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                    String sFolderPath = tbFolderPath.Text;
+                    String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.PbpMissing) && (!cgs.PbpCountMisMatchDiscsCount) && (cgs.BadPbpName))
                     {
@@ -3544,7 +3715,7 @@ namespace pbPSCReAlpha
         private void btIniFileCopy_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> BleemSync ini copy Click");
-            if (1 == iBleemsyncVersion)
+            if (Constant.iBLEEMSYNC_V100 == iBleemsyncVersion)
             {
                 String sFolderPath = tbFolderPath.Text;
                 if (sFolderPath.EndsWith("\\"))
@@ -3687,7 +3858,7 @@ namespace pbPSCReAlpha
             tsmiABv060.Checked = !(bIsChecked);
             if (bIsChecked)
             {
-                iBleemsyncVersion = 0;
+                iBleemsyncVersion = Constant.iBLEEMSYNC_V041;
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
@@ -3707,7 +3878,7 @@ namespace pbPSCReAlpha
             tsmiABv060.Checked = !(bIsChecked);
             if (bIsChecked)
             {
-                iBleemsyncVersion = 1;
+                iBleemsyncVersion = Constant.iBLEEMSYNC_V100;
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
@@ -3726,7 +3897,7 @@ namespace pbPSCReAlpha
             tsmiBSv100.Checked = !(bIsChecked);
             if (bIsChecked)
             {
-                iBleemsyncVersion = 2;
+                iBleemsyncVersion = Constant.iAUTOBLEEM_V06;
             }
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
@@ -3745,8 +3916,8 @@ namespace pbPSCReAlpha
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to update your folders from BS0.4.1 to AB0.6.0 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                ClVersionHelper srcVersion = bleemsyncVersions[0];
-                ClVersionHelper dstVersion = bleemsyncVersions[2];
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V041];
+                ClVersionHelper dstVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V06];
                 foreach (DirectoryInfo di in dirList)
                 {
                     if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
@@ -3969,8 +4140,8 @@ namespace pbPSCReAlpha
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to update your folders from BS1.0.0 to AB0.6.0 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                ClVersionHelper srcVersion = bleemsyncVersions[1];
-                ClVersionHelper dstVersion = bleemsyncVersions[2];
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V100];
+                ClVersionHelper dstVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V06];
                 foreach (DirectoryInfo di in dirList)
                 {
                     if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
@@ -4123,8 +4294,8 @@ namespace pbPSCReAlpha
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want upgrade your folders from AB0.6.0 to BS0.4.1 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                ClVersionHelper srcVersion = bleemsyncVersions[2];
-                ClVersionHelper dstVersion = bleemsyncVersions[0];
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V06];
+                ClVersionHelper dstVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V041];
                 foreach (DirectoryInfo di in dirList)
                 {
                     try
@@ -4229,8 +4400,8 @@ namespace pbPSCReAlpha
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to update your folders from AB0.6.0 to BS1.0.0 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
-                ClVersionHelper srcVersion = bleemsyncVersions[2];
-                ClVersionHelper dstVersion = bleemsyncVersions[1];
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V06];
+                ClVersionHelper dstVersion = bleemsyncVersions[Constant.iBLEEMSYNC_V100];
                 foreach (DirectoryInfo di in dirList)
                 {
                     if ((di.Name != "!SaveStates") && (di.Name != "!MemCards"))
@@ -4334,7 +4505,7 @@ namespace pbPSCReAlpha
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
-            ClVersionHelper srcVersion = bleemsyncVersions[2];
+            ClVersionHelper srcVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V06];
 
             //String sFolderBase = sFolderPath.Substring(0, sFolderPath.LastIndexOf('\\'));
             String sFilePath = sFolderPath + srcVersion.DbFolder;
@@ -4398,6 +4569,172 @@ namespace pbPSCReAlpha
                 bNeedRecreateDB = true;
             }
             slLogger.Trace("<< Read AB0.6.0 database Click");
+        }
+
+        private void btSwitchToInternal_Click(object sender, EventArgs e)
+        {
+            sFolderUpGames = tbFolderPath.Text;
+            if (sFolderUpGames.EndsWith("\\"))
+            {
+                sFolderUpGames = sFolderUpGames.Substring(0, sFolderUpGames.Length - 1);
+            }
+            int iUp = sFolderUpGames.LastIndexOf("\\");
+            if (iUp > 0)
+            {
+                sFolderUpGames = sFolderUpGames.Substring(0, iUp);
+            }
+            lInternalSize = 0;
+            iCheckFlagBackupDone = -1;
+            if (File.Exists(sFolderUpGames + "\\" + "df.log"))
+            {
+                using (StreamReader sr = new StreamReader(sFolderUpGames + "\\" + "df.log"))
+                {
+                    string s = String.Empty;
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        s = s.Trim();
+                        // /dev/mapper/gaadata   14674540  13693892    964264  94% /gaadata
+                        if (s.StartsWith("/dev/mapper/gaadata"))
+                        {
+                            String[] sArr = s.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (sArr.Length == 6)
+                            {
+                                if (long.TryParse(sArr[1], out lInternalSize))
+                                {
+                                    lInternalSize = (lInternalSize - 200000) * 1024;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (File.Exists(sFolderUpGames + "\\" + "backupdone.log"))
+            {
+                using (StreamReader sr = new StreamReader(sFolderUpGames + "\\" + "backupdone.log"))
+                {
+                    string s = String.Empty;
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        s = s.Trim();
+                        if (!String.IsNullOrEmpty(s))
+                        {
+                            if (int.TryParse(s, out iCheckFlagBackupDone))
+                            {
+                                // 1 good
+                                // 2 db created
+                                // 3 modifying done
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ((!bInternalAffairs))
+            {
+                switch (iCheckFlagBackupDone)
+                {
+                    case 1:
+                        // no problem, expected value
+                        break;
+                    case 2:
+                        // no problem, the psc has not been modified yet (but I have already generated a db on the usb)
+                        break;
+                    case 3:
+                        // warning, the psc was modified, continue ?
+                        if (DialogResult.No == FlexibleMessageBox.Show("The PSC has already been modified. Are you sure you want to continue ?", "Warning...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                        {
+                            iCheckFlagBackupDone = -1; // stay normal mode
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if ((!bInternalAffairs) && (Directory.Exists(sFolderUpGames + "\\" + "games_backup")) && (File.Exists(sFolderUpGames + "\\" + "df.log")) 
+                && (File.Exists(sFolderUpGames + "\\" + "copiedfiles.log")) && (File.Exists(sFolderUpGames + "\\" + "backupdone.log")) 
+                && (lInternalSize > 0) && (iCheckFlagBackupDone > 0))
+            {
+                if(!Directory.Exists(sFolderUpGames + "\\" + "replaced_games"))
+                {
+                    Directory.CreateDirectory(sFolderUpGames + "\\" + "replaced_games");
+                }
+                ForeColor = Color.Red;
+                tbFolderPath.Enabled = false;
+                btCrowseGamesFolder.Enabled = false;
+                tsmiBSVersionItem.Text = "Currently use internal structure";
+                tsmiBSVersionItem.Enabled = false;
+                iBleemsyncVersion = Constant.iSTRUCT_INTERNAL;
+                currentUsedVersion = internalVersion;
+
+                btCheckMemCard.Enabled = false;
+                btIniFileCopy.Enabled = false;
+                btUpdateFoldersAB060toBS041.Enabled = false;
+                btUpdateFoldersAB060toBS100.Enabled = false;
+                btUpdateFoldersBS041toAB060.Enabled = false;
+                btUpdateFoldersBS041toBS100.Enabled = false;
+                btUpdateFoldersBS100toAB060.Enabled = false;
+                btUpdateFoldersBS100toBS041.Enabled = false;
+                btReadAB060Database.Enabled = false;
+                btReadBS041Database.Enabled = false;
+                btReadBS100Database.Enabled = false;
+
+                bInternalAffairs = true;
+                lbInternalFreeSpace.Visible = true;
+                lbNbInternalGames.Visible = true;
+                lbNbInternalGames.Text = "";
+                btSwitchToInternal.Text = "Goto normal";
+                purgeRightInfos();
+                refreshGameListFolders();
+                if (lbGames.Items.Count > 0)
+                {
+                    lbGames.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+                tbFolderPath.Enabled = true;
+                btCrowseGamesFolder.Enabled = true;
+                tsmiBSVersionItem.Enabled = true;
+                if(tsmiBSv041.Checked)
+                {
+                    iBleemsyncVersion = Constant.iBLEEMSYNC_V041;
+                }
+                else if(tsmiBSv100.Checked)
+                {
+                    iBleemsyncVersion = Constant.iBLEEMSYNC_V100;
+                }
+                else if (tsmiABv060.Checked)
+                {
+                    iBleemsyncVersion = Constant.iAUTOBLEEM_V06;
+                }
+                currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
+                tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
+
+                btCheckMemCard.Enabled = true;
+                btIniFileCopy.Enabled = true;
+                btUpdateFoldersAB060toBS041.Enabled = true;
+                btUpdateFoldersAB060toBS100.Enabled = true;
+                btUpdateFoldersBS041toAB060.Enabled = true;
+                btUpdateFoldersBS041toBS100.Enabled = true;
+                btUpdateFoldersBS100toAB060.Enabled = true;
+                btUpdateFoldersBS100toBS041.Enabled = true;
+                btReadAB060Database.Enabled = true;
+                btReadBS041Database.Enabled = true;
+                btReadBS100Database.Enabled = true;
+                
+                bInternalAffairs = false;
+                lbInternalFreeSpace.Visible = false;
+                lbNbInternalGames.Visible = false;
+                btSwitchToInternal.Text = "Goto internal";
+                purgeRightInfos();
+                refreshGameListFolders();
+                if (lbGames.Items.Count > 0)
+                {
+                    lbGames.SelectedIndex = 0;
+                }
+            }
         }
     }
 }
