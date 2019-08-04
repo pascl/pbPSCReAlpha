@@ -4,9 +4,14 @@ A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *
 
 Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
 
-Last version: 1.3
+Last version: 1.4
 
-![Preview](https://i.imgur.com/TuyKEQA.png)
+![Preview](https://i.imgur.com/x5jRWBr.png)
+
+**NEW 1.4**
+* CHD files are managed.
+* With some launchers, you can replace internal games
+
 
 ## General
 
@@ -20,7 +25,7 @@ In the games folder, some numeroted folders (one per game) containing:
 * png file (only one)
 * cue file(s) (one per disc if several)
 * bin file(s) (at least one per disc but can be more)
-* instead of bin & cue files, pbp file(s) (one per disc if several)
+* instead of bin & cue files, pbp or chd file(s) (one per disc if several)
 * sbi file(s) necessary fo some PAL games
 * game.ini file or not, depending on the bleemsync version (or if you have already run this app).
 
@@ -45,13 +50,13 @@ After modifications in the app, you have to click on Recreate database to have t
 * pcsx.cfg is missing. (Only a warning if a BleemSync1.0.0/1.1.0 drive is used)
 * Game.ini is missing.
 * Game.ini is incomplete.
-* No cue (or pbp) files in the folder.
+* No cue (or pbp or chd) files in the folder.
 * No bin files in the folder.
 * PNG file is missing.
 * Several PNG files are in the folder.
 * PNG filename and Discs information in Game.ini mismatch.
-* Numbers of Cue (or Pbp) files and Discs in Game.ini mismatch.
-* Cue (or Pbp) filenames and Discs information in Game.ini mismatch.
+* Numbers of Cue (or pbp or chd) files and Discs in Game.ini mismatch.
+* Cue (or pbp or chd) filenames and Discs information in Game.ini mismatch.
 * Cue content and Bin filenames mismatch.
 * For some PAL games, Sbi files are needed and you can be warned for that (if you keep Discs information like SLES-abcde).
 * Comma in filenames are forbidden. Several special characters are also forbidden.
@@ -60,7 +65,7 @@ After modifications in the app, you have to click on Recreate database to have t
 An error is symbolized by a '*' before the folder number and the title in the left-side list. A warning is symbolized by a '!' before the folder number and the title in the left-side list.
 An error will prevent you from sorting, not the warnings.
 
-For now, you can add all files you want, but only cue, bin, pbp, png, game.ini and pcsx.cfg are managed by the app. The content of pbp or bin files are not read by the app, the app only checks filenames.
+For now, you can add all files you want, but only cue, bin, pbp, chd, png, game.ini and pcsx.cfg are managed by the app. The content of pbp, chd or bin files are not read by the app, the app only checks filenames.
 
 PBP files are for PS1 games only and not for BleemSync0.4.1.
 
@@ -113,7 +118,7 @@ Once a game is selected, on the right-hand of the window, you can:
 
 In the left-side list, you can delete an entire folder with DEL key on keyboard (confirmtion needed) or Shif+DEL (no confirmation).
 
-Auto-rename buttons can rename files automatically. They rename files according to the "Discs" field in the Game.ini file. Bin, cue, pbp, png and sbi files can be renamed automatically. Ask a user confirmation before really doing it.
+Auto-rename buttons can rename files automatically. They rename files according to the "Discs" field in the Game.ini file. Bin, cue, pbp, chd, png and sbi files can be renamed automatically. Ask a user confirmation before really doing it.
 
 ### Edit Game.ini & Edit Image
 ![Preview](https://i.imgur.com/1nwPOLg.png)

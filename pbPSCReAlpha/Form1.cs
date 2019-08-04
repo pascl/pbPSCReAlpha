@@ -315,13 +315,16 @@ namespace pbPSCReAlpha
                 bool bCuePresent = false;
                 bool bBinPresent = false;
                 bool bPbpPresent = false;
+                bool bChdPresent = false;
                 bool bSbiPresent = false;
                 bool bNeededSbiMissing = false;
                 bool bDiscCountMatchCueCount = false;
                 bool bDiscCountMatchPbpCount = false;
+                bool bDiscCountMatchChdCount = false;
                 bool bBadBinName = false;
                 bool bBadCueName = false;
                 bool bBadPbpName = false;
+                bool bBadChdName = false;
                 bool bNameWithComma = false;
                 bool bBadDiscsName = false;
                 UInt16 uiGameIni = 0;
@@ -330,10 +333,12 @@ namespace pbPSCReAlpha
                 int iNbBin = 0;
                 int iNbSbi = 0;
                 int iNbPbp = 0;
+                int iNbChd = 0;
                 Dictionary<String, String[]> dcBinParsed = new Dictionary<String, String[]>();
                 List<String> lsBinPresent = new List<string>();
                 List<String> lsSbiPresent = new List<string>();
                 List<String> lsPbpPresent = new List<string>();
+                List<String> lsChdPresent = new List<string>();
                 List<String> sFiles = new List<string>();
                 FileInfo[] inDirfileList = new DirectoryInfo(di.FullName + currentUsedVersion.GameDataFolder).GetFiles("*.*", SearchOption.TopDirectoryOnly);
                 long lSizeFolder = 0;
@@ -366,6 +371,13 @@ namespace pbPSCReAlpha
                         bPbpPresent = true;
                         iNbPbp++;
                         lsPbpPresent.Add(fi.Name.ToLower());
+                    }
+                    else
+                    if (fi.Extension.ToLower() == ".chd")
+                    {
+                        bChdPresent = true;
+                        iNbChd++;
+                        lsChdPresent.Add(fi.Name.ToLower());
                     }
                     else
                     if (fi.Extension.ToLower() == ".cue")
@@ -522,6 +534,7 @@ namespace pbPSCReAlpha
                 List<String> lsBinFilesOk = new List<String>();
                 List<String> lsCueFilesOk = new List<String>();
                 List<String> lsPbpFilesOk = new List<String>();
+                List<String> lsChdFilesOk = new List<String>();
                 List<String> lsSbiFilesOk = new List<String>();
                 if ((bGameIniPresent) && (5 == uiGameIni))
                 {
@@ -535,7 +548,7 @@ namespace pbPSCReAlpha
                             bPngMatchDisc = true;
                         }
                     }
-                    if(((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bPbpPresent))
+                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bPbpPresent))
                     {
                         if (iNbPbp == iNbDiscs)
                         {
@@ -556,6 +569,32 @@ namespace pbPSCReAlpha
                                 else
                                 {
                                     lsPbpFilesOk.Add(s);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bChdPresent))
+                    {
+                        if (iNbChd == iNbDiscs)
+                        {
+                            bDiscCountMatchChdCount = true;
+                            foreach (String sDisc in sDiscMulti)
+                            {
+                                String s = sDisc.ToLower() + ".chd";
+                                if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
+                                {
+                                    lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
+                                    bBadDiscsName = true;
+                                }
+                                if (lsChdPresent.IndexOf(s) == -1)
+                                {
+                                    lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching chd file.");
+                                    bBadChdName = true;
+                                }
+                                else
+                                {
+                                    lsChdFilesOk.Add(s);
                                 }
                             }
                         }
@@ -650,7 +689,10 @@ namespace pbPSCReAlpha
                     // facultative for 1.0.0
                     bPcsxFilePresent = true;
                 }*/
-                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, bNameWithComma, !bPbpPresent, bBadPbpName, !bDiscCountMatchPbpCount, bBadDiscsName, iBleemsyncVersion);
+                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, 
+                    !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, 
+                    bNameWithComma, !bPbpPresent, bBadPbpName, !bDiscCountMatchPbpCount, bBadDiscsName, !bChdPresent, bBadChdName, !bDiscCountMatchChdCount, 
+                    iBleemsyncVersion);
                 if (bGameIniPresent)
                 {
                     cgs.setIniInfos(sTitle, sDiscs, sPublisher, sDeveloper, sYear, sPlayers, sAlphaTitle);
@@ -680,6 +722,7 @@ namespace pbPSCReAlpha
                 cgs.FilesCueOk = lsCueFilesOk;
                 cgs.FilesSbiOk = lsSbiFilesOk;
                 cgs.FilesPbpOk = lsPbpFilesOk;
+                cgs.FilesChdOk = lsChdFilesOk;
             }
             else
             {
@@ -1017,6 +1060,18 @@ namespace pbPSCReAlpha
                                 }
                             }
                             else
+                            if (s.EndsWith(".chd"))
+                            {
+                                if (cgs.FilesChdOk.IndexOf(s) > -1)
+                                {
+                                    iIndexImg = 1;
+                                }
+                                else
+                                {
+                                    iIndexImg = 3;
+                                }
+                            }
+                            else
                             if (s.EndsWith(".bin"))
                             {
                                 if (cgs.FilesBinOk.IndexOf(s) > -1)
@@ -1070,7 +1125,7 @@ namespace pbPSCReAlpha
                         }
                         else
                         //if ((s == "pcsx.cfg") || (s == "Game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png")))
-                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".pbp")) || (s.EndsWith(".png"))
+                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".pbp")) || (s.EndsWith(".chd")) || (s.EndsWith(".png"))
                             || ((s.EndsWith(".sbi")) && (cgs.Discs.ToLower().Contains(s.Substring(0, s.Length - 4)))))
                         {
                             iIndexImg = 1;
@@ -1089,7 +1144,7 @@ namespace pbPSCReAlpha
                 if (true == cgs.GeneralError)
                 {
                     bool bPng = false;
-                    bool bPbp = false;
+                    bool bPbpChd = false;
                     bool bCue = false;
                     bool bBin = false;
                     bool bSbi = false;
@@ -1106,7 +1161,14 @@ namespace pbPSCReAlpha
                         {
                             if ((!cgs.PbpCountMisMatchDiscsCount) && (cgs.BadPbpName)) // numbers pbp and discs ok and bad pbp filename
                             {
-                                bPbp = true;
+                                bPbpChd = true;
+                            }
+                        }
+                        if (!cgs.ChdMissing) // chd exist
+                        {
+                            if ((!cgs.ChdCountMisMatchDiscsCount) && (cgs.BadChdName)) // numbers chd and discs ok and bad chd filename
+                            {
+                                bPbpChd = true;
                             }
                         }
                         if (!cgs.CueMissing) // cue exist
@@ -1125,7 +1187,7 @@ namespace pbPSCReAlpha
                             bBin = true;
                         }
                     }
-                    btPbpRename.Enabled = bPbp;
+                    btPbpRename.Enabled = bPbpChd;
                     btCueRename.Enabled = bCue;
                     btPngRename.Enabled = bPng;
                     btSbiRename.Enabled = bSbi;
@@ -1179,7 +1241,7 @@ namespace pbPSCReAlpha
                     btOpenFolder.Enabled = true;
                     btOpenFolder.Visible = true;
 
-                    if (cgs.FilesPbpOk.Count == 0)
+                    if ((cgs.FilesPbpOk.Count == 0) && (cgs.FilesChdOk.Count == 0))
                     {
                         btBinRename.Enabled = true;
                     }
@@ -1268,10 +1330,18 @@ namespace pbPSCReAlpha
             {
                 sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
             }
+
+            DateTime dt = DateTime.Now;
+            String sDate = dt.Year.ToString() + "_" + dt.Month.ToString() + "_" + dt.Day.ToString() + "_" + dt.Hour.ToString() + "_" + dt.Minute.ToString() + "_" + dt.Second.ToString();
+
             String sFolderSavePath = String.Empty; // empty if in the same directory
             if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
             {
                 sFolderSavePath = sFolderPath + currentUsedVersion.SaveFolder;
+            }
+            else
+            {
+                //
             }
 
             // refresh without updating display, reupdate at the end
@@ -1286,26 +1356,42 @@ namespace pbPSCReAlpha
                 }
                 if (bCanContinue)
                 {
-                    DateTime dt = DateTime.Now;
-                    String sDate = dt.Year.ToString() + "_" + dt.Month.ToString() + "_" + dt.Day.ToString() + "_" + dt.Hour.ToString() + "_" + dt.Minute.ToString() + "_" + dt.Second.ToString();
                     try
                     {
                         foreach (String s in lsFolders)
                         {
                             if (dcGames.ContainsKey(s))
                             {
-                                if ((sFolderPath + "\\" + s) != (sFolderPath + "\\" + sDate + "_" + s))
+                                String sModif = sDate + "_" + s;
+                                if (iBleemsyncVersion != Constant.iAUTOBLEEM_V06)
                                 {
-                                    Directory.Move(sFolderPath + "\\" + s, sFolderPath + "\\" + sDate + "_" + s);
-                                    if (!String.IsNullOrEmpty(sFolderSavePath))
+                                    int iRes = 0;
+                                    bool bParsed = int.TryParse(dcGames[s].FolderIndex, out iRes);
+                                    if(bParsed)
                                     {
-                                        if ((sFolderSavePath + "\\" + s) != (sFolderSavePath + "\\" + sDate + "_" + s))
+                                        sModif = (iRes + Constant.iDECALAGE_RESORT).ToString();
+                                    }
+                                }
+
+                                if ((sFolderPath + "\\" + s) != (sFolderPath + "\\" + sModif))
+                                {
+                                    if (!Directory.Exists(sFolderPath + "\\" + sModif))
+                                    {
+                                        Directory.Move(sFolderPath + "\\" + s, sFolderPath + "\\" + sModif);
+                                        if (!String.IsNullOrEmpty(sFolderSavePath))
                                         {
-                                            if (Directory.Exists(sFolderSavePath + "\\" + s))
+                                            if ((sFolderSavePath + "\\" + s) != (sFolderSavePath + "\\" + sModif))
                                             {
-                                                Directory.Move(sFolderSavePath + "\\" + s, sFolderSavePath + "\\" + sDate + "_" + s);
+                                                if (Directory.Exists(sFolderSavePath + "\\" + s))
+                                                {
+                                                    Directory.Move(sFolderSavePath + "\\" + s, sFolderSavePath + "\\" + sModif);
+                                                }
                                             }
                                         }
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("A temporary folder I want to create already exists: " + sFolderPath + "\\" + sModif);
                                     }
                                 }
                             }
@@ -1419,20 +1505,37 @@ namespace pbPSCReAlpha
                                 ClGameStructure c1 = pair.Value;
                                 if (((c1.Alphatitle != String.Empty) && (c1.Alphatitle == s)) || ((c1.Alphatitle == String.Empty) && (c1.Title == s)))
                                 {
+                                    String sModif = sDate + "_" + c1.FolderIndex;
+                                    if (iBleemsyncVersion != Constant.iAUTOBLEEM_V06)
+                                    {
+                                        int iRes = 0;
+                                        bool bParsed = int.TryParse(c1.FolderIndex, out iRes);
+                                        if (bParsed)
+                                        {
+                                            sModif = (iRes + Constant.iDECALAGE_RESORT).ToString();
+                                        }
+                                    }
                                     if (lsFoldersDone.IndexOf(c1.FolderIndex) == -1) // if same title in different folders
                                     {
-                                        if ((sFolderPath + "\\" + sDate + "_" + c1.FolderIndex) != (sFolderPath + "\\" + (iNewIndex).ToString()))
+                                        if ((sFolderPath + "\\" + sModif) != (sFolderPath + "\\" + (iNewIndex).ToString()))
                                         {
-                                            Directory.Move(sFolderPath + "\\" + sDate + "_" + c1.FolderIndex, sFolderPath + "\\" + (iNewIndex).ToString());
-                                            if (!String.IsNullOrEmpty(sFolderSavePath))
+                                            if (!Directory.Exists(sFolderPath + "\\" + (iNewIndex).ToString()))
                                             {
-                                                if ((sFolderSavePath + "\\" + sDate + "_" + c1.FolderIndex) != (sFolderSavePath + "\\" + (iNewIndex).ToString()))
+                                                Directory.Move(sFolderPath + "\\" + sModif, sFolderPath + "\\" + (iNewIndex).ToString());
+                                                if (!String.IsNullOrEmpty(sFolderSavePath))
                                                 {
-                                                    if (Directory.Exists(sFolderSavePath + "\\" + sDate + "_" + c1.FolderIndex))
+                                                    if ((sFolderSavePath + "\\" + sModif) != (sFolderSavePath + "\\" + (iNewIndex).ToString()))
                                                     {
-                                                        Directory.Move(sFolderSavePath + "\\" + sDate + "_" + c1.FolderIndex, sFolderSavePath + "\\" + (iNewIndex).ToString());
+                                                        if (Directory.Exists(sFolderSavePath + "\\" + sModif))
+                                                        {
+                                                            Directory.Move(sFolderSavePath + "\\" + sModif, sFolderSavePath + "\\" + (iNewIndex).ToString());
+                                                        }
                                                     }
                                                 }
+                                            }
+                                            else
+                                            {
+                                                throw new Exception("A folder I want to create already exists: " + sFolderPath + "\\" + (iNewIndex).ToString());
                                             }
                                         }
                                         lsFoldersDone.Add(c1.FolderIndex);
@@ -1708,12 +1811,25 @@ namespace pbPSCReAlpha
                     try
                     {
                         List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                        bool bConsecutiveIndex = true;
+                        int iCurrent = 0;
+                        int iPrevious = 0;
                         foreach (string s in lsFolders)
                         {
                             if (dcGames.ContainsKey(s))
                             {
                                 lcgs.Add(dcGames[s]);
                                 bCanContinue &= (!dcGames[s].GeneralError);
+                                bool bIsInt = int.TryParse(dcGames[s].FolderIndex, out iCurrent);
+                                if((bIsInt) && (iCurrent == (iPrevious + 1)))
+                                {
+
+                                }
+                                else
+                                {
+                                    bConsecutiveIndex = false;
+                                }
+                                iPrevious++;
                             }
                         }
                         int iFolderCount = lsFolders.Count;
@@ -1730,6 +1846,11 @@ namespace pbPSCReAlpha
                             {
                                 bCanContinue = false;
                                 lsErr.Add("Maximum possible size " + ClPbHelper.FormatBytes(lInternalSize) + ", you have currently " + ClPbHelper.FormatBytes(lCurrentSize));
+                            }
+                            if(!bConsecutiveIndex)
+                            {
+                                bCanContinue = false;
+                                lsErr.Add("The numbered folders have to be consecutive. Resort games to correct that.");
                             }
                         }
                         
@@ -1753,6 +1874,13 @@ namespace pbPSCReAlpha
                                 if (!cdbm.BDone)
                                 {
                                     bNeedRecreateDB = true;
+                                    if (bInternalAffairs)
+                                    {
+                                        using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                                        {
+                                            sw.Write("1" + "\n"); // back to "backup done" state
+                                        }
+                                    }
                                     FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 }
                                 else
@@ -1762,7 +1890,7 @@ namespace pbPSCReAlpha
                                     {
                                         using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
                                         {
-                                            sw.Write("2" + "\n");
+                                            sw.Write("2" + "\n"); // go to "db generated" state -> can edit internal games
                                         }
                                         FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC. Run the appropriate launcher to edit internal games.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     }
@@ -1775,6 +1903,13 @@ namespace pbPSCReAlpha
                         }
                         else
                         {
+                            if(bInternalAffairs)
+                            {
+                                using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                                {
+                                    sw.Write("1" + "\n"); // back to "backup done" state
+                                }
+                            }
                             String sMsg = "Errors detected. Fix them before recreating database.";
                             if ((bInternalAffairs) && (lsErr.Count > 0))
                             {
@@ -1788,6 +1923,13 @@ namespace pbPSCReAlpha
                     }
                     catch (Exception ex)
                     {
+                        if (bInternalAffairs)
+                        {
+                            using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                            {
+                                sw.Write("1" + "\n"); // back to "backup done" state
+                            }
+                        }
                         slLogger.Fatal(ex.Message);
                         FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
@@ -3534,7 +3676,7 @@ namespace pbPSCReAlpha
 
         private void btPbpRename_Click(object sender, EventArgs e)
         {
-            slLogger.Trace(">> Pbp AutoRename Click");
+            slLogger.Trace(">> Pbp/chd AutoRename Click");
             if (lbGames.SelectedIndex > -1)
             {
                 try
@@ -3542,8 +3684,10 @@ namespace pbPSCReAlpha
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     String sFolderPath = returnGamePath();
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
+                    bool bDoneSomething = false;
                     if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.PbpMissing) && (!cgs.PbpCountMisMatchDiscsCount) && (cgs.BadPbpName))
                     {
+                        bDoneSomething = true;
                         String[] sDiscs = cgs.Discs.Split(',');
                         List<String> lsFilenamesOk = cgs.FilesPbpOk;
                         List<String> lsFileNamesPbpLower = new List<string>();
@@ -3619,11 +3763,89 @@ namespace pbPSCReAlpha
                                 }
                             }
                         }
-                        refreshOneFolder();
                     }
-                    else
+                    if ((!cgs.GameDataMissing) && (!cgs.IniMissing) && (!cgs.IniIncomplete) && (!cgs.ChdMissing) && (!cgs.ChdCountMisMatchDiscsCount) && (cgs.BadChdName))
                     {
-                        //
+                        bDoneSomething = true;
+                        String[] sDiscs = cgs.Discs.Split(',');
+                        List<String> lsFilenamesOk = cgs.FilesChdOk;
+                        List<String> lsFileNamesChdLower = new List<string>();
+                        List<String> lsFileToRename = new List<string>();
+                        foreach (String s in cgs.Filenames)
+                        {
+                            if (s.ToLower().EndsWith(".chd"))
+                            {
+                                lsFileNamesChdLower.Add(s.ToLower());
+                            }
+                        }
+                        if (lsFileNamesChdLower.Count > 0)
+                        {
+                            using (NaturalComparer comparer = new NaturalComparer())
+                            {
+                                lsFileNamesChdLower.Sort(comparer);
+                            }
+                            foreach (String sOneFile in lsFileNamesChdLower)
+                            {
+                                if (lsFilenamesOk.IndexOf(sOneFile) > -1)
+                                {
+                                    //
+                                }
+                                else
+                                {
+                                    lsFileToRename.Add(sOneFile);
+                                }
+                            }
+                            String[] sFileToRename = lsFileToRename.ToArray();
+                            int iIndex = 0;
+                            String sQuestion = String.Empty;
+                            foreach (String s in sDiscs)
+                            {
+                                String sDisc = s.ToLower();
+                                if (lsFilenamesOk.IndexOf(sDisc + ".chd") > -1)
+                                {
+                                    iIndex++;
+                                }
+                                else
+                                {
+                                    if (iIndex < sFileToRename.Length)
+                                    {
+                                        if (File.Exists(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex]))
+                                        {
+                                            sQuestion = sQuestion + Environment.NewLine + sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex] + " >> " + sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".chd";
+                                        }
+                                        iIndex++;
+                                    }
+                                }
+                            }
+                            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you want to rename those files ?" + sQuestion, "Renaming...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+                            {
+                                iIndex = 0;
+                                foreach (String s in sDiscs)
+                                {
+                                    String sDisc = s.ToLower();
+                                    if (lsFilenamesOk.IndexOf(sDisc + ".chd") > -1)
+                                    {
+                                        iIndex++;
+                                    }
+                                    else
+                                    {
+                                        if (iIndex < sFileToRename.Length)
+                                        {
+                                            if (File.Exists(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex]))
+                                            {
+                                                File.Move(sPath + currentUsedVersion.GameDataFolder + "\\" + sFileToRename[iIndex], sPath + currentUsedVersion.GameDataFolder + "\\" + s + ".chd");
+                                                slLogger.Debug("Renaming file " + sFileToRename[iIndex] + " -> " + s + ".chd");
+                                            }
+                                            iIndex++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if(bDoneSomething)
+                    {
+                        refreshOneFolder();
                     }
                 }
                 catch (Exception ex)
@@ -3632,7 +3854,7 @@ namespace pbPSCReAlpha
                 }
             }
             bNeedRecreateDB = true;
-            slLogger.Trace("<< Pbp AutoRename Click");
+            slLogger.Trace("<< Pbp/chd AutoRename Click");
         }
 
         private void btValidateCfg_Click(object sender, EventArgs e)

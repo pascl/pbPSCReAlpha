@@ -277,11 +277,11 @@
             // 
             this.btPbpRename.Enabled = false;
             this.btPbpRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btPbpRename.Location = new System.Drawing.Point(178, 19);
+            this.btPbpRename.Location = new System.Drawing.Point(178, 13);
             this.btPbpRename.Name = "btPbpRename";
-            this.btPbpRename.Size = new System.Drawing.Size(82, 25);
+            this.btPbpRename.Size = new System.Drawing.Size(82, 35);
             this.btPbpRename.TabIndex = 13;
-            this.btPbpRename.Text = "pbp file(s)";
+            this.btPbpRename.Text = "pbp/chd file(s)";
             this.btPbpRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btPbpRename.UseVisualStyleBackColor = true;
             this.btPbpRename.Click += new System.EventHandler(this.btPbpRename_Click);
@@ -290,9 +290,9 @@
             // 
             this.btSbiRename.Enabled = false;
             this.btSbiRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btSbiRename.Location = new System.Drawing.Point(354, 19);
+            this.btSbiRename.Location = new System.Drawing.Point(354, 13);
             this.btSbiRename.Name = "btSbiRename";
-            this.btSbiRename.Size = new System.Drawing.Size(82, 25);
+            this.btSbiRename.Size = new System.Drawing.Size(82, 35);
             this.btSbiRename.TabIndex = 12;
             this.btSbiRename.Text = "sbi file(s)";
             this.btSbiRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -303,9 +303,9 @@
             // 
             this.btPngRename.Enabled = false;
             this.btPngRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btPngRename.Location = new System.Drawing.Point(266, 19);
+            this.btPngRename.Location = new System.Drawing.Point(266, 13);
             this.btPngRename.Name = "btPngRename";
-            this.btPngRename.Size = new System.Drawing.Size(82, 25);
+            this.btPngRename.Size = new System.Drawing.Size(82, 35);
             this.btPngRename.TabIndex = 11;
             this.btPngRename.Text = "png file";
             this.btPngRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -316,9 +316,9 @@
             // 
             this.btBinRename.Enabled = false;
             this.btBinRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btBinRename.Location = new System.Drawing.Point(4, 19);
+            this.btBinRename.Location = new System.Drawing.Point(2, 13);
             this.btBinRename.Name = "btBinRename";
-            this.btBinRename.Size = new System.Drawing.Size(82, 25);
+            this.btBinRename.Size = new System.Drawing.Size(82, 35);
             this.btBinRename.TabIndex = 9;
             this.btBinRename.Text = "bin file(s)";
             this.btBinRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -329,9 +329,9 @@
             // 
             this.btCueRename.Enabled = false;
             this.btCueRename.Image = global::pbPSCReAlpha.Properties.Resources.edit_rename;
-            this.btCueRename.Location = new System.Drawing.Point(90, 19);
+            this.btCueRename.Location = new System.Drawing.Point(90, 13);
             this.btCueRename.Name = "btCueRename";
-            this.btCueRename.Size = new System.Drawing.Size(82, 25);
+            this.btCueRename.Size = new System.Drawing.Size(82, 35);
             this.btCueRename.TabIndex = 10;
             this.btCueRename.Text = "cue file(s)";
             this.btCueRename.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -1337,7 +1337,7 @@
             // 
             this.tsmiBSv041.CheckOnClick = true;
             this.tsmiBSv041.Name = "tsmiBSv041";
-            this.tsmiBSv041.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBSv041.Size = new System.Drawing.Size(166, 22);
             this.tsmiBSv041.Text = "BleemSync v0.4.1";
             this.tsmiBSv041.CheckedChanged += new System.EventHandler(this.tsmiBSv041_CheckedChanged);
             this.tsmiBSv041.Click += new System.EventHandler(this.tsmiBSv041_Click);
@@ -1346,7 +1346,7 @@
             // 
             this.tsmiBSv100.CheckOnClick = true;
             this.tsmiBSv100.Name = "tsmiBSv100";
-            this.tsmiBSv100.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBSv100.Size = new System.Drawing.Size(166, 22);
             this.tsmiBSv100.Text = "BleemSync v1.0.0";
             this.tsmiBSv100.CheckedChanged += new System.EventHandler(this.tsmiBSv100_CheckedChanged);
             this.tsmiBSv100.Click += new System.EventHandler(this.tsmiBSv100_Click);
@@ -1355,7 +1355,7 @@
             // 
             this.tsmiABv060.CheckOnClick = true;
             this.tsmiABv060.Name = "tsmiABv060";
-            this.tsmiABv060.Size = new System.Drawing.Size(180, 22);
+            this.tsmiABv060.Size = new System.Drawing.Size(166, 22);
             this.tsmiABv060.Text = "AutoBleem v0.6.0";
             this.tsmiABv060.CheckedChanged += new System.EventHandler(this.tsmiABv060_CheckedChanged);
             this.tsmiABv060.Click += new System.EventHandler(this.tsmiABv060_Click);

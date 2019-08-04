@@ -30,6 +30,16 @@ namespace pbPSCReAlpha
             m_sFolderPath = sFolderPath;
             m_cvh = cvh;
             m_frmParent = frm;
+            int iMaxGames = Properties.Settings.Default.iMaxGamesPerFolder;
+            if ((iMaxGames >= nudMaxGamesPerFolder.Minimum) && (iMaxGames <= nudMaxGamesPerFolder.Maximum))
+            {
+                nudMaxGamesPerFolder.Value = (decimal)(iMaxGames);
+            }
+            else
+            {
+                Properties.Settings.Default.iMaxGamesPerFolder = 40;
+                nudMaxGamesPerFolder.Value = (decimal)(40);
+            }
             manageRadioButton();
         }
 
@@ -177,6 +187,12 @@ namespace pbPSCReAlpha
                                 }
                             }
                             break;
+                        case 5:
+                            {
+                                Form10 f = new Form10(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger, this);
+                                f.ShowDialog();
+                            }
+                            break;
                         default: // also case 1:
                             {
                                 List<ClGameStructure> lcgs = new List<ClGameStructure>();
@@ -193,12 +209,12 @@ namespace pbPSCReAlpha
                     {
                         if (m_SelectionDBCreation != 1) // already done if 1
                         {
-                            if (1 == m_bsversion)
+                            if (Constant.iBLEEMSYNC_V100 == m_bsversion)
                             {
                                 // create the second db file
                                 ClDBManager.BleemSyncUI_AddDB(m_lcgs, m_sFolderPath, m_cvh, slLogger);
                             }
-                            if (2 == m_bsversion)
+                            if (Constant.iAUTOBLEEM_V06 == m_bsversion)
                             {
                                 // create the files for autobleem in order to prevent a scan at start
                                 ClDBManager.AutoBleem_CreateFiles(m_lcgs, m_sFolderPath, m_cvh, slLogger);
@@ -295,12 +311,13 @@ namespace pbPSCReAlpha
             switch(m_SelectionDBCreation)
             {
                 case 2:
-                    if (m_bsversion == 1)
+                    if (m_bsversion == Constant.iBLEEMSYNC_V100)
                     {
                         rbDBCreationOneFile.Enabled = true;
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
+                        rbDBCreationSeveralCustom.Enabled = true;
                         nudMaxGamesPerFolder.Enabled = true;
 
                         rbDBCreationSeveralFiles.Checked = true;
@@ -312,12 +329,13 @@ namespace pbPSCReAlpha
                     }
                     break;
                 case 3:
-                    if (m_bsversion == 1)
+                    if (m_bsversion == Constant.iBLEEMSYNC_V100)
                     {
                         rbDBCreationOneFile.Enabled = true;
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
+                        rbDBCreationSeveralCustom.Enabled = true;
                         nudMaxGamesPerFolder.Enabled = true;
 
                         rbDBCreationSeveralFilesWithFirstEmpty.Checked = true;
@@ -329,15 +347,34 @@ namespace pbPSCReAlpha
                     }
                     break;
                 case 4:
-                    if (m_bsversion == 1)
+                    if (m_bsversion == Constant.iBLEEMSYNC_V100)
                     {
                         rbDBCreationOneFile.Enabled = true;
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
+                        rbDBCreationSeveralCustom.Enabled = true;
                         nudMaxGamesPerFolder.Enabled = true;
 
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Checked = true;
+                    }
+                    else
+                    {
+                        m_SelectionDBCreation = 1;
+                        manageRadioButton();
+                    }
+                    break;
+                case 5:
+                    if (m_bsversion == Constant.iBLEEMSYNC_V100)
+                    {
+                        rbDBCreationOneFile.Enabled = true;
+                        rbDBCreationSeveralFiles.Enabled = true;
+                        rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
+                        rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
+                        rbDBCreationSeveralCustom.Enabled = true;
+                        nudMaxGamesPerFolder.Enabled = true;
+
+                        rbDBCreationSeveralCustom.Checked = true;
                     }
                     else
                     {
@@ -349,18 +386,20 @@ namespace pbPSCReAlpha
                     rbDBCreationOneFile.Checked = true;
                     rbDBCreationOneFile.Enabled = true;
                     nudMaxGamesPerFolder.Enabled = false;
-                    if (m_bsversion == 1)
+                    if (m_bsversion == Constant.iBLEEMSYNC_V100)
                     {
                         
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
+                        rbDBCreationSeveralCustom.Enabled = true;
                     }
                     else
                     {
                         rbDBCreationSeveralFiles.Enabled = false;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = false;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = false;
+                        rbDBCreationSeveralCustom.Enabled = false;
                     }
                     break;
             }
@@ -380,6 +419,23 @@ namespace pbPSCReAlpha
         {
             m_SelectionDBCreation = 4;
             manageRadioButton();
+        }
+
+        private void rbDBCreationSeveralCustom_CheckedChanged(object sender, EventArgs e)
+        {
+            //
+        }
+
+        private void rbDBCreationSeveralCustom_Click(object sender, EventArgs e)
+        {
+            m_SelectionDBCreation = 5;
+            manageRadioButton();
+        }
+
+        private void Form9_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.iMaxGamesPerFolder = (int)(nudMaxGamesPerFolder.Value);
+            Properties.Settings.Default.Save();
         }
     }
 }

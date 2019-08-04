@@ -12,7 +12,7 @@
 * This box can also appear when you have a wrong selected mod version. Don't read the database if the wrong version is selected, files would be created in the wrong folders.
 
 ### Is it only for PS1 games ? What file types are possible ?
-* YES, only PS1 games are managed. The PS1 games can be cue/bin files or pbp files (except for BleemSync0.4.1).
+* YES, only PS1 games are managed. The PS1 games can be cue/bin files, pbp or chd files (except for BleemSync0.4.1).
 
 #### Explorer Tab
 
@@ -43,6 +43,20 @@
 ### When can I click on Recreate DataBase ?
 * Once you did wished modifications, you have to regenerate the database. Be sure you have selected the right mod version before clicking on it.
 * Then, unplug properly your USB drive, and plug it in your PSC.
+
+### How can I replace internal games ?
+* pbPscReAlpha can manage a folder on your USB drive in order to replace games on your PSC.
+* Go to https://github.com/pascl/BleemSync_Mods and download the backupgames_launch, editgames_launch and restorebackup_launch launchers.
+* Copy the backupgames_launch launcher on your USB drive. Plug your drive on your PSC, then launch that. You need about 14 GB to backup everything.
+* After about 15 minutes (may be until 45 if your drive is a low speed one), the backup is done (present in "games_backup" folder).
+* Go back to pbPSCReAlpha with your drive, and a "Goto internal" button would be visible in the top right corner.
+* Click on it, and the font color will be red. A folder is set to contain games on your drive ("replaced_games" folder). [Just click again when you want to go back to your "normal" folder and font color will be black again]
+* Add games as you wish (limited to 25 games, and limited by available internal size). Then, click on "Recreate DB".
+* Copy now the editgames_launch launcher on your USB drive. Plug your drive on your PSC, then launch that. You need to wait some minutes. The first time you go over 20 games, pictures for games greater than 20 can be invisible, and these games won't start. Restart your PSC and these would be ok.
+* You can go back to the original games by launching the "restorebackup_launch" launcher on the PSC.
+* If you don't want to do a miss-click, you can delete the 3 launchers after that.
+* If you don't want the "Goto internal" button appear in pbPSCReAlpha, delete the 4 log files at the root of your usb drive.
+* To save space on your drive, you can backup the "games_backup" and "replaced_games" folders on your computer, then remove them from your USB drive.
 
 #### Game.ini editor
 

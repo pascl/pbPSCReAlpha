@@ -36,14 +36,17 @@ namespace pbPSCReAlpha
         private bool _cueMissing;
         private bool _binMissing;
         private bool _pbpMissing;
+        private bool _chdMissing;
         private bool _pngMismatch;
         private bool _cfgMissing;
         private bool _badCueName;
         private bool _badBinName;
         private bool _badPbpName;
+        private bool _badChdName;
         private bool _badDiscsName;
         private bool _cueCountMisMatchDiscsCount;
         private bool _pbpCountMisMatchDiscsCount;
+        private bool _chdCountMisMatchDiscsCount;
         private bool _neededSbiMissing;
         private bool _commaInFilename;
         private bool _specialCharsInFilename;
@@ -52,11 +55,15 @@ namespace pbPSCReAlpha
         private List<String> _filesCueOk;
         private List<String> _filesSbiOk;
         private List<String> _filesPbpOk;
+        private List<String> _filesChdOk;
         private long _size;
         private int _bleemSyncVersion;
 
         
-        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, bool bNeededSbiMissing, bool bNameWithComma, bool bPbpMissing, bool badPbpName, bool pbpCountMisMatchdiscsCount, bool badDiscsName, int iBleemSyncVersion)
+        public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, 
+            bool gameIniIncomplete, bool multiPictures, bool cueMissing, bool badCueName, bool binMissing, bool badBinName, bool cueCountMisMatchdiscsCount, 
+            bool bNeededSbiMissing, bool bNameWithComma, bool bPbpMissing, bool badPbpName, bool pbpCountMisMatchdiscsCount, bool badDiscsName,
+            bool bChdMissing, bool badChdName, bool chdCountMisMatchdiscsCount, int iBleemSyncVersion)
         {
             _folderIndex = folderIndex;
             _gameDataMissing = false; // if i have all these variables, i have at least the folder...
@@ -72,11 +79,14 @@ namespace pbPSCReAlpha
             _binMissing = binMissing;
             _badBinName = badBinName;
             _badPbpName = badPbpName;
+            _badChdName = badChdName;
             _badDiscsName = badDiscsName;
             _pbpMissing = bPbpMissing;
+            _chdMissing = bChdMissing;
             _commaInFilename = bNameWithComma;
             _cueCountMisMatchDiscsCount = cueCountMisMatchdiscsCount;
             _pbpCountMisMatchDiscsCount = pbpCountMisMatchdiscsCount;
+            _chdCountMisMatchDiscsCount = chdCountMisMatchdiscsCount;
             _neededSbiMissing = bNeededSbiMissing;
 
             _bleemSyncVersion = iBleemSyncVersion;
@@ -108,15 +118,15 @@ namespace pbPSCReAlpha
             {
                 this.ErrorString.Add("Picture file not found in the folder.");
             }
-            if ((_cueMissing) && (_pbpMissing)) // found no cue nor pbp in the folder
+            if ((_cueMissing) && (_pbpMissing) && (_chdMissing)) // found no cue, pbp, chd in the folder
             {
-                this.ErrorString.Add("Cue or Pbp files not found in the folder.");
+                this.ErrorString.Add("Cue, Pbp or Chd files not found in the folder.");
             }
-            if(((_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_pbpMissing))
+            if(((_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && ((!_pbpMissing) || (!_chdMissing)))
             {
-                this.ErrorString.Add("Pbp files won't start with selected version.");
+                this.ErrorString.Add("Pbp and/or Chd files won't start with selected version.");
             }
-            if ((_pbpMissing) && (_cueMissing) && (_binMissing)) // if a cue, need bin in the folder
+            if (((_pbpMissing) || (_chdMissing)) && (_cueMissing) && (_binMissing)) // if a cue, need bin in the folder
             {
                 this.ErrorString.Add("Bin files not found in the folder.");
             }
@@ -142,7 +152,11 @@ namespace pbPSCReAlpha
             {
                 this.ErrorString.Add("Count of pbp files doesn't match discs parameter in Game.ini.");
             }
-            if (((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_pbpMissing)) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (!_iniMissing) && (!_iniIncomplete) && (_cueCountMisMatchDiscsCount)) // if pbp present, no need cue
+            if (((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (!_chdMissing) && (!_iniMissing) && (!_iniIncomplete) && (_chdCountMisMatchDiscsCount))
+            {
+                this.ErrorString.Add("Count of chd files doesn't match discs parameter in Game.ini.");
+            }
+            if (((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && ((_pbpMissing) || (_chdMissing))) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (!_iniMissing) && (!_iniIncomplete) && (_cueCountMisMatchDiscsCount)) // if pbp/chd present, no need cue
             {
                 this.ErrorString.Add("Count of cue files doesn't match discs parameter in Game.ini.");
             }
@@ -151,12 +165,17 @@ namespace pbPSCReAlpha
                 // no need display this error if pbp missing
                 this.ErrorString.Add("At least one pbp file doesn't match discs parameter in Game.ini.");
             }
-            if (((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_pbpMissing)) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (_badCueName)) // if pbp present, no need cue
+            if (((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (!_chdMissing) && (_badChdName))
+            {
+                // no need display this error if chd missing
+                this.ErrorString.Add("At least one chd file doesn't match discs parameter in Game.ini.");
+            }
+            if (((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && ((_pbpMissing) || (_chdMissing))) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (_badCueName)) // if pbp/chd present, no need cue
             {
                 // no need display this error if cue missing
                 this.ErrorString.Add("At least one cue file doesn't match discs parameter in Game.ini.");
             }
-            if (((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_pbpMissing)) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (!_binMissing) && (_badBinName)) // if pbp present, no need bin
+            if (((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && ((_pbpMissing) || (_chdMissing))) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (!_binMissing) && (_badBinName)) // if pbp/chd present, no need bin
             {
                 // no need display this error if bin missing
                 this.ErrorString.Add("At least one bin file doesn't match entries in cue files.");
@@ -261,10 +280,14 @@ namespace pbPSCReAlpha
             if (b) { b &= (NeededSbiMissing == cgs.NeededSbiMissing); }
             if (b) { b &= (CommaInFilename == cgs.CommaInFilename); }
             if (b) { b &= (PbpMissing == cgs.PbpMissing); }
+            if (b) { b &= (ChdMissing == cgs.ChdMissing); }
             if (b) { b &= (BadPbpName == cgs.BadPbpName); }
+            if (b) { b &= (BadChdName == cgs.BadChdName); }
             if (b) { b &= (PbpCountMisMatchDiscsCount == cgs.PbpCountMisMatchDiscsCount); }
+            if (b) { b &= (ChdCountMisMatchDiscsCount == cgs.ChdCountMisMatchDiscsCount); }
             if (b) { b &= (BadDiscsName == cgs.BadDiscsName); }
             if (b) { b &= (PbpErrors == cgs.PbpErrors); }
+            if (b) { b &= (ChdErrors == cgs.ChdErrors); }
             if (b) { b &= (CueErrors == cgs.CueErrors); }
             if (b) { b &= (BinErrors == cgs.BinErrors); }
             if (b) { b &= (SbiErrors == cgs.SbiErrors); }
@@ -278,6 +301,7 @@ namespace pbPSCReAlpha
             if ((b) && (FilesCueOk != null) && (cgs.FilesCueOk != null)) { b &= (FilesCueOk.Count == cgs.FilesCueOk.Count); }
             if ((b) && (FilesSbiOk != null) && (cgs.FilesSbiOk != null)) { b &= (FilesSbiOk.Count == cgs.FilesSbiOk.Count); }
             if ((b) && (FilesPbpOk != null) && (cgs.FilesPbpOk != null)) { b &= (FilesPbpOk.Count == cgs.FilesPbpOk.Count); }
+            if ((b) && (FilesChdOk != null) && (cgs.FilesChdOk != null)) { b &= (FilesChdOk.Count == cgs.FilesChdOk.Count); }
             if ((b) && (Filenames != null) && (cgs.Filenames != null)) { b &= (Filenames.Count == cgs.Filenames.Count); }
 
             return b;
@@ -322,21 +346,26 @@ namespace pbPSCReAlpha
         public bool BadDiscsName { get => _badDiscsName; set => _badDiscsName = value; }
         public bool SpecialCharsInFilename { get => _specialCharsInFilename; set => _specialCharsInFilename = value; }
 
+        public bool ChdMissing { get => _chdMissing; set => _chdMissing = value; }
+        public bool BadChdName { get => _badChdName; set => _badChdName = value; }
+        public bool ChdCountMisMatchDiscsCount { get => _chdCountMisMatchDiscsCount; set => _chdCountMisMatchDiscsCount = value; }
+        public List<String> FilesChdOk { get => _filesChdOk; set => _filesChdOk = value; }
+
         public string ABautomation { get => _ABautomation; set => _ABautomation = value; }
         public string ABhighres { get => _ABhighres; set => _ABhighres = value; }
         public string ABimagetype { get => _ABimagetype; set => _ABimagetype = value; }
         public string ABmemcard { get => _ABmemcard; set => _ABmemcard = value; }
 
         public bool PbpErrors { get => (((_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_pbpMissing)) || (_cueMissing && ((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_pbpMissing || _badPbpName || _pbpCountMisMatchDiscsCount)); }
-        public bool CueErrors { get => ((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && _pbpMissing) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (_cueMissing || _badCueName || _cueCountMisMatchDiscsCount); }
-        public bool BinErrors { get => ((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && _pbpMissing) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (_binMissing || _badBinName); }
+        public bool ChdErrors { get => (((_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_chdMissing)) || (_cueMissing && ((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_chdMissing || _badChdName || _chdCountMisMatchDiscsCount)); }
+        public bool CueErrors { get => ((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_pbpMissing || _chdMissing)) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (_cueMissing || _badCueName || _cueCountMisMatchDiscsCount); }
+        public bool BinErrors { get => ((((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06)) && (_pbpMissing || _chdMissing)) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (!_cueMissing) && (_binMissing || _badBinName); }
         public bool SbiErrors { get => _neededSbiMissing; }
         public bool PngErrors { get => _pngMissing || _pngMismatch || _pngMultiple; }
         public bool IniErrors { get => _iniMissing || _iniIncomplete; }
         public bool FileErrors { get => (((_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (_nanFolder)) || (((_bleemSyncVersion == Constant.iBLEEMSYNC_V041) || (_bleemSyncVersion == Constant.iAUTOBLEEM_V06) || (_bleemSyncVersion == Constant.iSTRUCT_INTERNAL)) && (_cfgMissing)) || _gameDataMissing || _commaInFilename || _specialCharsInFilename; }
 
-        public bool GeneralError { get => PbpErrors || CueErrors || BinErrors || SbiErrors || PngErrors || IniErrors || FileErrors; }
+        public bool GeneralError { get => PbpErrors || ChdErrors || CueErrors || BinErrors || SbiErrors || PngErrors || IniErrors || FileErrors; }
         public bool GeneralWarning { get => BadDiscsName || ((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) && (!_cfgMissing)); }
-        
     }
 }
