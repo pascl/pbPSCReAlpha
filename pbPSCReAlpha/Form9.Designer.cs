@@ -37,7 +37,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btBack = new System.Windows.Forms.Button();
             this.rbDBCreationSeveralFilesWithFirstNoSpecial = new System.Windows.Forms.RadioButton();
-            this.rbDBCreationSeveralCustom = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.nudMaxGamesPerFolder)).BeginInit();
             this.SuspendLayout();
             // 
@@ -150,27 +149,12 @@
             this.rbDBCreationSeveralFilesWithFirstNoSpecial.CheckedChanged += new System.EventHandler(this.rbDBCreationSeveralFilesWithFirstNoSpecial_CheckedChanged);
             this.rbDBCreationSeveralFilesWithFirstNoSpecial.Click += new System.EventHandler(this.rbDBCreationSeveralFilesWithFirstNoSpecial_Click);
             // 
-            // rbDBCreationSeveralCustom
-            // 
-            this.rbDBCreationSeveralCustom.AutoSize = true;
-            this.rbDBCreationSeveralCustom.Enabled = false;
-            this.rbDBCreationSeveralCustom.Location = new System.Drawing.Point(12, 133);
-            this.rbDBCreationSeveralCustom.Name = "rbDBCreationSeveralCustom";
-            this.rbDBCreationSeveralCustom.Size = new System.Drawing.Size(202, 17);
-            this.rbDBCreationSeveralCustom.TabIndex = 9;
-            this.rbDBCreationSeveralCustom.TabStop = true;
-            this.rbDBCreationSeveralCustom.Text = "Open a new form to customize folders";
-            this.rbDBCreationSeveralCustom.UseVisualStyleBackColor = true;
-            this.rbDBCreationSeveralCustom.CheckedChanged += new System.EventHandler(this.rbDBCreationSeveralCustom_CheckedChanged);
-            this.rbDBCreationSeveralCustom.Click += new System.EventHandler(this.rbDBCreationSeveralCustom_Click);
-            // 
             // Form9
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btBack;
             this.ClientSize = new System.Drawing.Size(460, 239);
-            this.Controls.Add(this.rbDBCreationSeveralCustom);
             this.Controls.Add(this.rbDBCreationSeveralFilesWithFirstNoSpecial);
             this.Controls.Add(this.btBack);
             this.Controls.Add(this.label1);
@@ -202,6 +186,5 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btBack;
         private System.Windows.Forms.RadioButton rbDBCreationSeveralFilesWithFirstNoSpecial;
-        private System.Windows.Forms.RadioButton rbDBCreationSeveralCustom;
     }
 }

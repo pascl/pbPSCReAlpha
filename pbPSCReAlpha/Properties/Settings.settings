@@ -6,7 +6,7 @@
       <Value Profile="(Default)">F:\Games</Value>
     </Setting>
     <Setting Name="iVersionBleemSync" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="iSimultaneous" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>

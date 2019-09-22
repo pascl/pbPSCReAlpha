@@ -11,6 +11,8 @@ namespace pbPSCReAlpha
         public const int iBLEEMSYNC_V041 = 0;
         public const int iBLEEMSYNC_V100 = 1;
         public const int iAUTOBLEEM_V06 = 2;
+        public const int iBLEEMSYNC_V120 = 3;
+        public const int iCountVersions = 4;
         public const int iSTRUCT_INTERNAL = 99;
         public const int iSTART_AUTOBLEEM = 30;
         public const int iDECALAGE_RESORT = 3000;

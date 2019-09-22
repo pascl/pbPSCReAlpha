@@ -209,10 +209,10 @@ namespace pbPSCReAlpha
                     {
                         if (m_SelectionDBCreation != 1) // already done if 1
                         {
-                            if (Constant.iBLEEMSYNC_V100 == m_bsversion)
+                            if ((Constant.iBLEEMSYNC_V100 == m_bsversion) || (Constant.iBLEEMSYNC_V120 == m_bsversion))
                             {
                                 // create the second db file
-                                ClDBManager.BleemSyncUI_AddDB(m_lcgs, m_sFolderPath, m_cvh, slLogger);
+                                ClDBManager.BleemSyncUI_AddDB(m_lcgs, m_sFolderPath, m_cvh, slLogger, m_bsversion);
                             }
                             if (Constant.iAUTOBLEEM_V06 == m_bsversion)
                             {
@@ -317,7 +317,6 @@ namespace pbPSCReAlpha
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
-                        rbDBCreationSeveralCustom.Enabled = true;
                         nudMaxGamesPerFolder.Enabled = true;
 
                         rbDBCreationSeveralFiles.Checked = true;
@@ -335,7 +334,6 @@ namespace pbPSCReAlpha
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
-                        rbDBCreationSeveralCustom.Enabled = true;
                         nudMaxGamesPerFolder.Enabled = true;
 
                         rbDBCreationSeveralFilesWithFirstEmpty.Checked = true;
@@ -353,28 +351,9 @@ namespace pbPSCReAlpha
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
-                        rbDBCreationSeveralCustom.Enabled = true;
                         nudMaxGamesPerFolder.Enabled = true;
 
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Checked = true;
-                    }
-                    else
-                    {
-                        m_SelectionDBCreation = 1;
-                        manageRadioButton();
-                    }
-                    break;
-                case 5:
-                    if (m_bsversion == Constant.iBLEEMSYNC_V100)
-                    {
-                        rbDBCreationOneFile.Enabled = true;
-                        rbDBCreationSeveralFiles.Enabled = true;
-                        rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
-                        rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
-                        rbDBCreationSeveralCustom.Enabled = true;
-                        nudMaxGamesPerFolder.Enabled = true;
-
-                        rbDBCreationSeveralCustom.Checked = true;
                     }
                     else
                     {
@@ -392,14 +371,12 @@ namespace pbPSCReAlpha
                         rbDBCreationSeveralFiles.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = true;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = true;
-                        rbDBCreationSeveralCustom.Enabled = true;
                     }
                     else
                     {
                         rbDBCreationSeveralFiles.Enabled = false;
                         rbDBCreationSeveralFilesWithFirstEmpty.Enabled = false;
                         rbDBCreationSeveralFilesWithFirstNoSpecial.Enabled = false;
-                        rbDBCreationSeveralCustom.Enabled = false;
                     }
                     break;
             }
@@ -420,17 +397,7 @@ namespace pbPSCReAlpha
             m_SelectionDBCreation = 4;
             manageRadioButton();
         }
-
-        private void rbDBCreationSeveralCustom_CheckedChanged(object sender, EventArgs e)
-        {
-            //
-        }
-
-        private void rbDBCreationSeveralCustom_Click(object sender, EventArgs e)
-        {
-            m_SelectionDBCreation = 5;
-            manageRadioButton();
-        }
+        
 
         private void Form9_FormClosing(object sender, FormClosingEventArgs e)
         {

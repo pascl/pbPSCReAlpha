@@ -128,6 +128,7 @@ namespace pbPSCReAlpha
                         s.Parameters.Add("@p7", System.Data.DbType.String).Value = _link_game_id;
                         break;
                     case Constant.iBLEEMSYNC_V100:
+                    case Constant.iBLEEMSYNC_V120:
                         s = new SQLiteCommand("INSERT INTO MENU_ENTRIES"
                             + " (GAME_ID, GAME_TITLE_STRING, PUBLISHER_NAME, RELEASE_YEAR, PLAYERS, RATING_IMAGE, GAME_MANUAL_QR_IMAGE, LINK_GAME_ID, POSITION)"
                             + " VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8)", conn);
@@ -452,7 +453,7 @@ namespace pbPSCReAlpha
             return bDone;
         }
 
-        public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
+        public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl, int bs_version)
         {
             bool bDone = false;
             try
@@ -551,6 +552,19 @@ namespace pbPSCReAlpha
                                 sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190116024555_AddOrderingPosition', '2.1.1-rtm-30846')";
                                 command = new SQLiteCommand(sql, m_dbConnection);
                                 command.ExecuteNonQuery();
+                                // ADD 1.2
+                                if (bs_version == Constant.iBLEEMSYNC_V120)
+                                {
+                                    sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190624000000_Folders', '2.1.1-rtm-30846')";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    sql = "CREATE TABLE \"FolderNodes\" ( \"Id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"Name\" TEXT NOT NULL, \"ImagePath\" TEXT NOT NULL )";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                    sql = "CREATE TABLE \"FolderItems\" ( \"FolderId\" INTEGER NOT NULL, \"NodeId\" INTEGER NOT NULL, FOREIGN KEY(\"FolderId\") REFERENCES \"FolderNodes\"(\"Id\") ON DELETE CASCADE, FOREIGN KEY(\"NodeId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE CASCADE, UNIQUE(\"FolderId\", \"NodeId\"))";
+                                    command = new SQLiteCommand(sql, m_dbConnection);
+                                    command.ExecuteNonQuery();
+                                }
 
                                 tran.Commit();
                             }
@@ -641,6 +655,39 @@ namespace pbPSCReAlpha
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
                             sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            break;
+                        case Constant.iBLEEMSYNC_V120: // bs1.2.0
+                            sql = "CREATE TABLE \"DISC\" ( \"DISC_ID\" INTEGER NOT NULL CONSTRAINT \"PK_DISC\" PRIMARY KEY AUTOINCREMENT, \"GAME_ID\" INTEGER NOT NULL, \"DISC_NUMBER\" INTEGER NOT NULL, \"BASENAME\" TEXT NULL, CONSTRAINT \"FK_DISC_GAME_GAME_ID\" FOREIGN KEY (\"GAME_ID\") REFERENCES \"MENU_ENTRIES\" (\"GAME_ID\") ON DELETE CASCADE )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE \"MENU_ENTRIES\" ( \"GAME_ID\" INTEGER NOT NULL CONSTRAINT \"PK_GAME\" PRIMARY KEY AUTOINCREMENT, \"GAME_TITLE_STRING\" TEXT NULL, \"PUBLISHER_NAME\" TEXT NULL, \"RELEASE_YEAR\" INTEGER NOT NULL, \"PLAYERS\" INTEGER NOT NULL, \"RATING_IMAGE\" TEXT NULL, \"GAME_MANUAL_QR_IMAGE\" TEXT NULL, \"LINK_GAME_ID\" TEXT NULL , \"POSITION\" INTEGER NULL)";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE \"__EFMigrationsHistory\" ( \"MigrationId\" TEXT NOT NULL CONSTRAINT \"PK___EFMigrationsHistory\" PRIMARY KEY, \"ProductVersion\" TEXT NOT NULL )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE VIEW GAME AS SELECT * FROM MENU_ENTRIES ORDER BY POSITION, GAME_TITLE_STRING";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE \"LANGUAGE_SPECIFIC\"( \"LANGUAGE_ID\" TEXT NOT NULL CONSTRAINT \"PK_LANGUAGE_SPECIFIC\" PRIMARY KEY, \"DEFAULT_VALUE\" TEXT NULL, \"VALUE\" TEXT NULL )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE INDEX \"IX_DISC_GAME_ID\" ON \"DISC\"(\"GAME_ID\")";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190115023630_Seed', '2.1.1-rtm-30846')";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            // ADD 1.2
+                            sql = "INSERT INTO __EFMigrationsHistory (MigrationId, ProductVersion) VALUES ('20190624000000_Folders', '2.1.1-rtm-30846')";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE \"FOLDER_ENTRIES\" ( \"FOLDER_ID\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"FOLDER_NAME\" TEXT NOT NULL, \"FOLDER_IMAGE_PATH\" TEXT NOT NULL )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE \"FOLDER_ITEMS\" ( \"FOLDER_ID\" INTEGER NOT NULL, \"GAME_ID\" INTEGER NOT NULL, FOREIGN KEY(\"FOLDER_ID\") REFERENCES \"FOLDER_ENTRIES\"(\"FOLDER_ID\") ON DELETE CASCADE, FOREIGN KEY(\"GAME_ID\") REFERENCES \"MENU_ENTRIES\"(\"GAME_ID\") ON DELETE CASCADE, UNIQUE(\"FOLDER_ID\", \"GAME_ID\"))";
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
                             break;
@@ -763,10 +810,10 @@ namespace pbPSCReAlpha
                 }
                 if (true == _bDone)
                 {
-                    if (Constant.iBLEEMSYNC_V100 == bleemsyncVersion)
+                    if ((Constant.iBLEEMSYNC_V100 == bleemsyncVersion) || (Constant.iBLEEMSYNC_V120 == bleemsyncVersion))
                     {
                         // create the second db file
-                        _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl);
+                        _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl, bleemsyncVersion);
                     }
                     if (Constant.iAUTOBLEEM_V06 == bleemsyncVersion)
                     {
