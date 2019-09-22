@@ -4,13 +4,17 @@ A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *
 
 Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
 
-Last version: 1.4
+Last version: 1.5
 
 ![Preview](https://i.imgur.com/x5jRWBr.png)
 
 **NEW 1.4**
 * CHD files are managed.
 * With some launchers, you can replace internal games
+**NEW 1.5**
+* BleemSync1.2 is managed (reset your folders for now)
+
+PS: you can add laucnhers for your folders by editing the folder manager launcher. Go to https://github.com/pascl/BleemSync_Mods for more information.
 
 
 ## General
@@ -105,7 +109,7 @@ In case it is still locked somewhere, try to rename the locked folder in an expl
 	 
 	 ![Preview](https://i.imgur.com/9CJbYA8.png)
 
-PS: For the modded BleemSync1.1, go to https://github.com/pascl/BleemSync_Mods
+PS: For the modded BleemSync1.1, go to https://github.com/pascl/BleemSync_Mods/tree/BleemSync1.1
    
 ## Editor
 
