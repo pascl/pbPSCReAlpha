@@ -24,11 +24,22 @@ namespace pbPSCReAlpha
         public string Players { get => _players; set => _players = value; }
         public string ImgUrl { get => _imgUrl; set => _imgUrl = value; }
 
-        public ClGameScraper(String sHtml)
+        public ClGameScraper(String sHtml, int pattern)
         {
             if (!String.IsNullOrEmpty(sHtml))
             {
-                doScrape(sHtml);
+                switch(pattern)
+                {
+                    case 1:
+                        doScrapePsxDataCenter(sHtml);
+                        break;
+                    case 2:
+                        doScrapeTGDB(sHtml);
+                        break;
+                    default:
+                        // default values
+                        break;
+                }
             }
         }
 
@@ -38,7 +49,119 @@ namespace pbPSCReAlpha
             return sHtml;
         }
 
-        private void doScrape(String sHtmlContent)
+        private void doScrapeTGDB(String sHtmlContent)
+        {
+            try
+            {
+                String sImg = "src=\"https://cdn.thegamesdb.net/images/thumb/boxart/front/";
+
+                using (StringReader reader = new StringReader(sHtmlContent))
+                {
+                    //
+                    String s = String.Empty;
+                    while ((s = reader.ReadLine()) != null)
+                    {
+                        s = s.Trim();
+                        s = s.Replace("&nbsp;", " ");
+                        s = s.Replace("  ", " ");
+                        if (s.IndexOf("</h1>") > -1)
+                        {
+                            int ipos1 = s.IndexOf("<h1>");
+                            int ipos2 = s.IndexOf("</h1>");
+                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                            {
+                                _title = s.Substring(ipos1 + 4, ipos2 - ipos1 - 4).Trim();
+                            }
+                        }
+                        else
+                        if (s.IndexOf("<p>Publishers(s):") > -1)
+                        {
+                            int ipos1 = s.IndexOf("\">");
+                            int ipos2 = s.IndexOf("</a>");
+                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                            {
+                                String sPub = s.Substring(ipos1 + 2, ipos2 - ipos1 - 2).Trim();
+                                if (sPub.EndsWith("."))
+                                {
+                                    sPub = sPub.Substring(0, sPub.Length - 1);
+                                }
+                                _publisher = sPub;
+                            }
+                        }
+                        else
+                        if (s.IndexOf("<p>Developer(s):") > -1)
+                        {
+                            int ipos1 = s.IndexOf("\">");
+                            int ipos2 = s.IndexOf("</a>");
+                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                            {
+                                String sDev = s.Substring(ipos1 + 2, ipos2 - ipos1 - 2).Trim();
+                                if (sDev.EndsWith("."))
+                                {
+                                    sDev = sDev.Substring(0, sDev.Length - 1);
+                                }
+                                _developer = sDev;
+                            }
+                        }
+                        else
+                        if (s.IndexOf("<p>ReleaseDate:") > -1)
+                        {
+                            int ipos1 = s.IndexOf(" ");
+                            int ipos2 = s.IndexOf("-");
+                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                            {
+                                _year = s.Substring(ipos1 + 1, ipos2 - ipos1 - 1).Trim();
+                            }
+                        }
+                        else
+                        if (s.IndexOf("<p>Players:") > -1)
+                        {
+                            int ipos1 = s.IndexOf(" ");
+                            int ipos2 = s.IndexOf("</p>");
+                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                            {
+                                if (s.Substring(ipos1 + 1, ipos2 - ipos1 - 1).Trim().Contains("8"))
+                                {
+                                    _players = "8";
+                                }
+                                else
+                                if (s.Substring(ipos1 + 1, ipos2 - ipos1 - 1).Trim().Contains("5"))
+                                {
+                                    _players = "5";
+                                }
+                                else
+                                if (s.Substring(ipos1 + 1, ipos2 - ipos1 - 1).Trim().Contains("4"))
+                                {
+                                    _players = "4";
+                                }
+                                else
+                                if (s.Substring(ipos1 + 1, ipos2 - ipos1 - 1).Trim().Contains("2"))
+                                {
+                                    _players = "2";
+                                }
+                                else
+                                {
+                                    _players = "1";
+                                }
+                            }
+                        }
+                        else
+                        if (s.Contains(sImg))
+                        {
+                            int pos1 = s.IndexOf(sImg);
+                            String s1 = s.Substring(pos1 + sImg.Length, s.IndexOf("\"/>") - pos1 - sImg.Length);
+                            _imgUrl = "https://cdn.thegamesdb.net/images/thumb/boxart/front/" + s.Substring(pos1 + sImg.Length, s.IndexOf("\"/>") - pos1 - sImg.Length);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+        }
+
+        private void doScrapePsxDataCenter(String sHtmlContent)
         {
             try
             {

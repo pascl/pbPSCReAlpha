@@ -89,6 +89,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ClPS1Game.cs" />
+    <Compile Include="ClTGDBGame.cs" />
     <Compile Include="ClVersionHelper.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="FlexibleMessageBox.cs" />
@@ -239,6 +240,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="psx-icon-13.ico" />
+    <None Include="Resources\arrow-left-double-3.png" />
+    <Content Include="tgdbgames.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tgdbplatforms.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\folder-new-7.png" />
     <None Include="Resources\folder.png" />
     <None Include="Resources\bleem_48.png" />

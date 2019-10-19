@@ -28,8 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form23));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbGeneDeveloper = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.btExchangePublisherEditor = new System.Windows.Forms.Button();
+            this.btIniReload = new System.Windows.Forms.Button();
+            this.btReloadTitleDiscs = new System.Windows.Forms.Button();
             this.lbCurrentGameIniFile = new System.Windows.Forms.Label();
             this.btSaveIni = new System.Windows.Forms.Button();
             this.btGeneCopyTitle = new System.Windows.Forms.Button();
@@ -49,41 +55,48 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbGeneTitle = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btViewPage = new System.Windows.Forms.Button();
-            this.btLink = new System.Windows.Forms.Button();
+            this.btViewPagePSX = new System.Windows.Forms.Button();
+            this.btLinkPSX = new System.Windows.Forms.Button();
             this.btGeneSearch = new System.Windows.Forms.Button();
-            this.tbHiddenLink = new System.Windows.Forms.TextBox();
+            this.tbHiddenLinkPSX = new System.Windows.Forms.TextBox();
             this.tbGeneSearchText = new System.Windows.Forms.TextBox();
-            this.lbGeneBigData = new System.Windows.Forms.ListBox();
+            this.lbGeneBigDataPSX = new System.Windows.Forms.ListBox();
             this.btBack = new System.Windows.Forms.Button();
             this.sfdGeneSaveIni = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadIni = new System.Windows.Forms.OpenFileDialog();
             this.wbViewer = new System.Windows.Forms.WebBrowser();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btPictureReload = new System.Windows.Forms.Button();
             this.lbCurrentPngFile = new System.Windows.Forms.Label();
             this.btSave = new System.Windows.Forms.Button();
             this.btSaveAs = new System.Windows.Forms.Button();
             this.btLoad = new System.Windows.Forms.Button();
+            this.pbCover = new System.Windows.Forms.PictureBox();
             this.sfdGeneSaveImage = new System.Windows.Forms.SaveFileDialog();
             this.ofdGeneLoadImage = new System.Windows.Forms.OpenFileDialog();
+            this.tabControlSearchPanel = new System.Windows.Forms.TabControl();
+            this.tabPsxSearch = new System.Windows.Forms.TabPage();
+            this.tabTGDBNet = new System.Windows.Forms.TabPage();
+            this.btViewPageTGDB = new System.Windows.Forms.Button();
+            this.btLinkTGDB = new System.Windows.Forms.Button();
+            this.lbGeneBigDataTGDB = new System.Windows.Forms.ListBox();
+            this.tbHiddenLinkTGDB = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btScrapeImgProportional = new System.Windows.Forms.Button();
             this.pbTmp = new System.Windows.Forms.PictureBox();
             this.btScrapeImg = new System.Windows.Forms.Button();
-            this.btPictureReload = new System.Windows.Forms.Button();
-            this.pbCover = new System.Windows.Forms.PictureBox();
             this.btScraper = new System.Windows.Forms.Button();
-            this.btExchangePublisherEditor = new System.Windows.Forms.Button();
-            this.btIniReload = new System.Windows.Forms.Button();
-            this.btReloadTitleDiscs = new System.Windows.Forms.Button();
-            this.tbGeneDeveloper = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
-            this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).BeginInit();
+            this.tabControlSearchPanel.SuspendLayout();
+            this.tabPsxSearch.SuspendLayout();
+            this.tabTGDBNet.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -118,6 +131,52 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Game.ini";
+            // 
+            // tbGeneDeveloper
+            // 
+            this.tbGeneDeveloper.Location = new System.Drawing.Point(157, 123);
+            this.tbGeneDeveloper.Name = "tbGeneDeveloper";
+            this.tbGeneDeveloper.Size = new System.Drawing.Size(198, 20);
+            this.tbGeneDeveloper.TabIndex = 40;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(58, 126);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(56, 13);
+            this.label9.TabIndex = 39;
+            this.label9.Text = "Developer";
+            // 
+            // btExchangePublisherEditor
+            // 
+            this.btExchangePublisherEditor.Image = global::pbPSCReAlpha.Properties.Resources.arrow_switch;
+            this.btExchangePublisherEditor.Location = new System.Drawing.Point(9, 97);
+            this.btExchangePublisherEditor.Name = "btExchangePublisherEditor";
+            this.btExchangePublisherEditor.Size = new System.Drawing.Size(43, 46);
+            this.btExchangePublisherEditor.TabIndex = 38;
+            this.btExchangePublisherEditor.UseVisualStyleBackColor = true;
+            this.btExchangePublisherEditor.Click += new System.EventHandler(this.btExchangePublisherEditor_Click);
+            // 
+            // btIniReload
+            // 
+            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btIniReload.Location = new System.Drawing.Point(121, 175);
+            this.btIniReload.Name = "btIniReload";
+            this.btIniReload.Size = new System.Drawing.Size(30, 23);
+            this.btIniReload.TabIndex = 37;
+            this.btIniReload.UseVisualStyleBackColor = true;
+            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
+            // 
+            // btReloadTitleDiscs
+            // 
+            this.btReloadTitleDiscs.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btReloadTitleDiscs.Location = new System.Drawing.Point(361, 19);
+            this.btReloadTitleDiscs.Name = "btReloadTitleDiscs";
+            this.btReloadTitleDiscs.Size = new System.Drawing.Size(30, 46);
+            this.btReloadTitleDiscs.TabIndex = 36;
+            this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
+            this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
             // 
             // lbCurrentGameIniFile
             // 
@@ -195,12 +254,12 @@
             // 
             this.nuGeneYear.Location = new System.Drawing.Point(295, 151);
             this.nuGeneYear.Maximum = new decimal(new int[] {
-            2007,
+            2100,
             0,
             0,
             0});
             this.nuGeneYear.Minimum = new decimal(new int[] {
-            1994,
+            1900,
             0,
             0,
             0});
@@ -317,46 +376,31 @@
             this.label1.TabIndex = 17;
             this.label1.Text = "Title";
             // 
-            // groupBox2
+            // btViewPagePSX
             // 
-            this.groupBox2.Controls.Add(this.btViewPage);
-            this.groupBox2.Controls.Add(this.btLink);
-            this.groupBox2.Controls.Add(this.btGeneSearch);
-            this.groupBox2.Controls.Add(this.tbHiddenLink);
-            this.groupBox2.Controls.Add(this.tbGeneSearchText);
-            this.groupBox2.Controls.Add(this.lbGeneBigData);
-            this.groupBox2.Location = new System.Drawing.Point(1, 424);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(404, 197);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Search";
+            this.btViewPagePSX.Enabled = false;
+            this.btViewPagePSX.Location = new System.Drawing.Point(262, 6);
+            this.btViewPagePSX.Name = "btViewPagePSX";
+            this.btViewPagePSX.Size = new System.Drawing.Size(125, 23);
+            this.btViewPagePSX.TabIndex = 30;
+            this.btViewPagePSX.Text = "View page here";
+            this.btViewPagePSX.UseVisualStyleBackColor = true;
+            this.btViewPagePSX.Click += new System.EventHandler(this.btViewPage_Click);
             // 
-            // btViewPage
+            // btLinkPSX
             // 
-            this.btViewPage.Enabled = false;
-            this.btViewPage.Location = new System.Drawing.Point(273, 43);
-            this.btViewPage.Name = "btViewPage";
-            this.btViewPage.Size = new System.Drawing.Size(125, 23);
-            this.btViewPage.TabIndex = 30;
-            this.btViewPage.Text = "View page here";
-            this.btViewPage.UseVisualStyleBackColor = true;
-            this.btViewPage.Click += new System.EventHandler(this.btViewPage_Click);
-            // 
-            // btLink
-            // 
-            this.btLink.Enabled = false;
-            this.btLink.Location = new System.Drawing.Point(142, 43);
-            this.btLink.Name = "btLink";
-            this.btLink.Size = new System.Drawing.Size(125, 23);
-            this.btLink.TabIndex = 29;
-            this.btLink.Text = "Go to PSXdatacenter";
-            this.btLink.UseVisualStyleBackColor = true;
-            this.btLink.Click += new System.EventHandler(this.btLink_Click);
+            this.btLinkPSX.Enabled = false;
+            this.btLinkPSX.Location = new System.Drawing.Point(131, 6);
+            this.btLinkPSX.Name = "btLinkPSX";
+            this.btLinkPSX.Size = new System.Drawing.Size(125, 23);
+            this.btLinkPSX.TabIndex = 29;
+            this.btLinkPSX.Text = "Go to PSXdatacenter";
+            this.btLinkPSX.UseVisualStyleBackColor = true;
+            this.btLinkPSX.Click += new System.EventHandler(this.btLink_Click);
             // 
             // btGeneSearch
             // 
-            this.btGeneSearch.Location = new System.Drawing.Point(273, 14);
+            this.btGeneSearch.Location = new System.Drawing.Point(273, 17);
             this.btGeneSearch.Name = "btGeneSearch";
             this.btGeneSearch.Size = new System.Drawing.Size(125, 23);
             this.btGeneSearch.TabIndex = 27;
@@ -364,33 +408,33 @@
             this.btGeneSearch.UseVisualStyleBackColor = true;
             this.btGeneSearch.Click += new System.EventHandler(this.btGeneSearch_Click);
             // 
-            // tbHiddenLink
+            // tbHiddenLinkPSX
             // 
-            this.tbHiddenLink.Enabled = false;
-            this.tbHiddenLink.Location = new System.Drawing.Point(6, 45);
-            this.tbHiddenLink.Name = "tbHiddenLink";
-            this.tbHiddenLink.Size = new System.Drawing.Size(119, 20);
-            this.tbHiddenLink.TabIndex = 28;
-            this.tbHiddenLink.Visible = false;
+            this.tbHiddenLinkPSX.Enabled = false;
+            this.tbHiddenLinkPSX.Location = new System.Drawing.Point(6, 6);
+            this.tbHiddenLinkPSX.Name = "tbHiddenLinkPSX";
+            this.tbHiddenLinkPSX.Size = new System.Drawing.Size(119, 20);
+            this.tbHiddenLinkPSX.TabIndex = 28;
+            this.tbHiddenLinkPSX.Visible = false;
             // 
             // tbGeneSearchText
             // 
-            this.tbGeneSearchText.Location = new System.Drawing.Point(6, 16);
+            this.tbGeneSearchText.Location = new System.Drawing.Point(6, 19);
             this.tbGeneSearchText.Name = "tbGeneSearchText";
             this.tbGeneSearchText.Size = new System.Drawing.Size(261, 20);
             this.tbGeneSearchText.TabIndex = 26;
             this.tbGeneSearchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbGeneSearchText_KeyDown);
             // 
-            // lbGeneBigData
+            // lbGeneBigDataPSX
             // 
-            this.lbGeneBigData.FormattingEnabled = true;
-            this.lbGeneBigData.Location = new System.Drawing.Point(6, 72);
-            this.lbGeneBigData.Name = "lbGeneBigData";
-            this.lbGeneBigData.ScrollAlwaysVisible = true;
-            this.lbGeneBigData.Size = new System.Drawing.Size(392, 121);
-            this.lbGeneBigData.TabIndex = 25;
-            this.lbGeneBigData.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigData_SelectedIndexChanged);
-            this.lbGeneBigData.DoubleClick += new System.EventHandler(this.lbGeneBigData_DoubleClick);
+            this.lbGeneBigDataPSX.FormattingEnabled = true;
+            this.lbGeneBigDataPSX.Location = new System.Drawing.Point(1, 34);
+            this.lbGeneBigDataPSX.Name = "lbGeneBigDataPSX";
+            this.lbGeneBigDataPSX.ScrollAlwaysVisible = true;
+            this.lbGeneBigDataPSX.Size = new System.Drawing.Size(389, 95);
+            this.lbGeneBigDataPSX.TabIndex = 25;
+            this.lbGeneBigDataPSX.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigData_SelectedIndexChanged);
+            this.lbGeneBigDataPSX.DoubleClick += new System.EventHandler(this.lbGeneBigData_DoubleClick);
             // 
             // btBack
             // 
@@ -423,11 +467,13 @@
             // 
             // wbViewer
             // 
+            this.wbViewer.AllowNavigation = false;
             this.wbViewer.AllowWebBrowserDrop = false;
             this.wbViewer.IsWebBrowserContextMenuEnabled = false;
             this.wbViewer.Location = new System.Drawing.Point(442, 0);
             this.wbViewer.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbViewer.Name = "wbViewer";
+            this.wbViewer.ScriptErrorsSuppressed = true;
             this.wbViewer.Size = new System.Drawing.Size(822, 658);
             this.wbViewer.TabIndex = 29;
             this.wbViewer.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbViewer_DocumentCompleted);
@@ -446,6 +492,16 @@
             this.groupBox3.TabIndex = 31;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Picture";
+            // 
+            // btPictureReload
+            // 
+            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
+            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
+            this.btPictureReload.Name = "btPictureReload";
+            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
+            this.btPictureReload.TabIndex = 38;
+            this.btPictureReload.UseVisualStyleBackColor = true;
+            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
             // 
             // lbCurrentPngFile
             // 
@@ -487,6 +543,20 @@
             this.btLoad.UseVisualStyleBackColor = true;
             this.btLoad.Click += new System.EventHandler(this.btLoad_Click);
             // 
+            // pbCover
+            // 
+            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCover.Location = new System.Drawing.Point(6, 19);
+            this.pbCover.Name = "pbCover";
+            this.pbCover.Size = new System.Drawing.Size(150, 150);
+            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbCover.TabIndex = 26;
+            this.pbCover.TabStop = false;
+            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
+            this.pbCover.LocationChanged += new System.EventHandler(this.pbCover_LocationChanged);
+            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
+            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
+            // 
             // sfdGeneSaveImage
             // 
             this.sfdGeneSaveImage.DefaultExt = "png";
@@ -505,6 +575,110 @@
             this.ofdGeneLoadImage.ShowHelp = true;
             this.ofdGeneLoadImage.Title = "Load file";
             // 
+            // tabControlSearchPanel
+            // 
+            this.tabControlSearchPanel.Controls.Add(this.tabPsxSearch);
+            this.tabControlSearchPanel.Controls.Add(this.tabTGDBNet);
+            this.tabControlSearchPanel.Location = new System.Drawing.Point(6, 45);
+            this.tabControlSearchPanel.Name = "tabControlSearchPanel";
+            this.tabControlSearchPanel.SelectedIndex = 0;
+            this.tabControlSearchPanel.Size = new System.Drawing.Size(398, 158);
+            this.tabControlSearchPanel.TabIndex = 40;
+            // 
+            // tabPsxSearch
+            // 
+            this.tabPsxSearch.Controls.Add(this.btViewPagePSX);
+            this.tabPsxSearch.Controls.Add(this.btLinkPSX);
+            this.tabPsxSearch.Controls.Add(this.lbGeneBigDataPSX);
+            this.tabPsxSearch.Controls.Add(this.tbHiddenLinkPSX);
+            this.tabPsxSearch.Location = new System.Drawing.Point(4, 22);
+            this.tabPsxSearch.Name = "tabPsxSearch";
+            this.tabPsxSearch.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPsxSearch.Size = new System.Drawing.Size(390, 132);
+            this.tabPsxSearch.TabIndex = 0;
+            this.tabPsxSearch.Text = "PSXDataCenter";
+            this.tabPsxSearch.UseVisualStyleBackColor = true;
+            // 
+            // tabTGDBNet
+            // 
+            this.tabTGDBNet.Controls.Add(this.btViewPageTGDB);
+            this.tabTGDBNet.Controls.Add(this.btLinkTGDB);
+            this.tabTGDBNet.Controls.Add(this.lbGeneBigDataTGDB);
+            this.tabTGDBNet.Controls.Add(this.tbHiddenLinkTGDB);
+            this.tabTGDBNet.Location = new System.Drawing.Point(4, 22);
+            this.tabTGDBNet.Name = "tabTGDBNet";
+            this.tabTGDBNet.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTGDBNet.Size = new System.Drawing.Size(390, 132);
+            this.tabTGDBNet.TabIndex = 1;
+            this.tabTGDBNet.Text = "TheGamesDB";
+            this.tabTGDBNet.UseVisualStyleBackColor = true;
+            // 
+            // btViewPageTGDB
+            // 
+            this.btViewPageTGDB.Enabled = false;
+            this.btViewPageTGDB.Location = new System.Drawing.Point(262, 5);
+            this.btViewPageTGDB.Name = "btViewPageTGDB";
+            this.btViewPageTGDB.Size = new System.Drawing.Size(125, 23);
+            this.btViewPageTGDB.TabIndex = 34;
+            this.btViewPageTGDB.Text = "View page here";
+            this.btViewPageTGDB.UseVisualStyleBackColor = true;
+            this.btViewPageTGDB.Click += new System.EventHandler(this.btViewPageTGDB_Click);
+            // 
+            // btLinkTGDB
+            // 
+            this.btLinkTGDB.Enabled = false;
+            this.btLinkTGDB.Location = new System.Drawing.Point(131, 5);
+            this.btLinkTGDB.Name = "btLinkTGDB";
+            this.btLinkTGDB.Size = new System.Drawing.Size(125, 23);
+            this.btLinkTGDB.TabIndex = 33;
+            this.btLinkTGDB.Text = "Go to TheGamesDB";
+            this.btLinkTGDB.UseVisualStyleBackColor = true;
+            this.btLinkTGDB.Click += new System.EventHandler(this.btLinkTGDB_Click);
+            // 
+            // lbGeneBigDataTGDB
+            // 
+            this.lbGeneBigDataTGDB.FormattingEnabled = true;
+            this.lbGeneBigDataTGDB.Location = new System.Drawing.Point(1, 33);
+            this.lbGeneBigDataTGDB.Name = "lbGeneBigDataTGDB";
+            this.lbGeneBigDataTGDB.ScrollAlwaysVisible = true;
+            this.lbGeneBigDataTGDB.Size = new System.Drawing.Size(389, 95);
+            this.lbGeneBigDataTGDB.TabIndex = 31;
+            this.lbGeneBigDataTGDB.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigDataTGDB_SelectedIndexChanged);
+            this.lbGeneBigDataTGDB.DoubleClick += new System.EventHandler(this.lbGeneBigDataTGDB_DoubleClick);
+            // 
+            // tbHiddenLinkTGDB
+            // 
+            this.tbHiddenLinkTGDB.Enabled = false;
+            this.tbHiddenLinkTGDB.Location = new System.Drawing.Point(6, 5);
+            this.tbHiddenLinkTGDB.Name = "tbHiddenLinkTGDB";
+            this.tbHiddenLinkTGDB.Size = new System.Drawing.Size(119, 20);
+            this.tbHiddenLinkTGDB.TabIndex = 32;
+            this.tbHiddenLinkTGDB.Visible = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.tbGeneSearchText);
+            this.groupBox2.Controls.Add(this.tabControlSearchPanel);
+            this.groupBox2.Controls.Add(this.btGeneSearch);
+            this.groupBox2.Location = new System.Drawing.Point(1, 418);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(404, 203);
+            this.groupBox2.TabIndex = 41;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Search";
+            // 
+            // btScrapeImgProportional
+            // 
+            this.btScrapeImgProportional.Enabled = false;
+            this.btScrapeImgProportional.Image = global::pbPSCReAlpha.Properties.Resources.arrow_left_double_3;
+            this.btScrapeImgProportional.Location = new System.Drawing.Point(411, 309);
+            this.btScrapeImgProportional.Name = "btScrapeImgProportional";
+            this.btScrapeImgProportional.Size = new System.Drawing.Size(25, 75);
+            this.btScrapeImgProportional.TabIndex = 42;
+            this.toolTipMain.SetToolTip(this.btScrapeImgProportional, "Copy picture keeping aspect ratio");
+            this.btScrapeImgProportional.UseVisualStyleBackColor = true;
+            this.btScrapeImgProportional.Click += new System.EventHandler(this.btScrapeImgProportional_Click);
+            // 
             // pbTmp
             // 
             this.pbTmp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -520,36 +694,13 @@
             // 
             this.btScrapeImg.Enabled = false;
             this.btScrapeImg.Image = global::pbPSCReAlpha.Properties.Resources.arrow_left_double;
-            this.btScrapeImg.Location = new System.Drawing.Point(411, 231);
+            this.btScrapeImg.Location = new System.Drawing.Point(411, 232);
             this.btScrapeImg.Name = "btScrapeImg";
-            this.btScrapeImg.Size = new System.Drawing.Size(25, 161);
+            this.btScrapeImg.Size = new System.Drawing.Size(25, 75);
             this.btScrapeImg.TabIndex = 32;
+            this.toolTipMain.SetToolTip(this.btScrapeImg, "Copy picture");
             this.btScrapeImg.UseVisualStyleBackColor = true;
             this.btScrapeImg.Click += new System.EventHandler(this.btScrapeImg_Click);
-            // 
-            // btPictureReload
-            // 
-            this.btPictureReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btPictureReload.Location = new System.Drawing.Point(157, 146);
-            this.btPictureReload.Name = "btPictureReload";
-            this.btPictureReload.Size = new System.Drawing.Size(30, 23);
-            this.btPictureReload.TabIndex = 38;
-            this.btPictureReload.UseVisualStyleBackColor = true;
-            this.btPictureReload.Click += new System.EventHandler(this.btPictureReload_Click);
-            // 
-            // pbCover
-            // 
-            this.pbCover.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCover.Location = new System.Drawing.Point(6, 19);
-            this.pbCover.Name = "pbCover";
-            this.pbCover.Size = new System.Drawing.Size(150, 150);
-            this.pbCover.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbCover.TabIndex = 26;
-            this.pbCover.TabStop = false;
-            this.pbCover.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pbCover_LoadCompleted);
-            this.pbCover.LocationChanged += new System.EventHandler(this.pbCover_LocationChanged);
-            this.pbCover.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCover_DragDrop);
-            this.pbCover.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCover_DragEnter);
             // 
             // btScraper
             // 
@@ -559,54 +710,9 @@
             this.btScraper.Name = "btScraper";
             this.btScraper.Size = new System.Drawing.Size(25, 202);
             this.btScraper.TabIndex = 30;
+            this.toolTipMain.SetToolTip(this.btScraper, "Copy information");
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
-            // 
-            // btExchangePublisherEditor
-            // 
-            this.btExchangePublisherEditor.Image = global::pbPSCReAlpha.Properties.Resources.arrow_switch;
-            this.btExchangePublisherEditor.Location = new System.Drawing.Point(9, 97);
-            this.btExchangePublisherEditor.Name = "btExchangePublisherEditor";
-            this.btExchangePublisherEditor.Size = new System.Drawing.Size(43, 46);
-            this.btExchangePublisherEditor.TabIndex = 38;
-            this.btExchangePublisherEditor.UseVisualStyleBackColor = true;
-            this.btExchangePublisherEditor.Click += new System.EventHandler(this.btExchangePublisherEditor_Click);
-            // 
-            // btIniReload
-            // 
-            this.btIniReload.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btIniReload.Location = new System.Drawing.Point(121, 175);
-            this.btIniReload.Name = "btIniReload";
-            this.btIniReload.Size = new System.Drawing.Size(30, 23);
-            this.btIniReload.TabIndex = 37;
-            this.btIniReload.UseVisualStyleBackColor = true;
-            this.btIniReload.Click += new System.EventHandler(this.btIniReload_Click);
-            // 
-            // btReloadTitleDiscs
-            // 
-            this.btReloadTitleDiscs.Image = global::pbPSCReAlpha.Properties.Resources.arrow_undo;
-            this.btReloadTitleDiscs.Location = new System.Drawing.Point(361, 19);
-            this.btReloadTitleDiscs.Name = "btReloadTitleDiscs";
-            this.btReloadTitleDiscs.Size = new System.Drawing.Size(30, 46);
-            this.btReloadTitleDiscs.TabIndex = 36;
-            this.btReloadTitleDiscs.UseVisualStyleBackColor = true;
-            this.btReloadTitleDiscs.Click += new System.EventHandler(this.btReloadTitleDiscs_Click);
-            // 
-            // tbGeneDeveloper
-            // 
-            this.tbGeneDeveloper.Location = new System.Drawing.Point(157, 123);
-            this.tbGeneDeveloper.Name = "tbGeneDeveloper";
-            this.tbGeneDeveloper.Size = new System.Drawing.Size(198, 20);
-            this.tbGeneDeveloper.TabIndex = 40;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(58, 126);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(56, 13);
-            this.label9.TabIndex = 39;
-            this.label9.Text = "Developer";
             // 
             // Form23
             // 
@@ -614,13 +720,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btBack;
             this.ClientSize = new System.Drawing.Size(1264, 657);
+            this.Controls.Add(this.btScrapeImgProportional);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.pbTmp);
             this.Controls.Add(this.btScrapeImg);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btScraper);
             this.Controls.Add(this.wbViewer);
             this.Controls.Add(this.btBack);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -628,16 +735,22 @@
             this.MinimizeBox = false;
             this.Name = "Form23";
             this.Text = "Picture & Game.ini Helper";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form23_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCover)).EndInit();
+            this.tabControlSearchPanel.ResumeLayout(false);
+            this.tabPsxSearch.ResumeLayout(false);
+            this.tabPsxSearch.PerformLayout();
+            this.tabTGDBNet.ResumeLayout(false);
+            this.tabTGDBNet.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -662,18 +775,17 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbGeneTitle;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btLink;
-        private System.Windows.Forms.TextBox tbHiddenLink;
+        private System.Windows.Forms.Button btLinkPSX;
+        private System.Windows.Forms.TextBox tbHiddenLinkPSX;
         private System.Windows.Forms.Button btGeneSearch;
         private System.Windows.Forms.TextBox tbGeneSearchText;
-        private System.Windows.Forms.ListBox lbGeneBigData;
+        private System.Windows.Forms.ListBox lbGeneBigDataPSX;
         private System.Windows.Forms.Button btBack;
         private System.Windows.Forms.SaveFileDialog sfdGeneSaveIni;
         private System.Windows.Forms.OpenFileDialog ofdGeneLoadIni;
         private System.Windows.Forms.Label lbCurrentGameIniFile;
         private System.Windows.Forms.Button btSaveIni;
-        private System.Windows.Forms.Button btViewPage;
+        private System.Windows.Forms.Button btViewPagePSX;
         private System.Windows.Forms.WebBrowser wbViewer;
         private System.Windows.Forms.Button btScraper;
         private System.Windows.Forms.Button btReloadTitleDiscs;
@@ -692,5 +804,15 @@
         private System.Windows.Forms.Button btExchangePublisherEditor;
         private System.Windows.Forms.TextBox tbGeneDeveloper;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TabControl tabControlSearchPanel;
+        private System.Windows.Forms.TabPage tabPsxSearch;
+        private System.Windows.Forms.TabPage tabTGDBNet;
+        private System.Windows.Forms.Button btViewPageTGDB;
+        private System.Windows.Forms.Button btLinkTGDB;
+        private System.Windows.Forms.ListBox lbGeneBigDataTGDB;
+        private System.Windows.Forms.TextBox tbHiddenLinkTGDB;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btScrapeImgProportional;
+        private System.Windows.Forms.ToolTip toolTipMain;
     }
 }

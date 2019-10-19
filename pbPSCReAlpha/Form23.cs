@@ -7,8 +7,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace pbPSCReAlpha
 {
@@ -17,18 +19,23 @@ namespace pbPSCReAlpha
         String _folderPath;
         SimpleLogger slLogger;
         Dictionary<String, ClPS1Game> dcPs1Games;
+        Dictionary<string, ClTGDBGame> dcTgdbGames;
         ClGameStructure newGame;
         String _currentFilePathIni;
         String _currentFilePathImg;
         String _docHtmlStr;
         ClVersionHelper _versionBS;
+        int _sleepTime = 200;
+        int _lastSite = -1;
+        
 
-        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClVersionHelper cvh)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, Dictionary<string, ClTGDBGame> dcClTgdbGames, ClVersionHelper cvh)
         {
             InitializeComponent();
             _folderPath = sFolderPath;
             slLogger = sl;
             dcPs1Games = dcClPS1Games;
+            dcTgdbGames = dcClTgdbGames;
             _versionBS = cvh;
             newGame = null;
             _currentFilePathIni = String.Empty;
@@ -45,11 +52,12 @@ namespace pbPSCReAlpha
             btPictureReload.Enabled = false;
         }
 
-        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, ClVersionHelper cvh, ClGameStructure myGame)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, Dictionary<string, ClTGDBGame> dcClTgdbGames, ClVersionHelper cvh, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
             dcPs1Games = dcClPS1Games;
+            dcTgdbGames = dcClTgdbGames;
             _versionBS = cvh;
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + _versionBS.GameDataFolder;
@@ -91,6 +99,15 @@ namespace pbPSCReAlpha
             lbCurrentPngFile.Text = _currentFilePathImg;
             btSave.Enabled = false;
             btPictureReload.Enabled = false;
+
+            if(newGame.BypassLaunchScript)
+            {
+                tabControlSearchPanel.SelectedTab = tabTGDBNet;
+            }
+            else
+            {
+                tabControlSearchPanel.SelectedTab = tabPsxSearch;
+            }
 
             if (!newGame.PngMissing)
             {
@@ -335,30 +352,52 @@ namespace pbPSCReAlpha
             if (null != slLogger)
                 slLogger.Trace(">> Search Game Click");
             String s = tbGeneSearchText.Text.Trim().ToUpper();
-            lbGeneBigData.Items.Clear();
-            lbGeneBigData.DisplayMember = "DisplayTitle";
-            tbHiddenLink.Text = "";
+            lbGeneBigDataPSX.Items.Clear();
+            lbGeneBigDataPSX.DisplayMember = "DisplayTitle";
+            tbHiddenLinkPSX.Text = "";
+            btViewPagePSX.Enabled = false;
+            btLinkPSX.Enabled = false;
+
+            lbGeneBigDataTGDB.Items.Clear();
+            lbGeneBigDataTGDB.DisplayMember = "DisplayTitle";
+            tbHiddenLinkTGDB.Text = "";
+            btViewPageTGDB.Enabled = false;
+            btLinkTGDB.Enabled = false;
+
             btScraper.Enabled = false;
             btScrapeImg.Enabled = false;
-            btViewPage.Enabled = false;
-            btLink.Enabled = false;
+            btScrapeImgProportional.Enabled = false;
+
             _docHtmlStr = String.Empty;
+            if (s.Length < 2)
+            {
+                FlexibleMessageBox.Show("You have to enter at least 2 characters (other than space) to search something.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
             if (dcPs1Games.Count > 0)
             {
-                if (s.Length >= 2)
+                foreach (KeyValuePair<string, ClPS1Game> pair in dcPs1Games)
                 {
-                    foreach (KeyValuePair<string, ClPS1Game> pair in dcPs1Games)
+                    ClPS1Game c1 = pair.Value;
+                    if (c1.Title.ToUpper().Contains(s))
                     {
-                        ClPS1Game c1 = pair.Value;
-                        if (c1.Title.ToUpper().Contains(s))
-                        {
-                            lbGeneBigData.Items.Add(c1);
-                        }
+                        lbGeneBigDataPSX.Items.Add(c1);
                     }
                 }
-                else
+            }
+            else
+            {
+                FlexibleMessageBox.Show("Error. Gamelist not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            if (dcTgdbGames.Count > 0)
+            {
+                foreach (KeyValuePair<string, ClTGDBGame> pair in dcTgdbGames)
                 {
-                    FlexibleMessageBox.Show("You have to enter at least 2 characters (other than space) to search something.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ClTGDBGame c1 = pair.Value;
+                    if (c1.Title.ToUpper().Contains(s))
+                    {
+                        lbGeneBigDataTGDB.Items.Add(c1);
+                    }
                 }
             }
             else
@@ -374,7 +413,7 @@ namespace pbPSCReAlpha
             if (null != slLogger)
                 slLogger.Trace(">> Game Link Click");
 
-            String sLink = tbHiddenLink.Text.Trim();
+            String sLink = tbHiddenLinkPSX.Text.Trim();
             if (!String.IsNullOrEmpty(sLink))
             {
                 System.Diagnostics.Process.Start("http://psxdatacenter.com/" + sLink);
@@ -387,9 +426,9 @@ namespace pbPSCReAlpha
         {
             if (null != slLogger)
                 slLogger.Trace(">> Game Selection changed in search results");
-            if (lbGeneBigData.SelectedIndex > -1)
+            if (lbGeneBigDataPSX.SelectedIndex > -1)
             {
-                ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
+                ClPS1Game psGame = (ClPS1Game)(lbGeneBigDataPSX.Items[lbGeneBigDataPSX.SelectedIndex]);
                 String sTitle = psGame.Title.Trim();
                 int ipos = sTitle.LastIndexOf("- [");
                 if(ipos > -1)
@@ -398,14 +437,14 @@ namespace pbPSCReAlpha
                 }
                 tbGeneTitle.Text = sTitle.Trim();
                 tbGeneDiscs.Text = psGame.Serial.Trim();
-                tbHiddenLink.Text = psGame.Link.Trim();
-                btLink.Enabled = true;
-                btViewPage.Enabled = true;
+                tbHiddenLinkPSX.Text = psGame.Link.Trim();
+                btLinkPSX.Enabled = true;
+                btViewPagePSX.Enabled = true;
             }
             else
             {
-                btLink.Enabled = false;
-                btViewPage.Enabled = false;
+                btLinkPSX.Enabled = false;
+                btViewPagePSX.Enabled = false;
             }
             if (null != slLogger)
                 slLogger.Trace("<< Game Selection changed in search results");
@@ -515,16 +554,23 @@ namespace pbPSCReAlpha
         {
             if (null != slLogger)
                 slLogger.Trace(">> View webpage Click");
-            if (lbGeneBigData.SelectedIndex > -1)
+            if (lbGeneBigDataPSX.SelectedIndex > -1)
             {
                 try
                 {
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
                     wbViewer.Navigate("about:blank");
+                    Thread.Sleep(_sleepTime);
                     btScraper.Enabled = false;
                     btScrapeImg.Enabled = false;
-                    ClPS1Game psGame = (ClPS1Game)(lbGeneBigData.Items[lbGeneBigData.SelectedIndex]);
-                    //wbViewer.Url = new Uri("http://psxdatacenter.com/" + psGame.Link.Trim());
+                    btScrapeImgProportional.Enabled = false;
+                    ClPS1Game psGame = (ClPS1Game)(lbGeneBigDataPSX.Items[lbGeneBigDataPSX.SelectedIndex]);
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
                     wbViewer.Navigate("http://psxdatacenter.com/" + psGame.Link.Trim());
+                    Thread.Sleep(_sleepTime);
+                    _lastSite = 1;
                 }
                 catch (Exception ex)
                 {
@@ -550,6 +596,16 @@ namespace pbPSCReAlpha
                     btScraper.Enabled = true;
                     this.pbTmp.WaitOnLoad = false;
                     this.pbTmp.ImageLocation = imgUrl;
+                    wbViewer.AllowNavigation = false;
+                    break;
+                }
+                else
+                if (imgUrl.StartsWith("https://cdn.thegamesdb.net/images/thumb/boxart/front/"))
+                {
+                    btScraper.Enabled = true;
+                    this.pbTmp.WaitOnLoad = false;
+                    this.pbTmp.ImageLocation = imgUrl;
+                    wbViewer.AllowNavigation = false;
                     break;
                 }
             }
@@ -559,7 +615,7 @@ namespace pbPSCReAlpha
         {
             if (null != slLogger)
                 slLogger.Trace(">> Scrape webpage Click");
-            ClGameScraper clgs = new ClGameScraper(_docHtmlStr);
+            ClGameScraper clgs = new ClGameScraper(_docHtmlStr, _lastSite);
 
             tbGenePublisher.Text = clgs.Publisher;
             tbGeneDeveloper.Text = clgs.Developer;
@@ -745,7 +801,6 @@ namespace pbPSCReAlpha
             }
             if (null != slLogger)
                 slLogger.Trace("<< Scrape image Click");
-            
         }
 
         private void pbCover_DragDrop(object sender, DragEventArgs e)
@@ -761,9 +816,70 @@ namespace pbPSCReAlpha
                     List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
                     if (lsAcceptedExt.IndexOf(sExt) > -1)
                     {
-                        using (Bitmap bmPicture = new Bitmap(sFileList[0]))
+                        if ((Control.ModifierKeys == Keys.Shift))
                         {
-                            pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                            using (Bitmap bm2 = new Bitmap(sFileList[0]))
+                            {
+                                int width = 226;
+                                int height = 226;
+                                int orig_width = bm2.Width;
+                                int orig_height = bm2.Height;
+                                float orig_ratio = 0;
+                                if (orig_height != 0)
+                                {
+                                    orig_ratio = (float)(orig_width) / (float)(orig_height);
+                                }
+                                else
+                                {
+                                    orig_ratio = 0;
+                                }
+                                if ((orig_ratio != 0) && (height != 0) && (orig_ratio != (width / height))) 
+                                {
+                                    using (Bitmap bm = new Bitmap(width, height)) 
+                                    {
+                                        using (Graphics gp = Graphics.FromImage(bm))
+                                        {
+                                            float current_ratio = (float)(width) / (float)(height);
+                                            int width1 = (int)(height * orig_ratio);
+                                            int height1 = (int)(width / orig_ratio);
+                                            //gp = Graphics.FromImage(bm);
+                                            gp.Clear(Color.Transparent);
+                                            int x = 0;
+                                            int y = 0;
+                                            if (width1 < width)
+                                            {
+                                                using (Bitmap bm1 = new Bitmap(ClPbHelper.ResizeImage(bm2, width1, height)))
+                                                {
+                                                    x = ((width - width1) / 2);
+                                                    gp.DrawImage(bm1, x, y);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                using (Bitmap bm1 = new Bitmap(ClPbHelper.ResizeImage(bm2, width, height1)))
+                                                {
+                                                    y = ((height - height1) / 2);
+                                                    gp.DrawImage(bm1, x, y);
+                                                }
+                                            }
+                                            gp.Flush();
+                                        }
+                                        //pbCover.Image = (Image)(new Bitmap(bm));
+                                        pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm)), 226, 226);
+                                    }
+                                }
+                                else
+                                {
+                                    pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm2)), 226, 226);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (Bitmap bmPicture = new Bitmap(sFileList[0]))
+                            {
+                                pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                            }
                         }
                     }
                     else
@@ -783,6 +899,10 @@ namespace pbPSCReAlpha
             {
                 if (null != slLogger)
                     slLogger.Fatal(ex.Message);
+            }
+            finally
+            {
+                e.Data.SetData(new Object());
             }
             if (null != slLogger)
                 slLogger.Trace("<< Dragdrop image");
@@ -877,6 +997,7 @@ namespace pbPSCReAlpha
         {
             //
             btScrapeImg.Enabled = true;
+            btScrapeImgProportional.Enabled = true;
         }
 
         private void lbGeneBigData_DoubleClick(object sender, EventArgs e)
@@ -889,6 +1010,162 @@ namespace pbPSCReAlpha
             String s = tbGeneDeveloper.Text;
             tbGeneDeveloper.Text = tbGenePublisher.Text;
             tbGenePublisher.Text = s;
+        }
+
+        private void btLinkTGDB_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Game Link Click");
+
+            String sLink = tbHiddenLinkTGDB.Text.Trim();
+            if (!String.IsNullOrEmpty(sLink))
+            {
+                System.Diagnostics.Process.Start("https://thegamesdb.net/game.php?id=" + sLink);
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Game Link Click");
+        }
+
+        private void btViewPageTGDB_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> View webpage Click");
+            if (lbGeneBigDataTGDB.SelectedIndex > -1)
+            {
+                try
+                {
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
+                    wbViewer.Navigate("about:blank");
+                    Thread.Sleep(_sleepTime);
+                    btScraper.Enabled = false;
+                    btScrapeImg.Enabled = false;
+                    btScrapeImgProportional.Enabled = false;
+                    ClTGDBGame tgdbGame = (ClTGDBGame)(lbGeneBigDataTGDB.Items[lbGeneBigDataTGDB.SelectedIndex]);
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
+                    wbViewer.Navigate("https://thegamesdb.net/game.php?id=" + tgdbGame.Link.Trim());
+                    Thread.Sleep(_sleepTime);
+                    _lastSite = 2;
+                }
+                catch (Exception ex)
+                {
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
+                }
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< View webpage Click");
+        }
+
+        private void lbGeneBigDataTGDB_DoubleClick(object sender, EventArgs e)
+        {
+            btViewPageTGDB_Click(sender, e);
+        }
+
+        private void lbGeneBigDataTGDB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Game Selection changed in search results");
+            if (lbGeneBigDataTGDB.SelectedIndex > -1)
+            {
+                ClTGDBGame tgdbGame = (ClTGDBGame)(lbGeneBigDataTGDB.Items[lbGeneBigDataTGDB.SelectedIndex]);
+                String sTitle = tgdbGame.Title.Trim();
+                int ipos = sTitle.LastIndexOf("- [");
+                if (ipos > -1)
+                {
+                    sTitle = sTitle.Substring(0, ipos).Trim();
+                }
+                tbGeneTitle.Text = sTitle.Trim();
+                tbHiddenLinkTGDB.Text = tgdbGame.Link.Trim();
+                btLinkTGDB.Enabled = true;
+                btViewPageTGDB.Enabled = true;
+            }
+            else
+            {
+                btLinkTGDB.Enabled = false;
+                btViewPageTGDB.Enabled = false;
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Game Selection changed in search results");
+        }
+
+        private void btScrapeImgProportional_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Scrape image Click");
+            try
+            {
+                using (Bitmap bm2 = new Bitmap(pbTmp.Image))
+                {
+                    int width = 226;
+                    int height = 226;
+                    int orig_width = bm2.Width;
+                    int orig_height = bm2.Height;
+                    float orig_ratio = 0;
+                    if (orig_height != 0)
+                    {
+                        orig_ratio = (float)(orig_width) / (float)(orig_height);
+                    }
+                    else
+                    {
+                        orig_ratio = 0;
+                    }
+
+                    if ((orig_ratio != 0) && (height != 0) && (orig_ratio != (width / height)))
+                    {
+                        using (Bitmap bm = new Bitmap(width, height))
+                        {
+                            using (Graphics gp = Graphics.FromImage(bm))
+                            {
+                                float current_ratio = (float)(width) / (float)(height);
+                                int width1 = (int)(height * orig_ratio);
+                                int height1 = (int)(width / orig_ratio);
+                                gp.Clear(Color.Transparent);
+                                int x = 0;
+                                int y = 0;
+                                if (width1 < width)
+                                {
+                                    using (Bitmap bm1 = new Bitmap(ClPbHelper.ResizeImage(pbTmp.Image, width1, height)))
+                                    {
+                                        x = ((width - width1) / 2);
+                                        gp.DrawImage(bm1, x, y);
+                                    }
+                                }
+                                else
+                                {
+                                    using (Bitmap bm1 = new Bitmap(ClPbHelper.ResizeImage(pbTmp.Image, width, height1)))
+                                    {
+                                        y = ((height - height1) / 2);
+                                        gp.DrawImage(bm1, x, y);
+                                    }
+                                }
+                                gp.Flush();
+                            }
+                            pbCover.Image = (Image)(new Bitmap(bm));
+                        }
+                    }
+                    else
+                    {
+                        pbCover.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm2)), 226, 226);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (null != slLogger)
+                    slLogger.Fatal(ex.Message);
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Scrape image Click");
+        }
+
+        private void Form23_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            wbViewer.AllowNavigation = true;
+            Thread.Sleep(_sleepTime);
+            wbViewer.Navigate("about:blank"); // reset page with sleep in order to prevent from crash ??? bad workaround but works... TBD
+            Thread.Sleep(_sleepTime);
         }
     }
 }
