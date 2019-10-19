@@ -19,6 +19,7 @@ namespace pbPSCReAlpha
     public partial class Form1 : Form
     {
         Dictionary<String, ClPS1Game> dcPs1Games;
+        Dictionary<string, ClTGDBGame> dcTgdbGames;
         List<String> lsFolders;
         List<String> lsTitles;
         List<String> lsSbiNeeds;
@@ -40,7 +41,7 @@ namespace pbPSCReAlpha
 
         public bool bNeedRecreateDB = false;
 
-        public Form1(Dictionary<string, ClPS1Game> ps1games)
+        public Form1(Dictionary<string, ClPS1Game> ps1games, Dictionary<string, ClTGDBGame> tgdbgames)
         {
             InitializeComponent();
             this.Text = "pbPSCReAlpha v" + Assembly.GetExecutingAssembly().GetName().Version;
@@ -103,6 +104,7 @@ namespace pbPSCReAlpha
             this.frmCopy.Visible = false;
 
             dcPs1Games = ps1games;
+            dcTgdbGames = tgdbgames;
             lsSbiNeeds = new List<string>();
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
@@ -331,6 +333,8 @@ namespace pbPSCReAlpha
                 bool bBadChdName = false;
                 bool bNameWithComma = false;
                 bool bBadDiscsName = false;
+                bool bLaunchShPresent = false;
+                bool bBypassByShellScript = false;
                 UInt16 uiGameIni = 0;
                 int iNbDiscs = 0;
                 int iNbCue = 0;
@@ -436,6 +440,11 @@ namespace pbPSCReAlpha
                     if (fi.Name.ToLower() == "pcsx.cfg")
                     {
                         bPcsxFilePresent = true;
+                    }
+                    else
+                    if (fi.Name.ToLower() == "launch.sh")
+                    {
+                        bLaunchShPresent = true;
                     }
                     else
                     if (fi.Name.ToLower() == "game.ini") // (fi.Name == "Game.ini")
@@ -552,136 +561,143 @@ namespace pbPSCReAlpha
                             bPngMatchDisc = true;
                         }
                     }
-                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bPbpPresent))
+                    if(bLaunchShPresent)
                     {
-                        if (iNbPbp == iNbDiscs)
-                        {
-                            bDiscCountMatchPbpCount = true;
-                            foreach (String sDisc in sDiscMulti)
-                            {
-                                String s = sDisc.ToLower() + ".pbp";
-                                if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
-                                {
-                                    lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
-                                    bBadDiscsName = true;
-                                }
-                                if (lsPbpPresent.IndexOf(s) == -1)
-                                {
-                                    lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching pbp file.");
-                                    bBadPbpName = true;
-                                }
-                                else
-                                {
-                                    lsPbpFilesOk.Add(s);
-                                }
-                            }
-                        }
+                        bBypassByShellScript = true;
                     }
-                    else
-                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bChdPresent))
+                    if (!bBypassByShellScript)
                     {
-                        if (iNbChd == iNbDiscs)
+                        if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bPbpPresent))
                         {
-                            bDiscCountMatchChdCount = true;
-                            foreach (String sDisc in sDiscMulti)
+                            if (iNbPbp == iNbDiscs)
                             {
-                                String s = sDisc.ToLower() + ".chd";
-                                if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
+                                bDiscCountMatchPbpCount = true;
+                                foreach (String sDisc in sDiscMulti)
                                 {
-                                    lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
-                                    bBadDiscsName = true;
-                                }
-                                if (lsChdPresent.IndexOf(s) == -1)
-                                {
-                                    lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching chd file.");
-                                    bBadChdName = true;
-                                }
-                                else
-                                {
-                                    lsChdFilesOk.Add(s);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    if (bCuePresent)
-                    {
-                        if (iNbCue == iNbDiscs)
-                        {
-                            bDiscCountMatchCueCount = true;
-                            foreach (String sDisc in sDiscMulti)
-                            {
-                                String s = sDisc.ToLower();
-                                if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
-                                {
-                                    lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
-                                    bBadDiscsName = true;
-                                }
-                                if (false == dcBinParsed.ContainsKey(s))
-                                {
-                                    lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching cue file.");
-                                    bBadCueName = true;
-                                }
-                                else
-                                {
-                                    lsCueFilesOk.Add(s + ".cue");
-                                }
-                                String s1 = sDisc.ToUpper();
-                                if (lsSbiNeeds.IndexOf(s1) > -1)
-                                {
-                                    if (lsSbiPresent.IndexOf(s) == -1)
+                                    String s = sDisc.ToLower() + ".pbp";
+                                    if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
                                     {
-                                        // err
-                                        lsVerboseError.Add("Sbi file for " + s + " not found.");
-                                        bNeededSbiMissing = true;
+                                        lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
+                                        bBadDiscsName = true;
+                                    }
+                                    if (lsPbpPresent.IndexOf(s) == -1)
+                                    {
+                                        lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching pbp file.");
+                                        bBadPbpName = true;
                                     }
                                     else
                                     {
-                                        // ok
-                                        lsSbiFilesOk.Add(s + ".sbi");
+                                        lsPbpFilesOk.Add(s);
                                     }
                                 }
                             }
-                            foreach (String sCue in dcBinParsed.Keys)
+                        }
+                        else
+                        if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bChdPresent))
+                        {
+                            if (iNbChd == iNbDiscs)
                             {
-                                String s = sCue.ToLower();
-                                if (-1 == Array.IndexOf(sDiscMulti, s))
+                                bDiscCountMatchChdCount = true;
+                                foreach (String sDisc in sDiscMulti)
                                 {
-                                    lsVerboseError.Add("Cue file " + sCue + " doesn't have a matching disc.");
-                                    bBadCueName = true;
+                                    String s = sDisc.ToLower() + ".chd";
+                                    if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
+                                    {
+                                        lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
+                                        bBadDiscsName = true;
+                                    }
+                                    if (lsChdPresent.IndexOf(s) == -1)
+                                    {
+                                        lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching chd file.");
+                                        bBadChdName = true;
+                                    }
+                                    else
+                                    {
+                                        lsChdFilesOk.Add(s);
+                                    }
                                 }
                             }
+                        }
+                        else
+                        if (bCuePresent)
+                        {
+                            if (iNbCue == iNbDiscs)
+                            {
+                                bDiscCountMatchCueCount = true;
+                                foreach (String sDisc in sDiscMulti)
+                                {
+                                    String s = sDisc.ToLower();
+                                    if (((s.IndexOf("e") == 2) || (s.IndexOf("u") == 2) || (s.IndexOf("p") == 2)) && (s.IndexOf("-") != 4))
+                                    {
+                                        lsVerboseError.Add("!! If this game doesn't run, maybe rename " + sDisc + " in Discs and change the 3rd letter with 'p' for a Japanese game, 'u' for a US game or 'e' for an European game.");
+                                        bBadDiscsName = true;
+                                    }
+                                    if (false == dcBinParsed.ContainsKey(s))
+                                    {
+                                        lsVerboseError.Add("Disc " + sDisc + " doesn't have a matching cue file.");
+                                        bBadCueName = true;
+                                    }
+                                    else
+                                    {
+                                        lsCueFilesOk.Add(s + ".cue");
+                                    }
+                                    String s1 = sDisc.ToUpper();
+                                    if (lsSbiNeeds.IndexOf(s1) > -1)
+                                    {
+                                        if (lsSbiPresent.IndexOf(s) == -1)
+                                        {
+                                            // err
+                                            lsVerboseError.Add("Sbi file for " + s + " not found.");
+                                            bNeededSbiMissing = true;
+                                        }
+                                        else
+                                        {
+                                            // ok
+                                            lsSbiFilesOk.Add(s + ".sbi");
+                                        }
+                                    }
+                                }
+                                foreach (String sCue in dcBinParsed.Keys)
+                                {
+                                    String s = sCue.ToLower();
+                                    if (-1 == Array.IndexOf(sDiscMulti, s))
+                                    {
+                                        lsVerboseError.Add("Cue file " + sCue + " doesn't have a matching disc.");
+                                        bBadCueName = true;
+                                    }
+                                }
 
-                            List<String> lsFound = new List<String>();
-                            foreach (KeyValuePair<String, String[]> entry in dcBinParsed)
-                            {
-                                // do something with entry.Value or entry.Key
-                                foreach (String sFile in entry.Value)
+                                List<String> lsFound = new List<String>();
+                                foreach (KeyValuePair<String, String[]> entry in dcBinParsed)
                                 {
-                                    String s = sFile.ToLower();
-                                    int iS = lsBinPresent.IndexOf(s);
-                                    if (iS > -1)
+                                    // do something with entry.Value or entry.Key
+                                    foreach (String sFile in entry.Value)
                                     {
-                                        lsFound.Add(s);
-                                        lsBinFilesOk.Add(s);
-                                    }
-                                    else
-                                    {
-                                        bBadBinName = true;
-                                        lsVerboseError.Add("File " + entry.Key + " wants a file not found: " + sFile);
+                                        String s = sFile.ToLower();
+                                        int iS = lsBinPresent.IndexOf(s);
+                                        if (iS > -1)
+                                        {
+                                            lsFound.Add(s);
+                                            lsBinFilesOk.Add(s);
+                                        }
+                                        else
+                                        {
+                                            bBadBinName = true;
+                                            lsVerboseError.Add("File " + entry.Key + " wants a file not found: " + sFile);
+                                        }
                                     }
                                 }
-                            }
-                            if (lsFound.Count != lsBinPresent.Count)
-                            {
-                                foreach (String sFile in lsBinPresent)
+                                if (lsFound.Count != lsBinPresent.Count)
                                 {
-                                    String s = sFile.ToLower();
-                                    int iS = lsFound.IndexOf(s);
-                                    if (iS == -1)
+                                    foreach (String sFile in lsBinPresent)
                                     {
-                                        bBadBinName = true;
-                                        lsVerboseError.Add("File " + sFile + " present but not used by any cue file");
+                                        String s = sFile.ToLower();
+                                        int iS = lsFound.IndexOf(s);
+                                        if (iS == -1)
+                                        {
+                                            bBadBinName = true;
+                                            lsVerboseError.Add("File " + sFile + " present but not used by any cue file");
+                                        }
                                     }
                                 }
                             }
@@ -693,10 +709,18 @@ namespace pbPSCReAlpha
                     // facultative for 1.0.0
                     bPcsxFilePresent = true;
                 }*/
-                cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc, 
-                    !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing, 
-                    bNameWithComma, !bPbpPresent, bBadPbpName, !bDiscCountMatchPbpCount, bBadDiscsName, !bChdPresent, bBadChdName, !bDiscCountMatchChdCount, 
-                    iBleemsyncVersion);
+                if (bBypassByShellScript)
+                {
+                    cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPicturePresent, !bPngMatchDisc,
+                        !bGameIniComplete, bMultiPictures, iBleemsyncVersion);
+                }
+                else
+                {
+                    cgs = new ClGameStructure(sFolderIndex, !bIsNumericFolderName, !bGameIniPresent, !bPcsxFilePresent, !bPicturePresent, !bPngMatchDisc,
+                        !bGameIniComplete, bMultiPictures, !bCuePresent, bBadCueName, !bBinPresent, bBadBinName, !bDiscCountMatchCueCount, bNeededSbiMissing,
+                        bNameWithComma, !bPbpPresent, bBadPbpName, !bDiscCountMatchPbpCount, bBadDiscsName, !bChdPresent, bBadChdName, !bDiscCountMatchChdCount,
+                        iBleemsyncVersion);
+                }
                 if (bGameIniPresent)
                 {
                     cgs.setIniInfos(sTitle, sDiscs, sPublisher, sDeveloper, sYear, sPlayers, sAlphaTitle);
@@ -1023,6 +1047,11 @@ namespace pbPSCReAlpha
                         int iIndexImg = 0; // 0=?, 1=ok, 2=ko, 3=warn, 4=info
                         if (true == cgs.GeneralError)
                         {
+                            if (s == "launch.sh")
+                            {
+                                iIndexImg = 1;
+                            }
+                            else
                             if ((cgs.CommaInFilename) && (s.Contains(",")))
                             {
                                 iIndexImg = 3;
@@ -1129,7 +1158,7 @@ namespace pbPSCReAlpha
                         }
                         else
                         //if ((s == "pcsx.cfg") || (s == "Game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".png")))
-                        if ((s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".pbp")) || (s.EndsWith(".chd")) || (s.EndsWith(".png"))
+                        if ((s == "launch.sh") || (s == "pcsx.cfg") || (s == "game.ini") || (s.EndsWith(".cue")) || (s.EndsWith(".bin")) || (s.EndsWith(".pbp")) || (s.EndsWith(".chd")) || (s.EndsWith(".png"))
                             || ((s.EndsWith(".sbi")) && (cgs.Discs.ToLower().Contains(s.Substring(0, s.Length - 4)))))
                         {
                             iIndexImg = 1;
@@ -1232,10 +1261,17 @@ namespace pbPSCReAlpha
                 }
                 else
                 {
+                    if (cgs.FilesCueOk.Count > 0)
+                    {
+                        btEditCue.Enabled = true;
+                        btEditCue.Visible = true;
+                    }
+                    else
+                    {
+                        btEditCue.Enabled = false;
+                        btEditCue.Visible = false;
+                    }
                     // visible if no errors
-                    btEditCue.Enabled = true;
-                    btEditCue.Visible = true;
-
                     btAddFiles.Enabled = true;
                     btAddFiles.Visible = true;
 
@@ -2032,11 +2068,11 @@ namespace pbPSCReAlpha
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion, cgs);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, dcTgdbGames, currentUsedVersion, cgs);
             }
             else
             {
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, currentUsedVersion);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, dcTgdbGames, currentUsedVersion);
             }
             f.ShowDialog();
             refreshOneFolder();
@@ -2277,9 +2313,69 @@ namespace pbPSCReAlpha
                     List<String> lsAcceptedExt = new List<string>() { ".png", ".jpg", ".jpeg", ".bmp" };
                     if (lsAcceptedExt.IndexOf(sExt) > -1)
                     {
-                        using (Bitmap bmPicture = new Bitmap(sFileList[0]))
+                        if ((Control.ModifierKeys == Keys.Shift))
                         {
-                            pbExploreImage.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                            using (Bitmap bm2 = new Bitmap(sFileList[0]))
+                            {
+                                int width = 226;
+                                int height = 226;
+                                int orig_width = bm2.Width;
+                                int orig_height = bm2.Height;
+                                float orig_ratio = 0;
+                                if (orig_height != 0)
+                                {
+                                    orig_ratio = (float)(orig_width) / (float)(orig_height);
+                                }
+                                else
+                                {
+                                    orig_ratio = 0;
+                                }
+                                if ((orig_ratio != 0) && (height != 0) && (orig_ratio != (width / height)))
+                                {
+                                    using (Bitmap bm = new Bitmap(width, height))
+                                    {
+                                        using (Graphics gp = Graphics.FromImage(bm))
+                                        {
+                                            float current_ratio = (float)(width) / (float)(height);
+                                            int width1 = (int)(height * orig_ratio);
+                                            int height1 = (int)(width / orig_ratio);
+                                            //gp = Graphics.FromImage(bm);
+                                            gp.Clear(Color.Transparent);
+                                            int x = 0;
+                                            int y = 0;
+                                            if (width1 < width)
+                                            {
+                                                using (Bitmap bm1 = new Bitmap(ClPbHelper.ResizeImage(bm2, width1, height)))
+                                                {
+                                                    x = ((width - width1) / 2);
+                                                    gp.DrawImage(bm1, x, y);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                using (Bitmap bm1 = new Bitmap(ClPbHelper.ResizeImage(bm2, width, height1)))
+                                                {
+                                                    y = ((height - height1) / 2);
+                                                    gp.DrawImage(bm1, x, y);
+                                                }
+                                            }
+                                            gp.Flush();
+                                        }
+                                        pbExploreImage.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm)), 226, 226);
+                                    }
+                                }
+                                else
+                                {
+                                    pbExploreImage.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bm2)), 226, 226);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            using (Bitmap bmPicture = new Bitmap(sFileList[0]))
+                            {
+                                pbExploreImage.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                            }
                         }
                         if (lbGames.SelectedIndex > -1)
                         {
@@ -5001,6 +5097,11 @@ namespace pbPSCReAlpha
             currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
             tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
             refreshAndAskDBRead();
+        }
+
+        private void btAddEditLaunchSh_Click(object sender, EventArgs e)
+        {
+            //
         }
     }
 }

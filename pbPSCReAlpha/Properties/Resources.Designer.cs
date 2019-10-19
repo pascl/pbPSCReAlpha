@@ -443,6 +443,16 @@ namespace pbPSCReAlpha.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap hourglass_add {
+            get {
+                object obj = ResourceManager.GetObject("hourglass-add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap inode_blockdevice {
             get {
                 object obj = ResourceManager.GetObject("inode-blockdevice", resourceCulture);
