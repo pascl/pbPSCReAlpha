@@ -1225,7 +1225,9 @@ namespace pbPSCReAlpha
                     btPngRename.Enabled = bPng;
                     btSbiRename.Enabled = bSbi;
                     btBinRename.Enabled = bBin;
-                    
+
+                    btAddEditLaunchSh.Text = "Add launch.sh";
+
                     if (cgs.CueMissing)
                     {
                         btEditCue.Visible = false;
@@ -1245,6 +1247,21 @@ namespace pbPSCReAlpha
                     {
                         btAddPcsxCfg.Visible = false;
                         btAddPcsxCfg.Enabled = false;
+                    }
+
+                    if (iBleemsyncVersion == Constant.iBLEEMSYNC_V120)
+                    {
+                        if(cgs.BypassLaunchScript)
+                        {
+                            btAddEditLaunchSh.Text = "Edit launch.sh";
+                        }
+                        btAddEditLaunchSh.Enabled = true;
+                        btAddEditLaunchSh.Visible = true;
+                    }
+                    else
+                    {
+                        btAddEditLaunchSh.Enabled = false;
+                        btAddEditLaunchSh.Visible = false;
                     }
 
                     btAddFiles.Enabled = true;
@@ -1307,6 +1324,23 @@ namespace pbPSCReAlpha
                     {
                         btM3uGenerate.Visible = false;
                         btM3uGenerate.Enabled = false;
+                    }
+
+                    btAddEditLaunchSh.Text = "Add launch.sh";
+
+                    if (iBleemsyncVersion == Constant.iBLEEMSYNC_V120)
+                    {
+                        if (cgs.BypassLaunchScript)
+                        {
+                            btAddEditLaunchSh.Text = "Edit launch.sh";
+                        }
+                        btAddEditLaunchSh.Enabled = true;
+                        btAddEditLaunchSh.Visible = true;
+                    }
+                    else
+                    {
+                        btAddEditLaunchSh.Enabled = false;
+                        btAddEditLaunchSh.Visible = false;
                     }
                 }
             }
@@ -5101,7 +5135,8 @@ namespace pbPSCReAlpha
 
         private void btAddEditLaunchSh_Click(object sender, EventArgs e)
         {
-            //
+            Form11 f = new Form11();
+            f.ShowDialog();
         }
     }
 }
