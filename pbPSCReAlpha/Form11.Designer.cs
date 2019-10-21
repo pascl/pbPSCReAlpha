@@ -37,6 +37,8 @@
             this.scBinFiles = new System.Windows.Forms.SplitContainer();
             this.lbFiles = new System.Windows.Forms.ListBox();
             this.btClipboardCopy = new System.Windows.Forms.Button();
+            this.btReload = new System.Windows.Forms.Button();
+            this.btTemplate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.scMainSplit)).BeginInit();
             this.scMainSplit.Panel1.SuspendLayout();
             this.scMainSplit.Panel2.SuspendLayout();
@@ -96,6 +98,8 @@
             // 
             // scSplitterVertical.Panel2
             // 
+            this.scSplitterVertical.Panel2.Controls.Add(this.btTemplate);
+            this.scSplitterVertical.Panel2.Controls.Add(this.btReload);
             this.scSplitterVertical.Panel2.Controls.Add(this.btSave);
             this.scSplitterVertical.Panel2.Controls.Add(this.tbLaunchContent);
             this.scSplitterVertical.Size = new System.Drawing.Size(800, 416);
@@ -165,6 +169,26 @@
             this.btClipboardCopy.UseVisualStyleBackColor = true;
             this.btClipboardCopy.Click += new System.EventHandler(this.btClipboardCopy_Click);
             // 
+            // btReload
+            // 
+            this.btReload.Location = new System.Drawing.Point(84, 390);
+            this.btReload.Name = "btReload";
+            this.btReload.Size = new System.Drawing.Size(75, 23);
+            this.btReload.TabIndex = 2;
+            this.btReload.Text = "Reload";
+            this.btReload.UseVisualStyleBackColor = true;
+            this.btReload.Click += new System.EventHandler(this.btReload_Click);
+            // 
+            // btTemplate
+            // 
+            this.btTemplate.Location = new System.Drawing.Point(165, 390);
+            this.btTemplate.Name = "btTemplate";
+            this.btTemplate.Size = new System.Drawing.Size(75, 23);
+            this.btTemplate.TabIndex = 3;
+            this.btTemplate.Text = "Template";
+            this.btTemplate.UseVisualStyleBackColor = true;
+            this.btTemplate.Click += new System.EventHandler(this.btTemplate_Click);
+            // 
             // Form11
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,5 +229,7 @@
         private System.Windows.Forms.SplitContainer scBinFiles;
         private System.Windows.Forms.ListBox lbFiles;
         private System.Windows.Forms.Button btClipboardCopy;
+        private System.Windows.Forms.Button btReload;
+        private System.Windows.Forms.Button btTemplate;
     }
 }

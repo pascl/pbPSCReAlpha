@@ -17,6 +17,7 @@ namespace pbPSCReAlpha
         SimpleLogger slLogger;
         ClGameStructure newGame;
         ClVersionHelper _versionBS;
+        String _sDefaultContent;
 
         public Form11()
         {
@@ -31,6 +32,7 @@ namespace pbPSCReAlpha
             _versionBS = cvh;
 
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + cvh.GameDataFolder;
+            _sDefaultContent = String.Empty;
 
             if (newGame.BypassLaunchScript)
             {
@@ -42,7 +44,8 @@ namespace pbPSCReAlpha
                         String sline = String.Empty;
                         while ((sline = sr.ReadLine()) != null)
                         {
-                            tbLaunchContent.AppendText(sline + Environment.NewLine);
+                            tbLaunchContent.AppendText(sline.Trim() + Environment.NewLine);
+                            _sDefaultContent += sline.Trim() + Environment.NewLine;
                         }
                     }
                 }
@@ -80,7 +83,7 @@ namespace pbPSCReAlpha
                         String[] sTok = s.Split('\n');
                         foreach(String sLine in sTok)
                         {
-                            sw.Write(sLine + "\n");
+                            sw.Write(sLine.Trim() + "\n");
                         }
                     }
                 }
@@ -108,6 +111,29 @@ namespace pbPSCReAlpha
         private void lbFiles_DoubleClick(object sender, EventArgs e)
         {
             CopyFilenameToClipboard();
+        }
+
+        private void btReload_Click(object sender, EventArgs e)
+        {
+            if (newGame.BypassLaunchScript)
+            {
+                try
+                {
+                    tbLaunchContent.Clear();
+                    tbLaunchContent.Text = _sDefaultContent;
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+            }
+        }
+
+        private void btTemplate_Click(object sender, EventArgs e)
+        {
+            //
+            Form12 f = new Form12();
+            f.ShowDialog();
         }
     }
 }
