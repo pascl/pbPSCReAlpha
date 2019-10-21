@@ -5135,8 +5135,18 @@ namespace pbPSCReAlpha
 
         private void btAddEditLaunchSh_Click(object sender, EventArgs e)
         {
-            Form11 f = new Form11();
-            f.ShowDialog();
+            slLogger.Trace(">> Add/Edit launch.sh file Click");
+            String sFolderPath = returnGamePath();
+            Form11 f = null;
+            if (lbGames.SelectedIndex > -1)
+            {
+                ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
+                f = new Form11(sFolderPath, slLogger, cgs, currentUsedVersion);
+                f.ShowDialog();
+                refreshOneFolder();
+            }
+            bNeedRecreateDB = true;
+            slLogger.Trace("<< Add/Edit launch.sh file Click");
         }
     }
 }
