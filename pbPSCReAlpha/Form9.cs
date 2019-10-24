@@ -187,12 +187,6 @@ namespace pbPSCReAlpha
                                 }
                             }
                             break;
-                        case 5:
-                            {
-                                Form10 f = new Form10(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger, this);
-                                f.ShowDialog();
-                            }
-                            break;
                         default: // also case 1:
                             {
                                 List<ClGameStructure> lcgs = new List<ClGameStructure>();
