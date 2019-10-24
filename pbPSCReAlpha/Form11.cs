@@ -14,6 +14,7 @@ namespace pbPSCReAlpha
     public partial class Form11 : Form
     {
         String _folderPath;
+        String _originFolderPath;
         SimpleLogger slLogger;
         ClGameStructure newGame;
         ClVersionHelper _versionBS;
@@ -30,7 +31,7 @@ namespace pbPSCReAlpha
             slLogger = sl;
             newGame = myGame;
             _versionBS = cvh;
-
+            _originFolderPath = sFolderPath;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + cvh.GameDataFolder;
             _sDefaultContent = String.Empty;
 
@@ -132,8 +133,12 @@ namespace pbPSCReAlpha
         private void btTemplate_Click(object sender, EventArgs e)
         {
             //
-            Form12 f = new Form12();
+            Form12 f = new Form12(_originFolderPath, slLogger, newGame, _versionBS);
             f.ShowDialog();
+            if (!String.IsNullOrEmpty(f.ResultContent))
+            {
+                tbLaunchContent.Text = f.ResultContent;
+            }
         }
     }
 }
