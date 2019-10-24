@@ -1936,45 +1936,48 @@ namespace pbPSCReAlpha
                         {
                             if((!bInternalAffairs) && (Control.ModifierKeys == Keys.Shift))
                             {
+                                // BS1.1 - need some mods to use folders like this... BS1.2 uses a better way...
                                 Form9 f = new Form9(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger, this);
                                 f.ShowDialog();
                             }
                             else
-                            /*if (Control.ModifierKeys == Keys.Control)
                             {
-                                //ClVersionHelper cvh = new ClVersionHelper("internal", "", String.Empty, "\\databases", String.Empty);
-                                //ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, 0, cvh, slLogger);
-                                ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
-                            }
-                            else*/
-                            {
-                                ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
-                                if (!cdbm.BDone)
+                                if (iBleemsyncVersion == Constant.iBLEEMSYNC_V120)
                                 {
-                                    bNeedRecreateDB = true;
-                                    if (bInternalAffairs)
-                                    {
-                                        using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
-                                        {
-                                            sw.Write("1" + "\n"); // back to "backup done" state
-                                        }
-                                    }
-                                    FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    // if BS1.2, display folder manager instead of creating db...
+                                    Form10 f = new Form10(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                                    f.ShowDialog();
                                 }
                                 else
                                 {
-                                    bNeedRecreateDB = false;
-                                    if (bInternalAffairs)
+                                    ClDBManager cdbm = new ClDBManager(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                                    if (!cdbm.BDone)
                                     {
-                                        using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                                        bNeedRecreateDB = true;
+                                        if (bInternalAffairs)
                                         {
-                                            sw.Write("2" + "\n"); // go to "db generated" state -> can edit internal games
+                                            using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                                            {
+                                                sw.Write("1" + "\n"); // back to "backup done" state
+                                            }
                                         }
-                                        FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC. Run the appropriate launcher to edit internal games.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     }
                                     else
                                     {
-                                        FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        bNeedRecreateDB = false;
+                                        if (bInternalAffairs)
+                                        {
+                                            using (StreamWriter sw = new StreamWriter(sFolderUpGames + "\\" + "backupdone.log", false))
+                                            {
+                                                sw.Write("2" + "\n"); // go to "db generated" state -> can edit internal games
+                                            }
+                                            FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC. Run the appropriate launcher to edit internal games.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        }
+                                        else
+                                        {
+                                            FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        }
                                     }
                                 }
                             }
