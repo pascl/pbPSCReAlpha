@@ -15,6 +15,6 @@ namespace pbPSCReAlpha
         public const int iCountVersions = 4;
         public const int iSTRUCT_INTERNAL = 99;
         public const int iSTART_AUTOBLEEM = 30;
-        public const int iDECALAGE_RESORT = 3000;
+        public const int iDECALAGE_RESORT = 30000;
     }
 }
