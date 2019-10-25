@@ -42,6 +42,81 @@ namespace pbPSCReAlpha
             }
         }
 
+        public class ClFolderEntriesTable
+        {
+            private int _folder_id;
+            private String _folder_name;
+            private String _folder_image_path;
+
+            public int Folder_id { get => _folder_id; set => _folder_id = value; }
+            public string Folder_name { get => _folder_name; set => _folder_name = value; }
+            public string Folder_image_path { get => _folder_image_path; set => _folder_image_path = value; }
+            
+            public ClFolderEntriesTable(int iFolderId, String sFoldername)
+            {
+                _folder_id = iFolderId;
+                _folder_name = sFoldername;
+                _folder_image_path = "images/folder.png"; // TODO
+            }
+            
+            public SQLiteCommand generateInsertCommand(SQLiteConnection conn)
+            {
+                SQLiteCommand s = new SQLiteCommand("INSERT INTO FOLDER_ENTRIES"
+                    + " (FOLDER_ID, FOLDER_NAME, FOLDER_IMAGE_PATH)"
+                    + " VALUES (@p1, @p2, @p3)", conn);
+                s.Parameters.Add("@p1", System.Data.DbType.Int32).Value = _folder_id;
+                s.Parameters.Add("@p2", System.Data.DbType.String).Value = _folder_name;
+                s.Parameters.Add("@p3", System.Data.DbType.String).Value = _folder_image_path;
+                return s;
+            }
+
+            public SQLiteCommand BleemSyncUI_generateInsertCommand(SQLiteConnection conn)
+            {
+                SQLiteCommand s = new SQLiteCommand("INSERT INTO FolderNodes"
+                    + " (Id, Name, ImagePath)"
+                    + " VALUES (@p1, @p2, @p3)", conn);
+                s.Parameters.Add("@p1", System.Data.DbType.Int32).Value = _folder_id;
+                s.Parameters.Add("@p2", System.Data.DbType.String).Value = _folder_name;
+                s.Parameters.Add("@p3", System.Data.DbType.String).Value = _folder_image_path;
+                return s;
+            }
+        }
+
+        public class ClFolderItemsTable
+        {
+            private int _folder_id;
+            private int _game_id;
+
+            public int Folder_id { get => _folder_id; set => _folder_id = value; }
+            public int Game_id { get => _game_id; set => _game_id = value; }
+
+            public ClFolderItemsTable(int iFolderId, int iGameId)
+            {
+                _folder_id = iFolderId;
+                _game_id = iGameId;
+            }
+            
+            public SQLiteCommand generateInsertCommand(SQLiteConnection conn)
+            {
+                SQLiteCommand s = new SQLiteCommand("INSERT INTO FOLDER_ITEMS"
+                    + " (FOLDER_ID, GAME_ID)"
+                    + " VALUES (@p1, @p2)", conn);
+                s.Parameters.Add("@p1", System.Data.DbType.Int32).Value = _folder_id;
+                s.Parameters.Add("@p2", System.Data.DbType.Int32).Value = _game_id;
+                return s;
+            }
+
+            public SQLiteCommand BleemSyncUI_generateInsertCommand(SQLiteConnection conn)
+            {
+                SQLiteCommand s = new SQLiteCommand("INSERT INTO FolderItems"
+                    + " (FolderId, NodeId)"
+                    + " VALUES (@p1, @p2)", conn);
+                s.Parameters.Add("@p1", System.Data.DbType.Int32).Value = _folder_id;
+                s.Parameters.Add("@p2", System.Data.DbType.Int32).Value = _game_id;
+                return s;
+            }
+        }
+
         public class ClGameTable
         {
             private int _game_id;
@@ -453,7 +528,7 @@ namespace pbPSCReAlpha
             return bDone;
         }
 
-        public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl, int bs_version)
+        public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl, int bs_version, List<ClUIFolder> lFolders)
         {
             bool bDone = false;
             try
@@ -564,6 +639,29 @@ namespace pbPSCReAlpha
                                     sql = "CREATE TABLE \"FolderItems\" ( \"FolderId\" INTEGER NOT NULL, \"NodeId\" INTEGER NOT NULL, FOREIGN KEY(\"FolderId\") REFERENCES \"FolderNodes\"(\"Id\") ON DELETE CASCADE, FOREIGN KEY(\"NodeId\") REFERENCES \"GameManagerNodes\"(\"Id\") ON DELETE CASCADE, UNIQUE(\"FolderId\", \"NodeId\"))";
                                     command = new SQLiteCommand(sql, m_dbConnection);
                                     command.ExecuteNonQuery();
+                                    if(lFolders != null)
+                                    {
+                                        if (lFolders.Count > 0)
+                                        {
+                                            int iFolderIndex = 1;
+                                            foreach (ClUIFolder cuif in lFolders)
+                                            {
+                                                ClFolderEntriesTable cfet = new ClFolderEntriesTable(iFolderIndex, cuif.Title);
+                                                command = cfet.BleemSyncUI_generateInsertCommand(m_dbConnection);
+                                                command.ExecuteNonQuery();
+                                                if (cuif.ListGameIds.Count > 0)
+                                                {
+                                                    foreach (int iGameId in cuif.ListGameIds)
+                                                    {
+                                                        ClFolderItemsTable cfit = new ClFolderItemsTable(iFolderIndex, iGameId);
+                                                        command = cfit.BleemSyncUI_generateInsertCommand(m_dbConnection);
+                                                        command.ExecuteNonQuery();
+                                                    }
+                                                }
+                                                iFolderIndex++;
+                                            }
+                                        }
+                                    }
                                 }
 
                                 tran.Commit();
@@ -593,6 +691,11 @@ namespace pbPSCReAlpha
                 sl.Fatal(ex.Message);
             }
             return bDone;
+        }
+
+        public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl, int bs_version)
+        {
+            return BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl, bs_version, null);
         }
 
         private void doBackupExistingFile(String sFilename)
@@ -766,7 +869,7 @@ namespace pbPSCReAlpha
             return b;
         }
 
-        public ClDBManager(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl)
+        public ClDBManager(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl, List<ClUIFolder> lFolders)
         {
             slLogger = sl;
             try
@@ -791,6 +894,14 @@ namespace pbPSCReAlpha
                         {
                             _bDone = doAddGamesInDB(lcgs, bleemsyncVersion, m_dbConnection, 0);
                         }
+                        if(_bDone)
+                        {
+                            if(lFolders != null)
+                            {
+                                //
+                                _bDone = doAddFoldersInDB(lFolders, bleemsyncVersion, m_dbConnection);
+                            }
+                        }
                         m_dbConnection.Close();
                         if(_bDone)
                             slLogger.Debug("Creating DB ok");
@@ -813,7 +924,7 @@ namespace pbPSCReAlpha
                     if ((Constant.iBLEEMSYNC_V100 == bleemsyncVersion) || (Constant.iBLEEMSYNC_V120 == bleemsyncVersion))
                     {
                         // create the second db file
-                        _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl, bleemsyncVersion);
+                        _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl, bleemsyncVersion, lFolders);
                     }
                     if (Constant.iAUTOBLEEM_V06 == bleemsyncVersion)
                     {
@@ -827,6 +938,60 @@ namespace pbPSCReAlpha
                 slLogger.Fatal(ex.Message);
                 _bDone = false;
             }
+        }
+
+        private bool doAddFoldersInDB(List<ClUIFolder> lFolders, int bleemsyncVersion, SQLiteConnection sqlconn)
+        {
+            bool b = false;
+            String sql = String.Empty;
+            try
+            {
+                if (bleemsyncVersion == Constant.iBLEEMSYNC_V120)
+                {
+                    using (var tran = sqlconn.BeginTransaction())
+                    {
+                        SQLiteCommand cmd;
+                        if (lFolders.Count > 0)
+                        {
+                            int iFolderIndex = 1;
+                            foreach (ClUIFolder cuif in lFolders)
+                            {
+                                ClFolderEntriesTable cfet = new ClFolderEntriesTable(iFolderIndex, cuif.Title);
+                                cmd = cfet.generateInsertCommand(sqlconn);
+                                cmd.ExecuteNonQuery();
+                                if (cuif.ListGameIds.Count > 0)
+                                {
+                                    foreach (int iGameId in cuif.ListGameIds)
+                                    {
+                                        ClFolderItemsTable cfit = new ClFolderItemsTable(iFolderIndex, iGameId);
+                                        cmd = cfit.generateInsertCommand(sqlconn);
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                iFolderIndex++;
+                            }
+                        }
+                        tran.Commit();
+                        b = true;
+                    }
+                }
+                else
+                {
+                    b = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                b = false;
+                slLogger.Fatal(ex.Message);
+            }
+            return b;
+        }
+
+        public ClDBManager(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl)
+            : this(lcgs, sFolderPath, bleemsyncVersion,cvh, sl, null)
+        {
+            
         }
 
         public ClDBManager(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, SimpleLogger sl, String sFullFileName)
