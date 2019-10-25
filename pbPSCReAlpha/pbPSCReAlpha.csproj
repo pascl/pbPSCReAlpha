@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="ClPS1Game.cs" />
     <Compile Include="ClTGDBGame.cs" />
+    <Compile Include="ClUIFolder.cs" />
     <Compile Include="ClVersionHelper.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="FlexibleMessageBox.cs" />
