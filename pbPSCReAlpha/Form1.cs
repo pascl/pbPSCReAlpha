@@ -1946,7 +1946,11 @@ namespace pbPSCReAlpha
                                 {
                                     // if BS1.2, display folder manager instead of creating db...
                                     Form10 f = new Form10(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
-                                    f.ShowDialog();
+                                    if(DialogResult.OK == f.ShowDialog())
+                                    {
+                                        bNeedRecreateDB = false;
+                                        FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    }
                                 }
                                 else
                                 {
