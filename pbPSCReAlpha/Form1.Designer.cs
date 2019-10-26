@@ -37,6 +37,7 @@
             this.lbFreeSpace = new System.Windows.Forms.Label();
             this.btLaunchBleemsync = new System.Windows.Forms.Button();
             this.gbExploreEdit = new System.Windows.Forms.GroupBox();
+            this.btAddEditLaunchSh = new System.Windows.Forms.Button();
             this.btM3uGenerate = new System.Windows.Forms.Button();
             this.gbAutoRename = new System.Windows.Forms.GroupBox();
             this.btPbpRename = new System.Windows.Forms.Button();
@@ -138,7 +139,6 @@
             this.btSwitchToInternal = new System.Windows.Forms.Button();
             this.lbInternalFreeSpace = new System.Windows.Forms.Label();
             this.lbNbInternalGames = new System.Windows.Forms.Label();
-            this.btAddEditLaunchSh = new System.Windows.Forms.Button();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -245,6 +245,20 @@
             this.gbExploreEdit.TabIndex = 9;
             this.gbExploreEdit.TabStop = false;
             this.gbExploreEdit.Text = "Edit";
+            // 
+            // btAddEditLaunchSh
+            // 
+            this.btAddEditLaunchSh.Enabled = false;
+            this.btAddEditLaunchSh.Image = global::pbPSCReAlpha.Properties.Resources.hourglass_add;
+            this.btAddEditLaunchSh.Location = new System.Drawing.Point(220, 19);
+            this.btAddEditLaunchSh.Name = "btAddEditLaunchSh";
+            this.btAddEditLaunchSh.Size = new System.Drawing.Size(115, 25);
+            this.btAddEditLaunchSh.TabIndex = 13;
+            this.btAddEditLaunchSh.Text = "Add launch.sh";
+            this.btAddEditLaunchSh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btAddEditLaunchSh.UseVisualStyleBackColor = true;
+            this.btAddEditLaunchSh.Visible = false;
+            this.btAddEditLaunchSh.Click += new System.EventHandler(this.btAddEditLaunchSh_Click);
             // 
             // btM3uGenerate
             // 
@@ -473,6 +487,7 @@
             this.tbFolderPath.Size = new System.Drawing.Size(160, 20);
             this.tbFolderPath.TabIndex = 5;
             this.tbFolderPath.Text = "F:\\Games";
+            this.tbFolderPath.Enter += new System.EventHandler(this.tbFolderPath_Enter);
             this.tbFolderPath.Leave += new System.EventHandler(this.tbFolderPath_Leave);
             // 
             // gbExploreDetails
@@ -1413,20 +1428,6 @@
             this.lbNbInternalGames.Text = "--";
             this.lbNbInternalGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbNbInternalGames.Visible = false;
-            // 
-            // btAddEditLaunchSh
-            // 
-            this.btAddEditLaunchSh.Enabled = false;
-            this.btAddEditLaunchSh.Image = global::pbPSCReAlpha.Properties.Resources.hourglass_add;
-            this.btAddEditLaunchSh.Location = new System.Drawing.Point(220, 19);
-            this.btAddEditLaunchSh.Name = "btAddEditLaunchSh";
-            this.btAddEditLaunchSh.Size = new System.Drawing.Size(115, 25);
-            this.btAddEditLaunchSh.TabIndex = 13;
-            this.btAddEditLaunchSh.Text = "Add launch.sh";
-            this.btAddEditLaunchSh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btAddEditLaunchSh.UseVisualStyleBackColor = true;
-            this.btAddEditLaunchSh.Visible = false;
-            this.btAddEditLaunchSh.Click += new System.EventHandler(this.btAddEditLaunchSh_Click);
             // 
             // Form1
             // 

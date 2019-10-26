@@ -415,6 +415,65 @@ namespace pbPSCReAlpha
         public bool BDone { get => _bDone; set => _bDone = value; }
         SimpleLogger slLogger;
 
+        public static List<ClUIFolder> ReadDBFolder(String sFilename, int bleemsyncVersion, SimpleLogger slLogger)
+        {
+            List<ClUIFolder> lFoldersFromDB = new List<ClUIFolder>();
+            Dictionary<int, List<int>> dcListGamesInFoldersFromDB = new Dictionary<int, List<int>>();
+
+            String cs = "URI=file:" + sFilename;
+            using (SQLiteConnection con = new SQLiteConnection(cs))
+            {
+                try
+                {
+                    con.Open();
+                    string stm = "SELECT * FROM FOLDER_ITEMS ORDER BY FOLDER_ID ASC";
+                    using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                    {
+                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                int iFolderId = int.Parse(rdr["FOLDER_ID"].ToString().Trim());
+                                int iGameId = int.Parse(rdr["GAME_ID"].ToString().Trim());
+                                if (!dcListGamesInFoldersFromDB.ContainsKey(iFolderId))
+                                {
+                                    dcListGamesInFoldersFromDB.Add(iFolderId, new List<int>());
+                                }
+                                dcListGamesInFoldersFromDB[iFolderId].Add(iGameId);
+                            }
+                        }
+                    }
+
+                    stm = "SELECT * FROM FOLDER_ENTRIES ORDER BY FOLDER_ID ASC";
+                    using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
+                    {
+                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
+                        {
+                            while (rdr.Read())
+                            {
+                                int iId = int.Parse(rdr["FOLDER_ID"].ToString().Trim());
+                                if (dcListGamesInFoldersFromDB.ContainsKey(iId))
+                                {
+                                    lFoldersFromDB.Add(new ClUIFolder(rdr["FOLDER_NAME"].ToString().Trim(), dcListGamesInFoldersFromDB[iId], rdr["FOLDER_IMAGE_PATH"].ToString().Trim()));
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    slLogger.Fatal(ex.Message);
+                }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                    SQLiteConnection.ClearAllPools();
+                }
+            }
+            return lFoldersFromDB;
+        }
+
         public static bool AutoBleem_CreateFiles(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
         {
             bool bDone = false;

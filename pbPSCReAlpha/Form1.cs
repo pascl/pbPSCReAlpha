@@ -39,7 +39,11 @@ namespace pbPSCReAlpha
         long lInternalSize;
         int iCheckFlagBackupDone;
 
+        String sBeforePath = String.Empty;
+
         public bool bNeedRecreateDB = false;
+
+        List<ClUIFolder> luiFolders;
 
         public Form1(Dictionary<string, ClPS1Game> ps1games, Dictionary<string, ClTGDBGame> tgdbgames)
         {
@@ -197,6 +201,7 @@ namespace pbPSCReAlpha
             bInternalAffairs = false;
             lInternalSize = 0;
             iCheckFlagBackupDone = -1;
+            luiFolders = null;
         }
 
         private string sortOptionToString(int v1, int v2)
@@ -229,14 +234,56 @@ namespace pbPSCReAlpha
             return sText;
         }
 
+        private void forceReadDBFolder(bool bForce)
+        {
+            if (iBleemsyncVersion == Constant.iBLEEMSYNC_V120)
+            {
+                if((bForce == false) && (luiFolders != null)) // do it only once if not forced
+                {
+                }
+                else
+                { 
+                    String sFolderUpp = tbFolderPath.Text;
+                    if (sFolderUpp.EndsWith("\\"))
+                    {
+                        sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
+                    }
+                    int ipos = sFolderUpp.LastIndexOf("\\");
+                    if (ipos > -1)
+                    {
+                        sFolderUpp = sFolderUpp.Substring(0, ipos);
+                    }
+                    if (File.Exists(sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SYS\\databases\\regional.db"))
+                    {
+                        luiFolders = ClDBManager.ReadDBFolder(sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SYS\\databases\\regional.db", Constant.iBLEEMSYNC_V120, slLogger);
+                    }
+                    else
+                    {
+                        luiFolders = null;
+                    }
+                }
+            }
+            else
+            {
+                luiFolders = null;
+            }
+        }
+
         private void btCrowseGamesFolder_Click(object sender, EventArgs e)
         {
+            sBeforePath = tbFolderPath.Text;
+            bool bForce = true;
             slLogger.Trace(">> Browse 'Games' Folder Click");
             if (DialogResult.OK == fbdGamesFolder.ShowDialog())
             {
                 String sFolderPath = fbdGamesFolder.SelectedPath;
+                if(sBeforePath.ToLower() == sFolderPath.ToLower())
+                {
+                    bForce = false;
+                }
                 tbFolderPath.Text = sFolderPath;
                 ReCalcFreeSpace(sFolderPath);
+                forceReadDBFolder(bForce);
             }
             slLogger.Trace("<< Browse 'Games' Folder Click");
         }
@@ -921,12 +968,16 @@ namespace pbPSCReAlpha
                 btSwitchToInternal.Enabled = false;
                 btSwitchToInternal.Visible = false;
             }
+            
+            if ((luiFolders == null) && (iBleemsyncVersion == Constant.iBLEEMSYNC_V120))
+            {
+                forceReadDBFolder(false);
+            }
         }
 
         private void refreshAndAskDBRead()
         {
             refreshGameListFolders();
-            // todo: if game.ini missing somewhere, ask for reading db !
             bool bAskReadDb = false;
             if (!bInternalAffairs)
             {
@@ -1437,10 +1488,11 @@ namespace pbPSCReAlpha
                             if (dcGames.ContainsKey(s))
                             {
                                 String sModif = sDate + "_" + s;
+                                int iRes = 0;
+                                bool bParsed = false;
                                 if (iBleemsyncVersion != Constant.iAUTOBLEEM_V06)
                                 {
-                                    int iRes = 0;
-                                    bool bParsed = int.TryParse(dcGames[s].FolderIndex, out iRes);
+                                    bParsed = int.TryParse(dcGames[s].FolderIndex, out iRes);
                                     if(bParsed)
                                     {
                                         sModif = (iRes + Constant.iDECALAGE_RESORT).ToString();
@@ -1452,6 +1504,35 @@ namespace pbPSCReAlpha
                                     if (!Directory.Exists(sFolderPath + "\\" + sModif))
                                     {
                                         Directory.Move(sFolderPath + "\\" + s, sFolderPath + "\\" + sModif);
+                                        if ((luiFolders != null) && (iBleemsyncVersion == Constant.iBLEEMSYNC_V120))
+                                        {
+                                            if (bParsed)
+                                            {
+                                                foreach (ClUIFolder cuif in luiFolders)
+                                                {
+                                                    List<int> lGameIdsIndex = new List<int>();
+                                                    int iIndex = 0;
+                                                    foreach (int iGameId in cuif.ListGameIds)
+                                                    {
+                                                        if (iGameId == iRes)
+                                                        {
+                                                            lGameIdsIndex.Add(iIndex);
+                                                        }
+                                                        iIndex++;
+                                                    }
+                                                    if(lGameIdsIndex.Count > 0)
+                                                    {
+                                                        foreach(int iGameIndex in lGameIdsIndex)
+                                                        {
+                                                            if (cuif.ListGameIds[iGameIndex] == iRes)
+                                                            {
+                                                                cuif.ListGameIds[iGameIndex] = (iRes + Constant.iDECALAGE_RESORT);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                         if (!String.IsNullOrEmpty(sFolderSavePath))
                                         {
                                             if ((sFolderSavePath + "\\" + s) != (sFolderSavePath + "\\" + sModif))
@@ -1580,10 +1661,11 @@ namespace pbPSCReAlpha
                                 if (((c1.Alphatitle != String.Empty) && (c1.Alphatitle == s)) || ((c1.Alphatitle == String.Empty) && (c1.Title == s)))
                                 {
                                     String sModif = sDate + "_" + c1.FolderIndex;
+                                    int iRes = 0;
+                                    bool bParsed = false;
                                     if (iBleemsyncVersion != Constant.iAUTOBLEEM_V06)
                                     {
-                                        int iRes = 0;
-                                        bool bParsed = int.TryParse(c1.FolderIndex, out iRes);
+                                        bParsed = int.TryParse(c1.FolderIndex, out iRes);
                                         if (bParsed)
                                         {
                                             sModif = (iRes + Constant.iDECALAGE_RESORT).ToString();
@@ -1596,6 +1678,35 @@ namespace pbPSCReAlpha
                                             if (!Directory.Exists(sFolderPath + "\\" + (iNewIndex).ToString()))
                                             {
                                                 Directory.Move(sFolderPath + "\\" + sModif, sFolderPath + "\\" + (iNewIndex).ToString());
+                                                if ((luiFolders != null) && (iBleemsyncVersion == Constant.iBLEEMSYNC_V120))
+                                                {
+                                                    if (bParsed)
+                                                    {
+                                                        foreach (ClUIFolder cuif in luiFolders)
+                                                        {
+                                                            List<int> lGameIdsIndex = new List<int>();
+                                                            int iIndex = 0;
+                                                            foreach (int iGameId in cuif.ListGameIds)
+                                                            {
+                                                                if (iGameId == iRes + Constant.iDECALAGE_RESORT)
+                                                                {
+                                                                    lGameIdsIndex.Add(iIndex);
+                                                                }
+                                                                iIndex++;
+                                                            }
+                                                            if (lGameIdsIndex.Count > 0)
+                                                            {
+                                                                foreach (int iGameIndex in lGameIdsIndex)
+                                                                {
+                                                                    if (cuif.ListGameIds[iGameIndex] == iRes + Constant.iDECALAGE_RESORT)
+                                                                    {
+                                                                        cuif.ListGameIds[iGameIndex] = iNewIndex;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                                 if (!String.IsNullOrEmpty(sFolderSavePath))
                                                 {
                                                     if ((sFolderSavePath + "\\" + sModif) != (sFolderSavePath + "\\" + (iNewIndex).ToString()))
@@ -1872,6 +1983,7 @@ namespace pbPSCReAlpha
         private void btLaunchBleemsync_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Recreate database Click");
+            Thread.Sleep(500);
             String sFolderPath = returnGamePath();
             if (sFolderPath.EndsWith("\\"))
             {
@@ -1945,10 +2057,11 @@ namespace pbPSCReAlpha
                                 if (iBleemsyncVersion == Constant.iBLEEMSYNC_V120)
                                 {
                                     // if BS1.2, display folder manager instead of creating db...
-                                    Form10 f = new Form10(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger);
+                                    Form10 f = new Form10(lcgs, sFolderPath, iBleemsyncVersion, currentUsedVersion, slLogger, luiFolders);
                                     if(DialogResult.OK == f.ShowDialog())
                                     {
                                         bNeedRecreateDB = false;
+                                        forceReadDBFolder(true);
                                         FlexibleMessageBox.Show("Database regenerated. Now you can properly unplug your usb drive and plug it in your PSC.", "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     }
                                 }
@@ -2577,7 +2690,13 @@ namespace pbPSCReAlpha
         private void tbFolderPath_Leave(object sender, EventArgs e)
         {
             String sFolderPath = tbFolderPath.Text;
+            bool bForce = true;
             ReCalcFreeSpace(sFolderPath);
+            if (sBeforePath.ToLower() == sFolderPath.ToLower())
+            {
+                bForce = false;
+            }
+            forceReadDBFolder(bForce);
         }
 
         private void tmRefreshFolder_Tick(object sender, EventArgs e)
@@ -5154,6 +5273,11 @@ namespace pbPSCReAlpha
             }
             bNeedRecreateDB = true;
             slLogger.Trace("<< Add/Edit launch.sh file Click");
+        }
+
+        private void tbFolderPath_Enter(object sender, EventArgs e)
+        {
+            sBeforePath = tbFolderPath.Text;
         }
     }
 }
