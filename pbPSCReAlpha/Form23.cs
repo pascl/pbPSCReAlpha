@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -70,6 +71,7 @@ namespace pbPSCReAlpha
                 tbGeneTitle.Text = newGame.Title;
                 tbGeneDiscs.Text = newGame.Discs;
                 tbGenePublisher.Text = newGame.Publisher;
+                tbGeneDeveloper.Text = newGame.Developer;
                 tbGeneAlphaTitle.Text = newGame.Alphatitle;
                 try
                 {
@@ -1077,6 +1079,7 @@ namespace pbPSCReAlpha
                     sTitle = sTitle.Substring(0, ipos).Trim();
                 }
                 tbGeneTitle.Text = sTitle.Trim();
+                tbGeneDiscs.Text = Regex.Replace(sTitle.Trim(), @"[^a-zA-Z0-9_\-\s\.]", "");
                 tbHiddenLinkTGDB.Text = tgdbGame.Link.Trim();
                 btLinkTGDB.Enabled = true;
                 btViewPageTGDB.Enabled = true;
