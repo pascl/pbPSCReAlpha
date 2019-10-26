@@ -20,8 +20,9 @@ namespace pbPSCReAlpha
         String m_sFolderPath;
         ClVersionHelper m_cvh;
         Dictionary<TreeNode,List<ClGameStructure>> m_lcgs_folder;
+        List<ClUIFolder> m_luiFolders;
 
-        public Form10(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl)
+        public Form10(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl, List<ClUIFolder> luiFoldersList)
         {
             InitializeComponent();
             slLogger = sl;
@@ -29,6 +30,7 @@ namespace pbPSCReAlpha
             m_lcgs = lcgs;
             m_sFolderPath = sFolderPath;
             m_cvh = cvh;
+            m_luiFolders = luiFoldersList;
             lbGameList.Items.Clear();
             lbGameList.DisplayMember = "IndexAndTitle";
             if (m_lcgs.Count > 0)
@@ -40,86 +42,30 @@ namespace pbPSCReAlpha
             }
             lbCurrentGames.DisplayMember = "IndexAndTitle";
             m_lcgs_folder = new Dictionary<TreeNode, List<ClGameStructure>>();
-
-            // TODO read DB
-            List<ClUIFolder> lFolders = ReadDBFolder("H:\\bleemsync\\etc\\bleemsync\\SYS\\databases\\regional.db", Constant.iBLEEMSYNC_V120);
-            foreach(ClUIFolder cuif in lFolders)
+            
+            // folders from DB
+            if (m_luiFolders != null)
             {
-                tvFolders.Nodes.Add(cuif.Title);
-                List<ClGameStructure> lcgs1 = new List<ClGameStructure>();
-                foreach (int iIndex in cuif.ListGameIds)
+                foreach (ClUIFolder cuif in m_luiFolders)
                 {
-                    foreach(ClGameStructure cgs in m_lcgs)
+                    tvFolders.Nodes.Add(cuif.Title);
+                    List<ClGameStructure> lcgs1 = new List<ClGameStructure>();
+                    foreach (int iIndex in cuif.ListGameIds)
                     {
-                        int iCurrent = int.Parse(cgs.FolderIndex);
-                        if(iCurrent == iIndex)
+                        foreach (ClGameStructure cgs in m_lcgs)
                         {
-                            lcgs1.Add(cgs);
-                            break;
-                        }
-                    }
-                }
-                m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], lcgs1);
-            }
-        }
-
-        private List<ClUIFolder> ReadDBFolder(String sFilename, int bleemsyncVersion)
-        {
-            List<ClUIFolder> lFoldersFromDB = new List<ClUIFolder>();
-            Dictionary<int, List<int>> dcListGamesInFoldersFromDB = new Dictionary<int, List<int>>();
-
-            String cs = "URI=file:" + sFilename;
-            using (SQLiteConnection con = new SQLiteConnection(cs))
-            {
-                try
-                {
-                    con.Open();
-                    string stm = "SELECT * FROM FOLDER_ITEMS ORDER BY FOLDER_ID ASC";
-                    using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
-                    {
-                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
-                        {
-                            while (rdr.Read())
+                            int iCurrent = int.Parse(cgs.FolderIndex);
+                            if (iCurrent == iIndex)
                             {
-                                int iFolderId = int.Parse(rdr["FOLDER_ID"].ToString().Trim());
-                                int iGameId = int.Parse(rdr["GAME_ID"].ToString().Trim());
-                                if (!dcListGamesInFoldersFromDB.ContainsKey(iFolderId))
-                                {
-                                    dcListGamesInFoldersFromDB.Add(iFolderId, new List<int>());
-                                }
-                                dcListGamesInFoldersFromDB[iFolderId].Add(iGameId);
+                                lcgs1.Add(cgs);
+                                break;
                             }
                         }
                     }
-
-                    stm = "SELECT * FROM FOLDER_ENTRIES ORDER BY FOLDER_ID ASC";
-                    using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
-                    {
-                        using (SQLiteDataReader rdr = cmd.ExecuteReader())
-                        {
-                            while (rdr.Read())
-                            {
-                                int iId = int.Parse(rdr["FOLDER_ID"].ToString().Trim());
-                                if (dcListGamesInFoldersFromDB.ContainsKey(iId))
-                                {
-                                    lFoldersFromDB.Add(new ClUIFolder(rdr["FOLDER_NAME"].ToString().Trim(), dcListGamesInFoldersFromDB[iId]));
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    slLogger.Fatal(ex.Message);
-                }
-                finally
-                {
-                    con.Close();
-                    con.Dispose();
-                    SQLiteConnection.ClearAllPools();
+                    m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], lcgs1);
                 }
             }
-            return lFoldersFromDB;
+            refreshComboBoxFolders();
         }
 
         private void btBack_Click(object sender, EventArgs e)
@@ -170,7 +116,6 @@ namespace pbPSCReAlpha
 
         private void tvFolders_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            //
             if (tvFolders.SelectedNode != null)
             {
                 if (m_lcgs_folder.ContainsKey(tvFolders.SelectedNode))
@@ -181,24 +126,36 @@ namespace pbPSCReAlpha
                     }
                 }
                 tbCurrentFolder.Text = tvFolders.SelectedNode.Text;
+                refreshComboBoxFolders();
             }
         }
 
         private void btNewFolder_Click(object sender, EventArgs e)
         {
             //
-            tvFolders.Nodes.Add("new folder");
+            int iNew = tvFolders.Nodes.Count + 1;
+            tvFolders.Nodes.Add("Folder " + iNew.ToString());
             m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new List<ClGameStructure>());
             tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
             tbCurrentFolder.Focus();
+            refreshComboBoxFolders();
         }
 
         private void btGenerate_Click(object sender, EventArgs e)
         {
             List<ClUIFolder> lFolders = new List<ClUIFolder>();
+            int iIndexFirstBoot = 0;
+            TreeNode tSelected = null;
+            if(cbFolderAtFirstBoot.SelectedIndex > 0)
+            {
+                tSelected = (TreeNode)(cbFolderAtFirstBoot.Items[cbFolderAtFirstBoot.SelectedIndex]);
+            }
             if(tvFolders.Nodes.Count > 0)
             {
-                foreach(TreeNode t in tvFolders.Nodes)
+                tvFolders.SelectedNode = null;
+                tvFolders.Sort();
+                int iIndex = 1;
+                foreach (TreeNode t in tvFolders.Nodes)
                 {
                     if (m_lcgs_folder.ContainsKey(t))
                     {
@@ -218,11 +175,84 @@ namespace pbPSCReAlpha
                                 }
                             }
                         }
-                        lFolders.Add(new ClUIFolder(t.Text, lGameIds));
+                        if(tSelected == t)
+                        {
+                            iIndexFirstBoot = iIndex;
+                        }
+                        lFolders.Add(new ClUIFolder(t.Text, lGameIds, "images/folder.png")); // TODO add img
                     }
+                    iIndex++;
                 }
             }
             ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger, lFolders);
+            String sFolderUpp = m_sFolderPath;
+            if (sFolderUpp.EndsWith("\\"))
+            {
+                sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
+            }
+            int ipos = sFolderUpp.LastIndexOf("\\");
+            if (ipos > -1)
+            {
+                sFolderUpp = sFolderUpp.Substring(0, ipos);
+            }
+            String sFolderImg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers\\folder_launch";
+            String sFolderLaunch = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers";
+            String sFolderSelectedCfg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\CFG";
+            if (iIndexFirstBoot == 0)
+            {
+                if(File.Exists(sFolderSelectedCfg + "\\selected_folder"))
+                {
+                    File.Delete(sFolderSelectedCfg + "\\selected_folder");
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = new StreamWriter(sFolderSelectedCfg + "\\selected_folder"))
+                {
+                    sw.Write(iIndexFirstBoot.ToString());
+                }
+            }
+            if (cbLauncherGenerate.Checked)
+            {
+                if (lFolders.Count > 0)
+                {
+                    if (Directory.Exists(sFolderLaunch))
+                    {
+                        DirectoryInfo[] dirList = new DirectoryInfo(sFolderLaunch).GetDirectories("bsfolder*", SearchOption.TopDirectoryOnly);
+                        foreach (DirectoryInfo di in dirList)
+                        {
+                            Directory.Delete(di.FullName, true);
+                        }
+                        int iIndex = 1;
+                        foreach (ClUIFolder cuif in lFolders)
+                        {
+                            Directory.CreateDirectory(sFolderLaunch + "\\bsfolder" + iIndex.ToString());
+                            using (StreamWriter sw = new StreamWriter(sFolderLaunch + "\\bsfolder" + iIndex.ToString() + "\\launch.sh"))
+                            {
+                                sw.Write("#!/bin/sh" + "\n\n");
+                                sw.Write("echo 2 > /data/power/disable" + "\n");
+                                sw.Write("echo " + iIndex.ToString() + " > \"/media/bleemsync/etc/bleemsync/CFG/selected_folder\"" + "\n");
+                                sw.Write("cd \"/var/volatile/launchtmp\"" + "\n"); // maybe useless, to be tested without this line
+                                sw.Write("echo \"launch_StockUI\" > \"/tmp/launchfilecommand\"" + "\n");
+                                sw.Write("echo 0 > /data/power/disable" + "\n");
+                            }
+                            using (StreamWriter sw = new StreamWriter(sFolderLaunch + "\\bsfolder" + iIndex.ToString() + "\\launcher.cfg"))
+                            {
+                                sw.Write("launcher_filename=\"folder\"" + "\n");
+                                sw.Write("launcher_title=\"" + cuif.Title + "\"" + "\n");
+                                sw.Write("launcher_publisher=\"Folder\"" + "\n");
+                                sw.Write("launcher_year=\"2019\"" + "\n");
+                                sw.Write("launcher_sort=\"no\"" + "\n");
+                            }
+                            if (File.Exists(sFolderImg + "\\" + cuif.Imgpath))
+                            {
+                                File.Copy(sFolderImg + "\\" + cuif.Imgpath, sFolderLaunch + "\\bsfolder" + iIndex.ToString() + "\\folder.png");
+                            }
+                            iIndex++;
+                        }
+                    }
+                }
+            }
             if (!cdbm.BDone)
             {
                 FlexibleMessageBox.Show("There is a problem during database creation", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -232,6 +262,36 @@ namespace pbPSCReAlpha
                 this.DialogResult = DialogResult.OK;
                 Close();
             }
+        }
+
+        private void refreshComboBoxFolders()
+        {
+            int iSelected = cbFolderAtFirstBoot.SelectedIndex;
+            int iNewSelected = 0;
+            TreeNode tSelected = new TreeNode("");
+            if (iSelected > -1)
+            {
+                tSelected = (TreeNode)(cbFolderAtFirstBoot.Items[cbFolderAtFirstBoot.SelectedIndex]);
+            }
+            cbFolderAtFirstBoot.DisplayMember = "Text";
+            cbFolderAtFirstBoot.Items.Clear();
+            cbFolderAtFirstBoot.Items.Add(new TreeNode("No folder"));
+            if (tvFolders.Nodes.Count > 0)
+            {
+                foreach(TreeNode t in tvFolders.Nodes)
+                {
+                    cbFolderAtFirstBoot.Items.Add(t);
+                    if(iSelected > 0)
+                    {
+                        if(tSelected == t)
+                        {
+                            iNewSelected = cbFolderAtFirstBoot.Items.Count - 1;
+                        }
+                    }
+
+                }
+            }
+            cbFolderAtFirstBoot.SelectedIndex = iNewSelected;
         }
 
         private void tvFolders_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -244,22 +304,93 @@ namespace pbPSCReAlpha
             if (tvFolders.SelectedNode != null)
             {
                 tvFolders.SelectedNode.Text = tbCurrentFolder.Text;
+                refreshComboBoxFolders();
             }
         }
 
         private void btRemoveSelectedGame_Click(object sender, EventArgs e)
         {
-            // TODO
+            if(lbCurrentGames.SelectedItems.Count > 0)
+            {
+                List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                foreach (ClGameStructure cgs in lbCurrentGames.SelectedItems)
+                {
+                    lcgs.Add(cgs);
+                }
+                foreach (ClGameStructure cgs in lcgs)
+                {
+                    lbCurrentGames.Items.Remove(cgs);
+                    m_lcgs_folder[tvFolders.SelectedNode].Remove(cgs);
+                }
+                refreshComboBoxFolders();
+            }
         }
 
         private void btRemoveFolder_Click(object sender, EventArgs e)
         {
-            // TODO
+            if (tvFolders.SelectedNode != null)
+            {
+                if (m_lcgs_folder.ContainsKey(tvFolders.SelectedNode))
+                {
+                    m_lcgs_folder.Remove(tvFolders.SelectedNode);
+                }
+                tvFolders.SelectedNode.Remove();
+                refreshComboBoxFolders();
+            }
         }
 
         private void btBrowseImage_Click(object sender, EventArgs e)
         {
             // TODO
+        }
+
+        private void btClearFolders_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.Yes == FlexibleMessageBox.Show("Are you sure you want to remove all folders ?", "Removing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                tvFolders.Nodes.Clear();
+                m_lcgs_folder.Clear();
+                lbCurrentGames.Items.Clear();
+                tbCurrentFolder.Text = "";
+                pbCurrentFolder.Image = null;
+                refreshComboBoxFolders();
+            }
+        }
+
+        private void tvFolders_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    if (m_lcgs_folder.ContainsKey(tvFolders.SelectedNode))
+                    {
+                        m_lcgs_folder.Remove(tvFolders.SelectedNode);
+                    }
+                    tvFolders.SelectedNode.Remove();
+                    refreshComboBoxFolders();
+                }
+            }
+        }
+
+        private void lbCurrentGames_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (lbCurrentGames.SelectedItems.Count > 0)
+                {
+                    List<ClGameStructure> lcgs = new List<ClGameStructure>();
+                    foreach (ClGameStructure cgs in lbCurrentGames.SelectedItems)
+                    {
+                        lcgs.Add(cgs);
+                    }
+                    foreach (ClGameStructure cgs in lcgs)
+                    {
+                        lbCurrentGames.Items.Remove(cgs);
+                        m_lcgs_folder[tvFolders.SelectedNode].Remove(cgs);
+                    }
+                }
+            }
         }
     }
 }
