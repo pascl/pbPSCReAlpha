@@ -1983,7 +1983,6 @@ namespace pbPSCReAlpha
         private void btLaunchBleemsync_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Recreate database Click");
-            Thread.Sleep(500);
             String sFolderPath = returnGamePath();
             if (sFolderPath.EndsWith("\\"))
             {
@@ -1996,6 +1995,7 @@ namespace pbPSCReAlpha
 
                 // force refresh without updating display, reupdate at the end
                 Dictionary<String, ClGameStructure> dcGames = generateGameListFolders(sFolderPath, out lsFolders, out lsTitles);
+                forceReadDBFolder(false);
                 if (lsFolders.Count > 0)
                 {
                     try
