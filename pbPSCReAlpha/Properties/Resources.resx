@@ -127,14 +127,14 @@
   <data name="arrow-turn-left" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow-turn-left.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="bgr-arrow-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bgr-arrow-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="list-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\list-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow-turn-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow-turn-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="arrow-down-double" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrow-down-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="brg-arrow-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brg-arrow-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bgr-arrow-up-double" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bgr-arrow-up-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -184,8 +184,8 @@
   <data name="grb-arrow-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\grb-arrow-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="brg-arrow-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\brg-arrow-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="arrow-right-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow-right-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="rbg-arrow-up-double" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rbg-arrow-up-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -193,20 +193,26 @@
   <data name="file-clipboard" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\file-clipboard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="arrow-right-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrow-right-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="edit-delete-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit-delete-6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit-clear-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\edit-clear-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="pictures" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pictures.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="bgr-arrow-right" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\bgr-arrow-right.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="brg-arrow-up-double" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\brg-arrow-up-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="arrow-down-double" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow-down-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="draw-arrow-back" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\draw-arrow-back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="naflag" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\naflag.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="view-refresh-6" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\view-refresh-6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -225,6 +231,9 @@
   </data>
   <data name="amflag" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\amflag.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="naflag" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\naflag.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="picture-edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\picture-edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -259,13 +268,16 @@
   <data name="draw-arrow-forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\draw-arrow-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hourglass-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hourglass-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="linked" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\linked.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="gbr-arrow-up-double" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gbr-arrow-up-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="hourglass-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hourglass-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="folder-image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder-image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

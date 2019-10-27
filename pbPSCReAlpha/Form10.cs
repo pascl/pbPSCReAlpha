@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,26 @@ namespace pbPSCReAlpha
         List<ClGameStructure> m_lcgs;
         String m_sFolderPath;
         ClVersionHelper m_cvh;
-        Dictionary<TreeNode,List<ClGameStructure>> m_lcgs_folder;
+        Dictionary<TreeNode,ClGameStructureWithPicture> m_lcgs_folder;
         List<ClUIFolder> m_luiFolders;
+
+        class ClGameStructureWithPicture
+        {
+            String _picturePath;
+            Bitmap _pictureBitmap;
+            List<ClGameStructure> _gameStruct;
+
+            public ClGameStructureWithPicture(string picturePath, Bitmap pictureBitmap, List<ClGameStructure> gameStruct)
+            {
+                _picturePath = picturePath;
+                _pictureBitmap = pictureBitmap;
+                _gameStruct = gameStruct;
+            }
+
+            public string PicturePath { get => _picturePath; set => _picturePath = value; }
+            public Bitmap PictureBitmap { get => _pictureBitmap; set => _pictureBitmap = value; }
+            public List<ClGameStructure> GameStruct { get => _gameStruct; set => _gameStruct = value; }
+        }
 
         public Form10(List<ClGameStructure> lcgs, String sFolderPath, int bleemsyncVersion, ClVersionHelper cvh, SimpleLogger sl, List<ClUIFolder> luiFoldersList)
         {
@@ -41,11 +60,22 @@ namespace pbPSCReAlpha
                 }
             }
             lbCurrentGames.DisplayMember = "IndexAndTitle";
-            m_lcgs_folder = new Dictionary<TreeNode, List<ClGameStructure>>();
+            m_lcgs_folder = new Dictionary<TreeNode, ClGameStructureWithPicture>();
             
             // folders from DB
             if (m_luiFolders != null)
             {
+                String sFolderUpp = m_sFolderPath;
+                if (sFolderUpp.EndsWith("\\"))
+                {
+                    sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
+                }
+                int ipos = sFolderUpp.LastIndexOf("\\");
+                if (ipos > -1)
+                {
+                    sFolderUpp = sFolderUpp.Substring(0, ipos);
+                }
+                String sFolderImg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers\\folder_launch";
                 foreach (ClUIFolder cuif in m_luiFolders)
                 {
                     tvFolders.Nodes.Add(cuif.Title);
@@ -62,7 +92,7 @@ namespace pbPSCReAlpha
                             }
                         }
                     }
-                    m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], lcgs1);
+                    m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new ClGameStructureWithPicture(sFolderImg + "\\" + cuif.Imgpath.Replace("/", "\\"), new Bitmap(sFolderImg + "\\" + cuif.Imgpath.Replace("/", "\\")), lcgs1));
                 }
             }
             refreshComboBoxFolders();
@@ -84,10 +114,10 @@ namespace pbPSCReAlpha
                     {
                         if (m_lcgs_folder.ContainsKey(tvFolders.SelectedNode))
                         {
-                            if (m_lcgs_folder[tvFolders.SelectedNode].Count > 0)
+                            if (m_lcgs_folder[tvFolders.SelectedNode].GameStruct.Count > 0)
                             {
                                 bool bFound = false;
-                                foreach (ClGameStructure cgs in m_lcgs_folder[tvFolders.SelectedNode])
+                                foreach (ClGameStructure cgs in m_lcgs_folder[tvFolders.SelectedNode].GameStruct)
                                 {
                                     if (bFound == false)
                                     {
@@ -100,13 +130,13 @@ namespace pbPSCReAlpha
                                 if (bFound == false)
                                 {
                                     lbCurrentGames.Items.Add(cgsGlobal);
-                                    m_lcgs_folder[tvFolders.SelectedNode].Add(cgsGlobal);
+                                    m_lcgs_folder[tvFolders.SelectedNode].GameStruct.Add(cgsGlobal);
                                 }
                             }
                             else
                             {
                                 lbCurrentGames.Items.Add(cgsGlobal);
-                                m_lcgs_folder[tvFolders.SelectedNode].Add(cgsGlobal);
+                                m_lcgs_folder[tvFolders.SelectedNode].GameStruct.Add(cgsGlobal);
                             }
                         }
                     }
@@ -120,13 +150,19 @@ namespace pbPSCReAlpha
             {
                 if (m_lcgs_folder.ContainsKey(tvFolders.SelectedNode))
                 {
-                    foreach (ClGameStructure cgs in m_lcgs_folder[tvFolders.SelectedNode])
+                    foreach (ClGameStructure cgs in m_lcgs_folder[tvFolders.SelectedNode].GameStruct)
                     {
                         lbCurrentGames.Items.Add(cgs);
                     }
+                    tbCurrentFolder.Text = tvFolders.SelectedNode.Text;
+                    pbCurrentFolder.Image = new Bitmap(m_lcgs_folder[tvFolders.SelectedNode].PictureBitmap);
                 }
-                tbCurrentFolder.Text = tvFolders.SelectedNode.Text;
                 refreshComboBoxFolders();
+                gbSelectedFolder.Enabled = true;
+            }
+            else
+            {
+                gbSelectedFolder.Enabled = false;
             }
         }
 
@@ -135,7 +171,7 @@ namespace pbPSCReAlpha
             //
             int iNew = tvFolders.Nodes.Count + 1;
             tvFolders.Nodes.Add("Folder " + iNew.ToString());
-            m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new List<ClGameStructure>());
+            m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new ClGameStructureWithPicture(String.Empty, null, new List<ClGameStructure>()));
             tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
             tbCurrentFolder.Focus();
             refreshComboBoxFolders();
@@ -146,7 +182,22 @@ namespace pbPSCReAlpha
             List<ClUIFolder> lFolders = new List<ClUIFolder>();
             int iIndexFirstBoot = 0;
             TreeNode tSelected = null;
-            if(cbFolderAtFirstBoot.SelectedIndex > 0)
+
+            String sFolderUpp = m_sFolderPath;
+            if (sFolderUpp.EndsWith("\\"))
+            {
+                sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
+            }
+            int ipos = sFolderUpp.LastIndexOf("\\");
+            if (ipos > -1)
+            {
+                sFolderUpp = sFolderUpp.Substring(0, ipos);
+            }
+            String sFolderImg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers\\folder_launch";
+            String sFolderLaunch = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers";
+            String sFolderSelectedCfg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\CFG";
+
+            if (cbFolderAtFirstBoot.SelectedIndex > 0)
             {
                 tSelected = (TreeNode)(cbFolderAtFirstBoot.Items[cbFolderAtFirstBoot.SelectedIndex]);
             }
@@ -160,9 +211,9 @@ namespace pbPSCReAlpha
                     if (m_lcgs_folder.ContainsKey(t))
                     {
                         List<int> lGameIds = new List<int>();
-                        if (m_lcgs_folder[t].Count > 0)
+                        if (m_lcgs_folder[t].GameStruct.Count > 0)
                         {
-                            foreach (ClGameStructure cgs in m_lcgs_folder[t])
+                            foreach (ClGameStructure cgs in m_lcgs_folder[t].GameStruct)
                             {
                                 try
                                 {
@@ -179,25 +230,64 @@ namespace pbPSCReAlpha
                         {
                             iIndexFirstBoot = iIndex;
                         }
-                        lFolders.Add(new ClUIFolder(t.Text, lGameIds, "images/folder.png")); // TODO add img
+                        String sImgDBPath = "images/folder.png";
+                        if ((!String.IsNullOrEmpty(m_lcgs_folder[t].PicturePath)) && (m_lcgs_folder[t].PicturePath.IndexOf(sFolderImg) > -1))
+                        {
+                            if (File.Exists(m_lcgs_folder[t].PicturePath))
+                            {
+                                // picture is already in the "right" place
+                                int ipos0 = m_lcgs_folder[t].PicturePath.LastIndexOf("\\");
+                                if (ipos0 > -1)
+                                {
+                                    sImgDBPath = "images/" + m_lcgs_folder[t].PicturePath.Substring(ipos0 + 1);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // picture needs to be copied
+                            if ((!String.IsNullOrEmpty(m_lcgs_folder[t].PicturePath)))
+                            {
+                                String sName = String.Empty;
+                                int ipos0 = m_lcgs_folder[t].PicturePath.LastIndexOf("\\");
+                                if (ipos0 > -1)
+                                {
+                                    sName = m_lcgs_folder[t].PicturePath.Substring(ipos0 + 1);
+                                }
+                                if (!File.Exists(sFolderImg + "\\images\\" + sName))
+                                {
+                                    m_lcgs_folder[t].PictureBitmap.Save(sFolderImg + "\\images\\" + sName, ImageFormat.Png);
+                                    MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFolderImg + "\\images\\" + sName + " --force --ext .png --verbose");
+                                    pPngQuant.DoIt();
+                                    sImgDBPath = "images/" + sName;
+                                }
+                                else
+                                {
+                                    int iIndexImg = 1;
+                                    String sNameWithoutExt = sName;
+                                    int iExt = sName.LastIndexOf(".");
+                                    if (iExt > -1)
+                                    {
+                                        sNameWithoutExt = sName.Substring(0, iExt);
+                                    }
+                                    while (File.Exists(sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png"))
+                                    {
+                                        iIndexImg++;
+                                    }
+                                    m_lcgs_folder[t].PictureBitmap.Save(sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png", ImageFormat.Png);
+                                    MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png" + " --force --ext .png --verbose");
+                                    pPngQuant.DoIt();
+                                    sImgDBPath = "images/" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png";
+                                }
+                            }
+                        }
+                        lFolders.Add(new ClUIFolder(t.Text, lGameIds, sImgDBPath));
                     }
                     iIndex++;
                 }
             }
             ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger, lFolders);
-            String sFolderUpp = m_sFolderPath;
-            if (sFolderUpp.EndsWith("\\"))
-            {
-                sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
-            }
-            int ipos = sFolderUpp.LastIndexOf("\\");
-            if (ipos > -1)
-            {
-                sFolderUpp = sFolderUpp.Substring(0, ipos);
-            }
-            String sFolderImg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers\\folder_launch";
-            String sFolderLaunch = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers";
-            String sFolderSelectedCfg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\CFG";
+
             if (iIndexFirstBoot == 0)
             {
                 if(File.Exists(sFolderSelectedCfg + "\\selected_folder"))
@@ -320,7 +410,7 @@ namespace pbPSCReAlpha
                 foreach (ClGameStructure cgs in lcgs)
                 {
                     lbCurrentGames.Items.Remove(cgs);
-                    m_lcgs_folder[tvFolders.SelectedNode].Remove(cgs);
+                    m_lcgs_folder[tvFolders.SelectedNode].GameStruct.Remove(cgs);
                 }
                 refreshComboBoxFolders();
             }
@@ -341,7 +431,49 @@ namespace pbPSCReAlpha
 
         private void btBrowseImage_Click(object sender, EventArgs e)
         {
-            // TODO
+            if (null != slLogger)
+                slLogger.Trace(">> Load image Click");
+            String sFolderUpp = m_sFolderPath;
+            if (sFolderUpp.EndsWith("\\"))
+            {
+                sFolderUpp = sFolderUpp.Substring(0, sFolderUpp.Length - 1);
+            }
+            int ipos = sFolderUpp.LastIndexOf("\\");
+            if (ipos > -1)
+            {
+                sFolderUpp = sFolderUpp.Substring(0, ipos);
+            }
+            String sFolderImg = sFolderUpp + "\\bleemsync\\etc\\bleemsync\\SUP\\launchers\\folder_launch\\images";
+            if (Directory.Exists(sFolderImg))
+            {
+                ofdBrowsePicture.InitialDirectory = sFolderImg;
+            }
+            if (DialogResult.OK == ofdBrowsePicture.ShowDialog())
+            {
+                String sFileName = ofdBrowsePicture.FileName;
+                try
+                {
+                    using (Bitmap bmPicture = new Bitmap(sFileName))
+                    {
+                        pbCurrentFolder.Image = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                        if (tvFolders.SelectedNode != null)
+                        {
+                            if (m_lcgs_folder.ContainsKey(tvFolders.SelectedNode))
+                            {
+                                m_lcgs_folder[tvFolders.SelectedNode].PictureBitmap = ClPbHelper.ResizeImage((Image)(new Bitmap(bmPicture)), 226, 226);
+                                m_lcgs_folder[tvFolders.SelectedNode].PicturePath = sFileName;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
+                }
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Load image Click");
         }
 
         private void btClearFolders_Click(object sender, EventArgs e)
@@ -387,7 +519,7 @@ namespace pbPSCReAlpha
                     foreach (ClGameStructure cgs in lcgs)
                     {
                         lbCurrentGames.Items.Remove(cgs);
-                        m_lcgs_folder[tvFolders.SelectedNode].Remove(cgs);
+                        m_lcgs_folder[tvFolders.SelectedNode].GameStruct.Remove(cgs);
                     }
                 }
             }

@@ -35,21 +35,22 @@
             this.btAddTo = new System.Windows.Forms.Button();
             this.lbCurrentGames = new System.Windows.Forms.ListBox();
             this.tbCurrentFolder = new System.Windows.Forms.TextBox();
-            this.pbCurrentFolder = new System.Windows.Forms.PictureBox();
-            this.btNewFolder = new System.Windows.Forms.Button();
-            this.btGenerate = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbSelectedFolder = new System.Windows.Forms.GroupBox();
             this.btRemoveSelectedGame = new System.Windows.Forms.Button();
             this.btBrowseImage = new System.Windows.Forms.Button();
+            this.pbCurrentFolder = new System.Windows.Forms.PictureBox();
             this.gbFolders = new System.Windows.Forms.GroupBox();
-            this.btRemoveFolder = new System.Windows.Forms.Button();
-            this.gbGameList = new System.Windows.Forms.GroupBox();
             this.btClearFolders = new System.Windows.Forms.Button();
+            this.btRemoveFolder = new System.Windows.Forms.Button();
+            this.btNewFolder = new System.Windows.Forms.Button();
+            this.gbGameList = new System.Windows.Forms.GroupBox();
             this.cbLauncherGenerate = new System.Windows.Forms.CheckBox();
             this.cbFolderAtFirstBoot = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.ofdBrowsePicture = new System.Windows.Forms.OpenFileDialog();
+            this.btGenerate = new System.Windows.Forms.Button();
+            this.gbSelectedFolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.gbFolders.SuspendLayout();
             this.gbGameList.SuspendLayout();
             this.SuspendLayout();
@@ -77,6 +78,7 @@
             // 
             // tvFolders
             // 
+            this.tvFolders.FullRowSelect = true;
             this.tvFolders.Location = new System.Drawing.Point(6, 19);
             this.tvFolders.Name = "tvFolders";
             this.tvFolders.Size = new System.Drawing.Size(150, 320);
@@ -87,11 +89,11 @@
             // 
             // btAddTo
             // 
+            this.btAddTo.Image = global::pbPSCReAlpha.Properties.Resources.arrow_left_double;
             this.btAddTo.Location = new System.Drawing.Point(532, 27);
             this.btAddTo.Name = "btAddTo";
             this.btAddTo.Size = new System.Drawing.Size(75, 56);
             this.btAddTo.TabIndex = 11;
-            this.btAddTo.Text = "<<";
             this.btAddTo.UseVisualStyleBackColor = true;
             this.btAddTo.Click += new System.EventHandler(this.btAddTo_Click);
             // 
@@ -114,68 +116,54 @@
             this.tbCurrentFolder.TabIndex = 13;
             this.tbCurrentFolder.Leave += new System.EventHandler(this.tbCurrentFolder_Leave);
             // 
+            // gbSelectedFolder
+            // 
+            this.gbSelectedFolder.Controls.Add(this.btRemoveSelectedGame);
+            this.gbSelectedFolder.Controls.Add(this.btBrowseImage);
+            this.gbSelectedFolder.Controls.Add(this.tbCurrentFolder);
+            this.gbSelectedFolder.Controls.Add(this.pbCurrentFolder);
+            this.gbSelectedFolder.Controls.Add(this.lbCurrentGames);
+            this.gbSelectedFolder.Enabled = false;
+            this.gbSelectedFolder.Location = new System.Drawing.Point(182, 12);
+            this.gbSelectedFolder.Name = "gbSelectedFolder";
+            this.gbSelectedFolder.Size = new System.Drawing.Size(344, 433);
+            this.gbSelectedFolder.TabIndex = 17;
+            this.gbSelectedFolder.TabStop = false;
+            this.gbSelectedFolder.Text = "Selected Folder";
+            // 
+            // btRemoveSelectedGame
+            // 
+            this.btRemoveSelectedGame.Image = global::pbPSCReAlpha.Properties.Resources.edit_delete_6;
+            this.btRemoveSelectedGame.Location = new System.Drawing.Point(150, 403);
+            this.btRemoveSelectedGame.Name = "btRemoveSelectedGame";
+            this.btRemoveSelectedGame.Size = new System.Drawing.Size(188, 23);
+            this.btRemoveSelectedGame.TabIndex = 16;
+            this.btRemoveSelectedGame.Text = "Remove selected game(s)";
+            this.btRemoveSelectedGame.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btRemoveSelectedGame.UseVisualStyleBackColor = true;
+            this.btRemoveSelectedGame.Click += new System.EventHandler(this.btRemoveSelectedGame_Click);
+            // 
+            // btBrowseImage
+            // 
+            this.btBrowseImage.Image = global::pbPSCReAlpha.Properties.Resources.folder_image;
+            this.btBrowseImage.Location = new System.Drawing.Point(9, 182);
+            this.btBrowseImage.Name = "btBrowseImage";
+            this.btBrowseImage.Size = new System.Drawing.Size(135, 23);
+            this.btBrowseImage.TabIndex = 15;
+            this.btBrowseImage.Text = "Browse picture...";
+            this.btBrowseImage.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btBrowseImage.UseVisualStyleBackColor = true;
+            this.btBrowseImage.Click += new System.EventHandler(this.btBrowseImage_Click);
+            // 
             // pbCurrentFolder
             // 
             this.pbCurrentFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbCurrentFolder.Location = new System.Drawing.Point(9, 41);
             this.pbCurrentFolder.Name = "pbCurrentFolder";
             this.pbCurrentFolder.Size = new System.Drawing.Size(135, 135);
+            this.pbCurrentFolder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbCurrentFolder.TabIndex = 14;
             this.pbCurrentFolder.TabStop = false;
-            // 
-            // btNewFolder
-            // 
-            this.btNewFolder.Location = new System.Drawing.Point(6, 345);
-            this.btNewFolder.Name = "btNewFolder";
-            this.btNewFolder.Size = new System.Drawing.Size(150, 23);
-            this.btNewFolder.TabIndex = 15;
-            this.btNewFolder.Text = "New folder";
-            this.btNewFolder.UseVisualStyleBackColor = true;
-            this.btNewFolder.Click += new System.EventHandler(this.btNewFolder_Click);
-            // 
-            // btGenerate
-            // 
-            this.btGenerate.Location = new System.Drawing.Point(693, 386);
-            this.btGenerate.Name = "btGenerate";
-            this.btGenerate.Size = new System.Drawing.Size(120, 23);
-            this.btGenerate.TabIndex = 16;
-            this.btGenerate.Text = "Generate";
-            this.btGenerate.UseVisualStyleBackColor = true;
-            this.btGenerate.Click += new System.EventHandler(this.btGenerate_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.btRemoveSelectedGame);
-            this.groupBox1.Controls.Add(this.btBrowseImage);
-            this.groupBox1.Controls.Add(this.tbCurrentFolder);
-            this.groupBox1.Controls.Add(this.pbCurrentFolder);
-            this.groupBox1.Controls.Add(this.lbCurrentGames);
-            this.groupBox1.Location = new System.Drawing.Point(182, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(344, 433);
-            this.groupBox1.TabIndex = 17;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Selected Folder";
-            // 
-            // btRemoveSelectedGame
-            // 
-            this.btRemoveSelectedGame.Location = new System.Drawing.Point(150, 403);
-            this.btRemoveSelectedGame.Name = "btRemoveSelectedGame";
-            this.btRemoveSelectedGame.Size = new System.Drawing.Size(188, 23);
-            this.btRemoveSelectedGame.TabIndex = 16;
-            this.btRemoveSelectedGame.Text = "Remove selected game(s)";
-            this.btRemoveSelectedGame.UseVisualStyleBackColor = true;
-            this.btRemoveSelectedGame.Click += new System.EventHandler(this.btRemoveSelectedGame_Click);
-            // 
-            // btBrowseImage
-            // 
-            this.btBrowseImage.Location = new System.Drawing.Point(9, 182);
-            this.btBrowseImage.Name = "btBrowseImage";
-            this.btBrowseImage.Size = new System.Drawing.Size(135, 23);
-            this.btBrowseImage.TabIndex = 15;
-            this.btBrowseImage.Text = "Browse picture...";
-            this.btBrowseImage.UseVisualStyleBackColor = true;
-            this.btBrowseImage.Click += new System.EventHandler(this.btBrowseImage_Click);
             // 
             // gbFolders
             // 
@@ -190,15 +178,41 @@
             this.gbFolders.TabStop = false;
             this.gbFolders.Text = "Folder List";
             // 
+            // btClearFolders
+            // 
+            this.btClearFolders.Image = global::pbPSCReAlpha.Properties.Resources.edit_clear_3;
+            this.btClearFolders.Location = new System.Drawing.Point(6, 403);
+            this.btClearFolders.Name = "btClearFolders";
+            this.btClearFolders.Size = new System.Drawing.Size(150, 23);
+            this.btClearFolders.TabIndex = 17;
+            this.btClearFolders.Text = "Clear All";
+            this.btClearFolders.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btClearFolders.UseVisualStyleBackColor = true;
+            this.btClearFolders.Click += new System.EventHandler(this.btClearFolders_Click);
+            // 
             // btRemoveFolder
             // 
+            this.btRemoveFolder.Image = global::pbPSCReAlpha.Properties.Resources.edit_delete_6;
             this.btRemoveFolder.Location = new System.Drawing.Point(6, 374);
             this.btRemoveFolder.Name = "btRemoveFolder";
             this.btRemoveFolder.Size = new System.Drawing.Size(150, 23);
             this.btRemoveFolder.TabIndex = 16;
             this.btRemoveFolder.Text = "Remove folder";
+            this.btRemoveFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btRemoveFolder.UseVisualStyleBackColor = true;
             this.btRemoveFolder.Click += new System.EventHandler(this.btRemoveFolder_Click);
+            // 
+            // btNewFolder
+            // 
+            this.btNewFolder.Image = global::pbPSCReAlpha.Properties.Resources.list_add;
+            this.btNewFolder.Location = new System.Drawing.Point(6, 345);
+            this.btNewFolder.Name = "btNewFolder";
+            this.btNewFolder.Size = new System.Drawing.Size(150, 23);
+            this.btNewFolder.TabIndex = 15;
+            this.btNewFolder.Text = "New folder";
+            this.btNewFolder.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btNewFolder.UseVisualStyleBackColor = true;
+            this.btNewFolder.Click += new System.EventHandler(this.btNewFolder_Click);
             // 
             // gbGameList
             // 
@@ -209,16 +223,6 @@
             this.gbGameList.TabIndex = 19;
             this.gbGameList.TabStop = false;
             this.gbGameList.Text = "All games";
-            // 
-            // btClearFolders
-            // 
-            this.btClearFolders.Location = new System.Drawing.Point(6, 403);
-            this.btClearFolders.Name = "btClearFolders";
-            this.btClearFolders.Size = new System.Drawing.Size(150, 23);
-            this.btClearFolders.TabIndex = 17;
-            this.btClearFolders.Text = "Clear All";
-            this.btClearFolders.UseVisualStyleBackColor = true;
-            this.btClearFolders.Click += new System.EventHandler(this.btClearFolders_Click);
             // 
             // cbLauncherGenerate
             // 
@@ -250,6 +254,27 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "Choose a folder for first boot:";
             // 
+            // ofdBrowsePicture
+            // 
+            this.ofdBrowsePicture.DefaultExt = "png";
+            this.ofdBrowsePicture.FileName = "Game.png";
+            this.ofdBrowsePicture.Filter = "image files|*.png;*.jpg;*.jpeg;*.bmp";
+            this.ofdBrowsePicture.RestoreDirectory = true;
+            this.ofdBrowsePicture.ShowHelp = true;
+            this.ofdBrowsePicture.Title = "Load file";
+            // 
+            // btGenerate
+            // 
+            this.btGenerate.Image = global::pbPSCReAlpha.Properties.Resources.inode_blockdevice1;
+            this.btGenerate.Location = new System.Drawing.Point(693, 386);
+            this.btGenerate.Name = "btGenerate";
+            this.btGenerate.Size = new System.Drawing.Size(120, 23);
+            this.btGenerate.TabIndex = 16;
+            this.btGenerate.Text = "Generate";
+            this.btGenerate.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btGenerate.UseVisualStyleBackColor = true;
+            this.btGenerate.Click += new System.EventHandler(this.btGenerate_Click);
+            // 
             // Form10
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -261,16 +286,16 @@
             this.Controls.Add(this.cbLauncherGenerate);
             this.Controls.Add(this.gbGameList);
             this.Controls.Add(this.gbFolders);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbSelectedFolder);
             this.Controls.Add(this.btGenerate);
             this.Controls.Add(this.btAddTo);
             this.Controls.Add(this.btBack);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form10";
             this.Text = "Folder Manager";
+            this.gbSelectedFolder.ResumeLayout(false);
+            this.gbSelectedFolder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.gbFolders.ResumeLayout(false);
             this.gbGameList.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -289,7 +314,7 @@
         private System.Windows.Forms.PictureBox pbCurrentFolder;
         private System.Windows.Forms.Button btNewFolder;
         private System.Windows.Forms.Button btGenerate;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbSelectedFolder;
         private System.Windows.Forms.Button btRemoveSelectedGame;
         private System.Windows.Forms.Button btBrowseImage;
         private System.Windows.Forms.GroupBox gbFolders;
@@ -299,5 +324,6 @@
         private System.Windows.Forms.CheckBox cbLauncherGenerate;
         private System.Windows.Forms.ComboBox cbFolderAtFirstBoot;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.OpenFileDialog ofdBrowsePicture;
     }
 }

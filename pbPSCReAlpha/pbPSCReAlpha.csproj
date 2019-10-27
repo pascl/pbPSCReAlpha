@@ -270,6 +270,10 @@
     <Content Include="psx-icon-13.ico" />
     <None Include="Resources\arrow-left-double-3.png" />
     <None Include="Resources\hourglass-add.png" />
+    <None Include="Resources\edit-delete-6.png" />
+    <None Include="Resources\list-add.png" />
+    <None Include="Resources\edit-clear-3.png" />
+    <None Include="Resources\folder-image.png" />
     <Content Include="tgdbgames.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
