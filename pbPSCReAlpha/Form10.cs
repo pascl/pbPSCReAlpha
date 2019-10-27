@@ -257,6 +257,7 @@ namespace pbPSCReAlpha
                     tvFolders.SelectedNode = null;
                     tvFolders.Sort();
                     int iIndex = 1;
+                    List<String> lsImage = new List<string>();
                     foreach (TreeNode t in tvFolders.Nodes)
                     {
                         if (m_lcgs_folder.ContainsKey(t))
@@ -308,8 +309,7 @@ namespace pbPSCReAlpha
                                     if (!File.Exists(sFolderImg + "\\images\\" + sName))
                                     {
                                         m_lcgs_folder[t].PictureBitmap.Save(sFolderImg + "\\images\\" + sName, ImageFormat.Png);
-                                        MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFolderImg + "\\images\\" + sName + " --force --ext .png --verbose");
-                                        pPngQuant.DoIt();
+                                        lsImage.Add(sFolderImg + "\\images\\" + sName);
                                         sImgDBPath = "images/" + sName;
                                     }
                                     else
@@ -326,8 +326,7 @@ namespace pbPSCReAlpha
                                             iIndexImg++;
                                         }
                                         m_lcgs_folder[t].PictureBitmap.Save(sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png", ImageFormat.Png);
-                                        MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png" + " --force --ext .png --verbose");
-                                        pPngQuant.DoIt();
+                                        lsImage.Add(sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png");
                                         sImgDBPath = "images/" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png";
                                     }
                                 }
@@ -335,6 +334,16 @@ namespace pbPSCReAlpha
                             lFolders.Add(new ClUIFolder(t.Text, lGameIds, sImgDBPath));
                         }
                         iIndex++;
+                    }
+                    if(lsImage.Count > 0)
+                    {
+                        String sList = String.Empty;
+                        foreach(String s in lsImage)
+                        {
+                            sList += " \"" + s + "\"";
+                        }
+                        MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sList + " --force --ext .png --verbose");
+                        pPngQuant.DoIt();
                     }
                 }
                 ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger, lFolders);
