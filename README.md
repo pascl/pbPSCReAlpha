@@ -4,26 +4,30 @@ A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *
 
 Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
 
-Last version: 1.5
+Last version: 1.6
 
-![Preview](https://i.imgur.com/x5jRWBr.png)
+![Preview](https://i.imgur.com/o2wNqJl.png)
 
 **NEW 1.4**
 * CHD files are managed.
 * With some launchers, you can replace internal games
-**NEW 1.5**
-* BleemSync1.2 is managed (reset your folders for now)
 
-PS: you can add laucnhers for your folders by editing the folder manager launcher. Go to https://github.com/pascl/BleemSync_Mods for more information.
+**NEW 1.5**
+* BleemSync1.2 is managed (reset your folders in this version)
+
+**NEW 1.6**
+* Folders and non-PS1 games are managed with BleemSync1.2
+* Folders were previously possible by modding some files in BleemSync1.1. With BleemSync1.2, there is not any file modifications to do.
 
 
 ## General
 
-An USB drive configured by Bleemsync (example of 1.01 version) contains several folders:
+An USB drive configured by Bleemsync (example of 1.2 version) contains several folders:
 * bleemsync
-* f854cc9b-6cfc-4524-90a2-a2b35bbc3e24
-* logs
+* d8781dae-c45c-4fc1-b961-e03eedebbffb
 * games
+* logs
+* transfer
 
 In the games folder, some numeroted folders (one per game) containing:
 * png file (only one)
@@ -32,8 +36,9 @@ In the games folder, some numeroted folders (one per game) containing:
 * instead of bin & cue files, pbp or chd file(s) (one per disc if several)
 * sbi file(s) necessary fo some PAL games
 * game.ini file or not, depending on the bleemsync version (or if you have already run this app).
+* **NEW 1.6** for non-PS1 games, launch.sh file
 
-For BleemSync1.0.0/1.1.0 users : This app needs a Game.ini file for each game. These files were necessary in the older versions of bleemsync but not present anymore since 1.0 version. This software can create these files by reading the database file on the usb drive (after a click on Refresh or in the Tranformer tab).
+For BleemSync1.0.0/1.1.0/1.2.0 users : This app needs a Game.ini file for each game. These files were necessary in the older versions of bleemsync but not present anymore since 1.0 version. This software can create these files by reading the database file on the usb drive (after a click on Refresh or in the Tranformer tab).
 
 After modifications in the app, you have to click on Recreate database to have these modifications available on the PSC.
 
@@ -69,6 +74,8 @@ After modifications in the app, you have to click on Recreate database to have t
 An error is symbolized by a '*' before the folder number and the title in the left-side list. A warning is symbolized by a '!' before the folder number and the title in the left-side list.
 An error will prevent you from sorting, not the warnings.
 
+**NEW 1.6** If a launch.sh is detected in the folder, some errors are bypassed.
+
 For now, you can add all files you want, but only cue, bin, pbp, chd, png, game.ini and pcsx.cfg are managed by the app. The content of pbp, chd or bin files are not read by the app, the app only checks filenames.
 
 PBP files are for PS1 games only and not for BleemSync0.4.1.
@@ -78,7 +85,7 @@ PBP files are for PS1 games only and not for BleemSync0.4.1.
 2. Click on Sort (click first on Refresh if disabled).
 3. Games will now be sorted alphabetically.
 
-During the process, the directories are renamed with the current date, then renamed from 1 to your gamecount, (or 21 to your gamecount+20 whith AutoBleem0.6.0).
+During the process, the directories are renamed temporarily, then renamed from 1 to your gamecount, (or 31 to your gamecount+30 whith AutoBleem0.6.0).
 
 For some convenience, a facultative parameter **AlphaTitle** can be added into Game.ini files to be sorted instead of the *Title*.
 For example:
@@ -102,7 +109,10 @@ In case it is still locked somewhere, try to rename the locked folder in an expl
 * **NEW 1.3** A refresh is now done by clicking on this button. You can't regenerate database if errors are detected.
 * **NEW 1.3** You have now 2 options to re-generate the database:
    * click on the button as in the previous versions. You will be warned if all is ok or not after a few seconds.
-   * [if you have a drive with a **modded BleemSync1.1**] with the **Shift key** pressed, click on the button to go to the advanced options.
+     * **NEW 1.6** if you have selected BleemSync1.2, the folder manager will appear before recreating the database. You can now create folders on the left-side, select one, then choose games in the "all games list" and click the double-arrow to have them in the folder.
+![Preview](https://i.imgur.com/7ocRrKV.png)
+	 
+   * * [**NEW 1.6** deprecated with BleemSync1.2] if you have a drive with a **modded BleemSync1.1**] with the **Shift key** pressed, click on the button to go to the advanced options.
      * You can choose different options to generate several DB files in order to be used in different folders.
 	 * An empty DB file is generated too, if you don't want any ps1 games in a folder.
      * Going to this advanced form if you have another version, or a not-modified BleemSync 1.1 version, only the first option will do something useful for you.
@@ -118,22 +128,22 @@ Once a game is selected, on the right-hand of the window, you can:
 * Edit directly filenames by clicking again on a selected file (or press F2 on keyboard).
 * Delete a file by pressing DEL on keyboard.
 * Copy files (one or several) directly by drag and drop.
-* Edit the picture by drag and drop (with automatic save and compression by pngquant)
+* Edit the picture by drag and drop (with automatic save and compression by pngquant). **NEW 1.6** Drag and drop with Shift clicked to keep aspect ratio.
 
 In the left-side list, you can delete an entire folder with DEL key on keyboard (confirmtion needed) or Shif+DEL (no confirmation).
 
 Auto-rename buttons can rename files automatically. They rename files according to the "Discs" field in the Game.ini file. Bin, cue, pbp, chd, png and sbi files can be renamed automatically. Ask a user confirmation before really doing it.
 
 ### Edit Game.ini & Edit Image
-![Preview](https://i.imgur.com/1nwPOLg.png)
+![Preview](https://i.imgur.com/U9RsnCW.png)
 
 Game.ini edit window and picture edit window have been merged.
 
 Default folder is the last selected in the main window. You can load/save other files if needed. For the picture box, you can load a png, bmp or jpg file and save to png.
 
-Search at the bottom of the window can fill automatically Title and Discs fields. Then, click on "View page here" to display the webpage of the game. You can now click on one of the blue arrows to fill Game.ini fields and/or picturebox.
+Search at the bottom of the window can fill automatically Title and Discs fields. Then, click on "View page here" to display the webpage of the game. You can now click on one of the blue arrows to fill Game.ini fields and/or picturebox (**NEW 1.6** for the picturebox, click on the green arrow to keep aspect ratio). **NEW 1.6** Search can now be done on 2 websites.
 
-For the picture, you can drag and drop a picture file (or directly from a webpage) instead of clicking the load button.
+For the picture, you can drag and drop a picture file (or directly from a webpage) instead of clicking the load button (**NEW 1.6** With Shift clicked during the drag and drop, you will keep the aspect ratio).
 
 Added pngquant exe to the package. It is launched during the save operation.
 
@@ -159,6 +169,21 @@ You can exit this window by pressing ESC on keyboard.
 The button appears only if the file is not detected in a folder. The file added is in the executable folder.
 
 This file becomes not necessary when you use BlemSync1.0.0. So the button will not appear anymore.
+
+### Add launch.sh file **NEW 1.6**
+![Preview](https://i.imgur.com/WSk8DUZ.png)
+The button permits to add and/or edit a launch.sh file.
+
+You can write directly to edit the file content. On the left-side, you have the list of the files which are present in the folder. You can select one and click on copy filename (or double-click in the list) to have it in the clipboard.
+
+The Reload button permits to have the content as it was at the window creation.
+
+The Template button permits to have helps to write the content. The new form allows you to use the launch*.sh files in the same folder of the executable and fills them (click on arrows). Use the Complete button to export the content of this from in the previous one.
+![Preview](https://i.imgur.com/PUdfZq9.png)
+
+The Save button saves the file (don't forget to use it).
+
+You can exit this window by pressing ESC on keyboard.
 
 ### Generate m3u file
 The button appears only for multidisc games. Creating a m3u file is not necessary if you use only the stock emulator. It is recommended if you use retroarch with a psx core.
@@ -225,7 +250,7 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 ## List of files in release pack
 * pbPSCReAlpha.exe
 * pcsx.cfg - the file to be copied when you are using the "add pcsx.cfg file" button or the "New" button.
-* ps1games.xml - the game list for the search operation
+* ps1games.xml - the game list for PSXdatacenter research
 * sbigames.xml - the game list with SBI needed
 * Markdig.dll - library used to display MarkDown (and this file)
 * Markdig-licence.txt - licence file for Markdig
@@ -241,4 +266,9 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 * System.Data.SQLite.EF6.dll
 * System.Data.SQLite.Linq.dll
 * bleemsync_cfg.INI
-* FAQ.md -
+* FAQ.md - some FAQ
+* launch_drastic.sh - **NEW 1.6** for launch.sh template form
+* launch_folder.sh - **NEW 1.6** for launch.sh template form
+* launch_retroarch.sh - **NEW 1.6** for launch.sh template form
+* tgdbgames.xml - **NEW 1.6** the game list for TGDB research
+* tgdbplatforms.xml - **NEW 1.6** the game paltforms for TGDB research
