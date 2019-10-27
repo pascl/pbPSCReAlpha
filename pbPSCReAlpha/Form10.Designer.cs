@@ -49,6 +49,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ofdBrowsePicture = new System.Windows.Forms.OpenFileDialog();
             this.btGenerate = new System.Windows.Forms.Button();
+            this.cbKeepRatioWhenBrowsing = new System.Windows.Forms.CheckBox();
             this.gbSelectedFolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).BeginInit();
             this.gbFolders.SuspendLayout();
@@ -118,6 +119,7 @@
             // 
             // gbSelectedFolder
             // 
+            this.gbSelectedFolder.Controls.Add(this.cbKeepRatioWhenBrowsing);
             this.gbSelectedFolder.Controls.Add(this.btRemoveSelectedGame);
             this.gbSelectedFolder.Controls.Add(this.btBrowseImage);
             this.gbSelectedFolder.Controls.Add(this.tbCurrentFolder);
@@ -164,6 +166,8 @@
             this.pbCurrentFolder.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbCurrentFolder.TabIndex = 14;
             this.pbCurrentFolder.TabStop = false;
+            this.pbCurrentFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.pbCurrentFolder_DragDrop);
+            this.pbCurrentFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.pbCurrentFolder_DragEnter);
             // 
             // gbFolders
             // 
@@ -275,6 +279,18 @@
             this.btGenerate.UseVisualStyleBackColor = true;
             this.btGenerate.Click += new System.EventHandler(this.btGenerate_Click);
             // 
+            // cbKeepRatioWhenBrowsing
+            // 
+            this.cbKeepRatioWhenBrowsing.AutoSize = true;
+            this.cbKeepRatioWhenBrowsing.Checked = true;
+            this.cbKeepRatioWhenBrowsing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbKeepRatioWhenBrowsing.Location = new System.Drawing.Point(9, 211);
+            this.cbKeepRatioWhenBrowsing.Name = "cbKeepRatioWhenBrowsing";
+            this.cbKeepRatioWhenBrowsing.Size = new System.Drawing.Size(109, 17);
+            this.cbKeepRatioWhenBrowsing.TabIndex = 17;
+            this.cbKeepRatioWhenBrowsing.Text = "Keep aspect ratio";
+            this.cbKeepRatioWhenBrowsing.UseVisualStyleBackColor = true;
+            // 
             // Form10
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -325,5 +341,6 @@
         private System.Windows.Forms.ComboBox cbFolderAtFirstBoot;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog ofdBrowsePicture;
+        private System.Windows.Forms.CheckBox cbKeepRatioWhenBrowsing;
     }
 }
