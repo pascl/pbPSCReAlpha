@@ -52,11 +52,11 @@ namespace pbPSCReAlpha
             public string Folder_name { get => _folder_name; set => _folder_name = value; }
             public string Folder_image_path { get => _folder_image_path; set => _folder_image_path = value; }
             
-            public ClFolderEntriesTable(int iFolderId, String sFoldername)
+            public ClFolderEntriesTable(int iFolderId, String sFoldername, String sImgPath)
             {
                 _folder_id = iFolderId;
                 _folder_name = sFoldername;
-                _folder_image_path = "images/folder.png"; // TODO
+                _folder_image_path = sImgPath;
             }
             
             public SQLiteCommand generateInsertCommand(SQLiteConnection conn)
@@ -456,6 +456,10 @@ namespace pbPSCReAlpha
                                 {
                                     lFoldersFromDB.Add(new ClUIFolder(rdr["FOLDER_NAME"].ToString().Trim(), dcListGamesInFoldersFromDB[iId], rdr["FOLDER_IMAGE_PATH"].ToString().Trim()));
                                 }
+                                else
+                                {
+                                    lFoldersFromDB.Add(new ClUIFolder(rdr["FOLDER_NAME"].ToString().Trim(), new List<int>(), rdr["FOLDER_IMAGE_PATH"].ToString().Trim()));
+                                }
                             }
                         }
                     }
@@ -705,7 +709,7 @@ namespace pbPSCReAlpha
                                             int iFolderIndex = 1;
                                             foreach (ClUIFolder cuif in lFolders)
                                             {
-                                                ClFolderEntriesTable cfet = new ClFolderEntriesTable(iFolderIndex, cuif.Title);
+                                                ClFolderEntriesTable cfet = new ClFolderEntriesTable(iFolderIndex, cuif.Title, cuif.Imgpath);
                                                 command = cfet.BleemSyncUI_generateInsertCommand(m_dbConnection);
                                                 command.ExecuteNonQuery();
                                                 if (cuif.ListGameIds.Count > 0)
@@ -1015,7 +1019,7 @@ namespace pbPSCReAlpha
                             int iFolderIndex = 1;
                             foreach (ClUIFolder cuif in lFolders)
                             {
-                                ClFolderEntriesTable cfet = new ClFolderEntriesTable(iFolderIndex, cuif.Title);
+                                ClFolderEntriesTable cfet = new ClFolderEntriesTable(iFolderIndex, cuif.Title, cuif.Imgpath);
                                 cmd = cfet.generateInsertCommand(sqlconn);
                                 cmd.ExecuteNonQuery();
                                 if (cuif.ListGameIds.Count > 0)
