@@ -837,6 +837,7 @@ namespace pbPSCReAlpha
                             dcGames.Add(sFolderIndex, cgs);
                         }
                     }
+                    this.Update();
                 } // foreach
                 if (lsFolders.Count > 0)
                 {
@@ -3404,31 +3405,52 @@ namespace pbPSCReAlpha
         private void btLaunchPngquant_Click(object sender, EventArgs e)
         {
             slLogger.Trace(">> Compress all PNG Click");
-            String sList = String.Empty;
-            String sFolderPath = returnGamePath();
-            var fileList = new DirectoryInfo(sFolderPath).GetFiles("*.png", SearchOption.AllDirectories);
-            if (fileList.Length > 0)
+            if (DialogResult.Yes == FlexibleMessageBox.Show("Are you sure you want to compress all PNG in your folders ?\n" + "It can be a long process (several minutes, or more...) if you have a lot of pictures", "Compressing...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
-                foreach (FileInfo fi in fileList)
+                slLogger.Trace("Positive user answer");
+                List<String> lsImage = new List<string>();
+                String sFolderPath = returnGamePath();
+                var fileList = new DirectoryInfo(sFolderPath).GetFiles("*.png", SearchOption.AllDirectories);
+                if (fileList.Length > 0)
                 {
-                    try
+                    foreach (FileInfo fi in fileList)
                     {
-                        using (FileStream fileStream = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read))
+                        try
                         {
-                            Image img = ClPbHelper.ResizeImage((Image)(new Bitmap(Image.FromStream(fileStream))), 226, 226);
-                            fileStream.Close();
-                            img.Save(fi.FullName, ImageFormat.Png);
+                            using (FileStream fileStream = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read))
+                            {
+                                Image img = ClPbHelper.ResizeImage((Image)(new Bitmap(Image.FromStream(fileStream))), 226, 226);
+                                fileStream.Close();
+                                img.Save(fi.FullName, ImageFormat.Png);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            slLogger.Fatal(ex.Message);
+                        }
+                        lsImage.Add("\"" + fi.FullName + "\"");
+                    }
+                    if (lsImage.Count > 0)
+                    {
+                        int imax = lsImage.Count;
+                        for (int i = 0; i < imax; i++)
+                        {
+                            this.Update();
+                            int ibegin = i;
+                            String s = String.Empty;
+                            for (i = ibegin; (i < imax) && (i < ibegin + 400); i++)
+                            {
+                                s += " " + lsImage[i];
+                            }
+                            MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", s + " --force --ext .png --verbose");
+                            pPngQuant.DoIt();
                         }
                     }
-                    catch(Exception ex)
-                    {
-                        slLogger.Fatal(ex.Message);
-                    }
-                    sList += " \"" + fi.FullName + "\"";
                 }
-                // pngquant "test/1.png" "test1/1.png" --force --ext .png --verbose
-                MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sList + " --force --ext .png --verbose");
-                pPngQuant.DoIt();
+            }
+            else
+            {
+                slLogger.Trace("Negative user answer");
             }
             slLogger.Trace("<< Compress all PNG Click");
         }
