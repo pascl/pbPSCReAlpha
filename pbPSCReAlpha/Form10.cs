@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -292,6 +293,7 @@ namespace pbPSCReAlpha
                                     if (ipos0 > -1)
                                     {
                                         sImgDBPath = "images/" + m_lcgs_folder[t].PicturePath.Substring(ipos0 + 1);
+                                        //m_lcgs_folder[t].PictureBitmap = null; // force unlock the file
                                     }
                                 }
                             }
@@ -311,6 +313,7 @@ namespace pbPSCReAlpha
                                         m_lcgs_folder[t].PictureBitmap.Save(sFolderImg + "\\images\\" + sName, ImageFormat.Png);
                                         lsImage.Add(sFolderImg + "\\images\\" + sName);
                                         sImgDBPath = "images/" + sName;
+                                        //m_lcgs_folder[t].PictureBitmap = null; // force unlock the file
                                     }
                                     else
                                     {
@@ -328,6 +331,7 @@ namespace pbPSCReAlpha
                                         m_lcgs_folder[t].PictureBitmap.Save(sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png", ImageFormat.Png);
                                         lsImage.Add(sFolderImg + "\\images\\" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png");
                                         sImgDBPath = "images/" + sNameWithoutExt + "_" + iIndexImg.ToString() + ".png";
+                                        //m_lcgs_folder[t].PictureBitmap = null; // force unlock the file
                                     }
                                 }
                             }
@@ -337,13 +341,19 @@ namespace pbPSCReAlpha
                     }
                     if(lsImage.Count > 0)
                     {
-                        String sList = String.Empty;
-                        foreach(String s in lsImage)
+                        int imax = lsImage.Count;
+                        for (int i = 0; i < imax; i++)
                         {
-                            sList += " \"" + s + "\"";
+                            this.Update();
+                            int ibegin = i;
+                            String s = String.Empty;
+                            for (i = ibegin; (i < imax) && (i < ibegin + 400); i++)
+                            {
+                                s += " " + lsImage[i];
+                            }
+                            MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", s + " --force --ext .png --verbose");
+                            pPngQuant.DoIt();
                         }
-                        MyProcessHelper pPngQuant = new MyProcessHelper(Application.StartupPath + "\\pngquant\\pngquant.exe", sList + " --force --ext .png --verbose");
-                        pPngQuant.DoIt();
                     }
                 }
                 ClDBManager cdbm = new ClDBManager(m_lcgs, m_sFolderPath, m_bsversion, m_cvh, slLogger, lFolders);
@@ -958,6 +968,31 @@ namespace pbPSCReAlpha
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;
+        }
+
+        private void Form10_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(m_lcgs_folder.Count > 0)
+            {
+                try
+                {
+                    foreach (KeyValuePair<TreeNode, ClGameStructureWithPicture> pair in m_lcgs_folder)
+                    {
+                        ClGameStructureWithPicture c = pair.Value;
+                        c.PictureBitmap = null; // want to unlock files
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //
+                }
+                finally
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
+            }
+            Thread.Sleep(200);
         }
     }
 }

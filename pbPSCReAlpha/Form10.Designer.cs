@@ -36,6 +36,7 @@
             this.lbCurrentGames = new System.Windows.Forms.ListBox();
             this.tbCurrentFolder = new System.Windows.Forms.TextBox();
             this.gbSelectedFolder = new System.Windows.Forms.GroupBox();
+            this.cbKeepRatioWhenBrowsing = new System.Windows.Forms.CheckBox();
             this.btRemoveSelectedGame = new System.Windows.Forms.Button();
             this.btBrowseImage = new System.Windows.Forms.Button();
             this.pbCurrentFolder = new System.Windows.Forms.PictureBox();
@@ -49,7 +50,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ofdBrowsePicture = new System.Windows.Forms.OpenFileDialog();
             this.btGenerate = new System.Windows.Forms.Button();
-            this.cbKeepRatioWhenBrowsing = new System.Windows.Forms.CheckBox();
             this.gbSelectedFolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).BeginInit();
             this.gbFolders.SuspendLayout();
@@ -132,6 +132,18 @@
             this.gbSelectedFolder.TabIndex = 17;
             this.gbSelectedFolder.TabStop = false;
             this.gbSelectedFolder.Text = "Selected Folder";
+            // 
+            // cbKeepRatioWhenBrowsing
+            // 
+            this.cbKeepRatioWhenBrowsing.AutoSize = true;
+            this.cbKeepRatioWhenBrowsing.Checked = true;
+            this.cbKeepRatioWhenBrowsing.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbKeepRatioWhenBrowsing.Location = new System.Drawing.Point(9, 211);
+            this.cbKeepRatioWhenBrowsing.Name = "cbKeepRatioWhenBrowsing";
+            this.cbKeepRatioWhenBrowsing.Size = new System.Drawing.Size(109, 17);
+            this.cbKeepRatioWhenBrowsing.TabIndex = 17;
+            this.cbKeepRatioWhenBrowsing.Text = "Keep aspect ratio";
+            this.cbKeepRatioWhenBrowsing.UseVisualStyleBackColor = true;
             // 
             // btRemoveSelectedGame
             // 
@@ -279,18 +291,6 @@
             this.btGenerate.UseVisualStyleBackColor = true;
             this.btGenerate.Click += new System.EventHandler(this.btGenerate_Click);
             // 
-            // cbKeepRatioWhenBrowsing
-            // 
-            this.cbKeepRatioWhenBrowsing.AutoSize = true;
-            this.cbKeepRatioWhenBrowsing.Checked = true;
-            this.cbKeepRatioWhenBrowsing.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbKeepRatioWhenBrowsing.Location = new System.Drawing.Point(9, 211);
-            this.cbKeepRatioWhenBrowsing.Name = "cbKeepRatioWhenBrowsing";
-            this.cbKeepRatioWhenBrowsing.Size = new System.Drawing.Size(109, 17);
-            this.cbKeepRatioWhenBrowsing.TabIndex = 17;
-            this.cbKeepRatioWhenBrowsing.Text = "Keep aspect ratio";
-            this.cbKeepRatioWhenBrowsing.UseVisualStyleBackColor = true;
-            // 
             // Form10
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -309,6 +309,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form10";
             this.Text = "Folder Manager";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form10_FormClosing);
             this.gbSelectedFolder.ResumeLayout(false);
             this.gbSelectedFolder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).EndInit();
