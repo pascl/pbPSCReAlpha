@@ -2,7 +2,7 @@
 
 A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync or autobleem. Plug your USB drive on your computer to add/edit/delete games with this app.
 
-Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
+Download Link: https://github.com/pascl/pbPSCReAlpha/releases
 
 Last version: 1.6
 
@@ -271,4 +271,4 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 * launch_folder.sh - **NEW 1.6** for launch.sh template form
 * launch_retroarch.sh - **NEW 1.6** for launch.sh template form
 * tgdbgames.xml - **NEW 1.6** the game list for TGDB research
-* tgdbplatforms.xml - **NEW 1.6** the game paltforms for TGDB research
+* tgdbplatforms.xml - **NEW 1.6** the game platforms for TGDB research
