@@ -2,9 +2,9 @@
 
 A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *Alpha*betically the contents of an USB drive used with bleemsync or autobleem. Plug your USB drive on your computer to add/edit/delete games with this app.
 
-Donwload Link: https://github.com/pascl/pbPSCReAlpha/releases
+Download Link: https://github.com/pascl/pbPSCReAlpha/releases
 
-Last version: 1.6
+Last version: 1.61
 
 ![Preview](https://i.imgur.com/o2wNqJl.png)
 
@@ -141,7 +141,7 @@ Game.ini edit window and picture edit window have been merged.
 
 Default folder is the last selected in the main window. You can load/save other files if needed. For the picture box, you can load a png, bmp or jpg file and save to png.
 
-Search at the bottom of the window can fill automatically Title and Discs fields. Then, click on "View page here" to display the webpage of the game. You can now click on one of the blue arrows to fill Game.ini fields and/or picturebox (**NEW 1.6** for the picturebox, click on the green arrow to keep aspect ratio). **NEW 1.6** Search can now be done on 2 websites.
+Search at the bottom of the window can fill automatically Title and Discs fields. Then, click on "View page here" to display the webpage of the game. You can now click on one of the blue arrows to fill Game.ini fields and/or picturebox (**NEW 1.6** for the picturebox, click on the green arrow to keep aspect ratio). **NEW 1.61** Search can now be done on 4 websites.
 
 For the picture, you can drag and drop a picture file (or directly from a webpage) instead of clicking the load button (**NEW 1.6** With Shift clicked during the drag and drop, you will keep the aspect ratio).
 
@@ -271,4 +271,4 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 * launch_folder.sh - **NEW 1.6** for launch.sh template form
 * launch_retroarch.sh - **NEW 1.6** for launch.sh template form
 * tgdbgames.xml - **NEW 1.6** the game list for TGDB research
-* tgdbplatforms.xml - **NEW 1.6** the game paltforms for TGDB research
+* tgdbplatforms.xml - **NEW 1.6** the game platforms for TGDB research
