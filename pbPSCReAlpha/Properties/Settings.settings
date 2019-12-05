@@ -38,5 +38,8 @@
     <Setting Name="iMaxGamesPerFolder" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">40</Value>
     </Setting>
+    <Setting Name="sCleJVcom" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0A12B34C56D78E9F</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -20,6 +20,8 @@ namespace pbPSCReAlpha
     {
         Dictionary<String, ClPS1Game> dcPs1Games;
         Dictionary<string, ClTGDBGame> dcTgdbGames;
+        Dictionary<string, ClIGNGame> dcIgnGames;
+        Dictionary<string, ClJVcomGame> dcJVcomGames;
         List<String> lsFolders;
         List<String> lsTitles;
         List<String> lsSbiNeeds;
@@ -45,7 +47,7 @@ namespace pbPSCReAlpha
 
         List<ClUIFolder> luiFolders;
 
-        public Form1(Dictionary<string, ClPS1Game> ps1games, Dictionary<string, ClTGDBGame> tgdbgames)
+        public Form1(Dictionary<string, ClPS1Game> ps1games, Dictionary<string, ClTGDBGame> tgdbgames, Dictionary<string, ClIGNGame> igngames, Dictionary<string, ClJVcomGame> jvcomgames)
         {
             InitializeComponent();
             this.Text = "pbPSCReAlpha v" + Assembly.GetExecutingAssembly().GetName().Version;
@@ -109,6 +111,8 @@ namespace pbPSCReAlpha
 
             dcPs1Games = ps1games;
             dcTgdbGames = tgdbgames;
+            dcIgnGames = igngames;
+            dcJVcomGames = jvcomgames;
             lsSbiNeeds = new List<string>();
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
@@ -2223,11 +2227,11 @@ namespace pbPSCReAlpha
             if (lbGames.SelectedIndex > -1)
             {
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, dcTgdbGames, currentUsedVersion, cgs);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, dcTgdbGames, dcIgnGames, dcJVcomGames, currentUsedVersion, cgs);
             }
             else
             {
-                f = new Form23(sFolderPath, slLogger, dcPs1Games, dcTgdbGames, currentUsedVersion);
+                f = new Form23(sFolderPath, slLogger, dcPs1Games, dcTgdbGames, dcIgnGames, dcJVcomGames, currentUsedVersion);
             }
             f.ShowDialog();
             refreshOneFolder();

@@ -166,5 +166,17 @@ namespace pbPSCReAlpha.Properties {
                 this["iMaxGamesPerFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0A12B34C56D78E9F")]
+        public string sCleJVcom {
+            get {
+                return ((string)(this["sCleJVcom"]));
+            }
+            set {
+                this["sCleJVcom"] = value;
+            }
+        }
     }
 }

@@ -81,12 +81,22 @@
             this.btLinkTGDB = new System.Windows.Forms.Button();
             this.lbGeneBigDataTGDB = new System.Windows.Forms.ListBox();
             this.tbHiddenLinkTGDB = new System.Windows.Forms.TextBox();
+            this.tabIGN = new System.Windows.Forms.TabPage();
+            this.btViewPageIGN = new System.Windows.Forms.Button();
+            this.btLinkIGN = new System.Windows.Forms.Button();
+            this.lbGeneBigDataIGN = new System.Windows.Forms.ListBox();
+            this.tbHiddenLinkIGN = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btScrapeImgProportional = new System.Windows.Forms.Button();
             this.pbTmp = new System.Windows.Forms.PictureBox();
             this.btScrapeImg = new System.Windows.Forms.Button();
             this.btScraper = new System.Windows.Forms.Button();
             this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
+            this.tabJVcom = new System.Windows.Forms.TabPage();
+            this.btViewPageJVcom = new System.Windows.Forms.Button();
+            this.btLinkJVcom = new System.Windows.Forms.Button();
+            this.lbGeneBigDataJVcom = new System.Windows.Forms.ListBox();
+            this.tbHiddenLinkJVcom = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nuGeneYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nuGenePlayers)).BeginInit();
@@ -95,8 +105,10 @@
             this.tabControlSearchPanel.SuspendLayout();
             this.tabPsxSearch.SuspendLayout();
             this.tabTGDBNet.SuspendLayout();
+            this.tabIGN.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).BeginInit();
+            this.tabJVcom.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -579,6 +591,8 @@
             // 
             this.tabControlSearchPanel.Controls.Add(this.tabPsxSearch);
             this.tabControlSearchPanel.Controls.Add(this.tabTGDBNet);
+            this.tabControlSearchPanel.Controls.Add(this.tabIGN);
+            this.tabControlSearchPanel.Controls.Add(this.tabJVcom);
             this.tabControlSearchPanel.Location = new System.Drawing.Point(6, 45);
             this.tabControlSearchPanel.Name = "tabControlSearchPanel";
             this.tabControlSearchPanel.SelectedIndex = 0;
@@ -655,6 +669,62 @@
             this.tbHiddenLinkTGDB.TabIndex = 32;
             this.tbHiddenLinkTGDB.Visible = false;
             // 
+            // tabIGN
+            // 
+            this.tabIGN.Controls.Add(this.btViewPageIGN);
+            this.tabIGN.Controls.Add(this.btLinkIGN);
+            this.tabIGN.Controls.Add(this.lbGeneBigDataIGN);
+            this.tabIGN.Controls.Add(this.tbHiddenLinkIGN);
+            this.tabIGN.Location = new System.Drawing.Point(4, 22);
+            this.tabIGN.Name = "tabIGN";
+            this.tabIGN.Padding = new System.Windows.Forms.Padding(3);
+            this.tabIGN.Size = new System.Drawing.Size(390, 132);
+            this.tabIGN.TabIndex = 2;
+            this.tabIGN.Text = "IGN";
+            this.tabIGN.UseVisualStyleBackColor = true;
+            // 
+            // btViewPageIGN
+            // 
+            this.btViewPageIGN.Enabled = false;
+            this.btViewPageIGN.Location = new System.Drawing.Point(262, 5);
+            this.btViewPageIGN.Name = "btViewPageIGN";
+            this.btViewPageIGN.Size = new System.Drawing.Size(125, 23);
+            this.btViewPageIGN.TabIndex = 38;
+            this.btViewPageIGN.Text = "View page here";
+            this.btViewPageIGN.UseVisualStyleBackColor = true;
+            this.btViewPageIGN.Click += new System.EventHandler(this.btViewPageIGN_Click);
+            // 
+            // btLinkIGN
+            // 
+            this.btLinkIGN.Enabled = false;
+            this.btLinkIGN.Location = new System.Drawing.Point(131, 5);
+            this.btLinkIGN.Name = "btLinkIGN";
+            this.btLinkIGN.Size = new System.Drawing.Size(125, 23);
+            this.btLinkIGN.TabIndex = 37;
+            this.btLinkIGN.Text = "Go to IGN";
+            this.btLinkIGN.UseVisualStyleBackColor = true;
+            this.btLinkIGN.Click += new System.EventHandler(this.btLinkIGN_Click);
+            // 
+            // lbGeneBigDataIGN
+            // 
+            this.lbGeneBigDataIGN.FormattingEnabled = true;
+            this.lbGeneBigDataIGN.Location = new System.Drawing.Point(1, 33);
+            this.lbGeneBigDataIGN.Name = "lbGeneBigDataIGN";
+            this.lbGeneBigDataIGN.ScrollAlwaysVisible = true;
+            this.lbGeneBigDataIGN.Size = new System.Drawing.Size(389, 95);
+            this.lbGeneBigDataIGN.TabIndex = 35;
+            this.lbGeneBigDataIGN.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigDataIGN_SelectedIndexChanged);
+            this.lbGeneBigDataIGN.DoubleClick += new System.EventHandler(this.lbGeneBigDataIGN_DoubleClick);
+            // 
+            // tbHiddenLinkIGN
+            // 
+            this.tbHiddenLinkIGN.Enabled = false;
+            this.tbHiddenLinkIGN.Location = new System.Drawing.Point(6, 5);
+            this.tbHiddenLinkIGN.Name = "tbHiddenLinkIGN";
+            this.tbHiddenLinkIGN.Size = new System.Drawing.Size(119, 20);
+            this.tbHiddenLinkIGN.TabIndex = 36;
+            this.tbHiddenLinkIGN.Visible = false;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.tbGeneSearchText);
@@ -714,6 +784,62 @@
             this.btScraper.UseVisualStyleBackColor = true;
             this.btScraper.Click += new System.EventHandler(this.btScraper_Click);
             // 
+            // tabJVcom
+            // 
+            this.tabJVcom.Controls.Add(this.btViewPageJVcom);
+            this.tabJVcom.Controls.Add(this.btLinkJVcom);
+            this.tabJVcom.Controls.Add(this.lbGeneBigDataJVcom);
+            this.tabJVcom.Controls.Add(this.tbHiddenLinkJVcom);
+            this.tabJVcom.Location = new System.Drawing.Point(4, 22);
+            this.tabJVcom.Name = "tabJVcom";
+            this.tabJVcom.Padding = new System.Windows.Forms.Padding(3);
+            this.tabJVcom.Size = new System.Drawing.Size(390, 132);
+            this.tabJVcom.TabIndex = 3;
+            this.tabJVcom.Text = "JeuxVideo";
+            this.tabJVcom.UseVisualStyleBackColor = true;
+            // 
+            // btViewPageJVcom
+            // 
+            this.btViewPageJVcom.Enabled = false;
+            this.btViewPageJVcom.Location = new System.Drawing.Point(262, 5);
+            this.btViewPageJVcom.Name = "btViewPageJVcom";
+            this.btViewPageJVcom.Size = new System.Drawing.Size(125, 23);
+            this.btViewPageJVcom.TabIndex = 42;
+            this.btViewPageJVcom.Text = "View page here";
+            this.btViewPageJVcom.UseVisualStyleBackColor = true;
+            this.btViewPageJVcom.Click += new System.EventHandler(this.btViewPageJVcom_Click);
+            // 
+            // btLinkJVcom
+            // 
+            this.btLinkJVcom.Enabled = false;
+            this.btLinkJVcom.Location = new System.Drawing.Point(131, 5);
+            this.btLinkJVcom.Name = "btLinkJVcom";
+            this.btLinkJVcom.Size = new System.Drawing.Size(125, 23);
+            this.btLinkJVcom.TabIndex = 41;
+            this.btLinkJVcom.Text = "Go to JeuxVideo.com";
+            this.btLinkJVcom.UseVisualStyleBackColor = true;
+            this.btLinkJVcom.Click += new System.EventHandler(this.btLinkJVcom_Click);
+            // 
+            // lbGeneBigDataJVcom
+            // 
+            this.lbGeneBigDataJVcom.FormattingEnabled = true;
+            this.lbGeneBigDataJVcom.Location = new System.Drawing.Point(1, 33);
+            this.lbGeneBigDataJVcom.Name = "lbGeneBigDataJVcom";
+            this.lbGeneBigDataJVcom.ScrollAlwaysVisible = true;
+            this.lbGeneBigDataJVcom.Size = new System.Drawing.Size(389, 95);
+            this.lbGeneBigDataJVcom.TabIndex = 39;
+            this.lbGeneBigDataJVcom.SelectedIndexChanged += new System.EventHandler(this.lbGeneBigDataJVcom_SelectedIndexChanged);
+            this.lbGeneBigDataJVcom.DoubleClick += new System.EventHandler(this.lbGeneBigDataJVcom_DoubleClick);
+            // 
+            // tbHiddenLinkJVcom
+            // 
+            this.tbHiddenLinkJVcom.Enabled = false;
+            this.tbHiddenLinkJVcom.Location = new System.Drawing.Point(6, 5);
+            this.tbHiddenLinkJVcom.Name = "tbHiddenLinkJVcom";
+            this.tbHiddenLinkJVcom.Size = new System.Drawing.Size(119, 20);
+            this.tbHiddenLinkJVcom.TabIndex = 40;
+            this.tbHiddenLinkJVcom.Visible = false;
+            // 
             // Form23
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -748,9 +874,13 @@
             this.tabPsxSearch.PerformLayout();
             this.tabTGDBNet.ResumeLayout(false);
             this.tabTGDBNet.PerformLayout();
+            this.tabIGN.ResumeLayout(false);
+            this.tabIGN.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTmp)).EndInit();
+            this.tabJVcom.ResumeLayout(false);
+            this.tabJVcom.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -814,5 +944,15 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btScrapeImgProportional;
         private System.Windows.Forms.ToolTip toolTipMain;
+        private System.Windows.Forms.TabPage tabIGN;
+        private System.Windows.Forms.Button btViewPageIGN;
+        private System.Windows.Forms.Button btLinkIGN;
+        private System.Windows.Forms.ListBox lbGeneBigDataIGN;
+        private System.Windows.Forms.TextBox tbHiddenLinkIGN;
+        private System.Windows.Forms.TabPage tabJVcom;
+        private System.Windows.Forms.Button btViewPageJVcom;
+        private System.Windows.Forms.Button btLinkJVcom;
+        private System.Windows.Forms.ListBox lbGeneBigDataJVcom;
+        private System.Windows.Forms.TextBox tbHiddenLinkJVcom;
     }
 }

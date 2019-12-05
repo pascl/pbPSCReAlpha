@@ -13,7 +13,7 @@ namespace pbPSCReAlpha
         String _title;
         String _publisher;
         String _developer;
-        String _year = "1995";
+        String _year = "1919";
         String _players = "1";
         String _imgUrl;
 
@@ -36,6 +36,12 @@ namespace pbPSCReAlpha
                     case 2:
                         doScrapeTGDB(sHtml);
                         break;
+                    case 3:
+                        doScrapeIGN(sHtml);
+                        break;
+                    case 4:
+                        doScrapeJVcom(sHtml);
+                        break;
                     default:
                         // default values
                         break;
@@ -49,12 +55,109 @@ namespace pbPSCReAlpha
             return sHtml;
         }
 
-        private void doScrapeTGDB(String sHtmlContent)
+        private void doScrapeJVcom(String sHtmlContent)
         {
+            _players = "1"; // no players information on jvcom
+            _imgUrl = String.Empty;
             try
             {
-                String sImg = "src=\"https://cdn.thegamesdb.net/images/thumb/boxart/front/";
+                using (StringReader reader = new StringReader(sHtmlContent))
+                {
+                    //
+                    String s = String.Empty;
+                    s = reader.ReadToEnd();
+                    {
+                        s = s.Trim();
+                        s = s.Replace("&nbsp;", " ");
+                        s = s.Replace("&amp;", "&");
+                        s = s.Replace("  ", " ");
+                        if (s.IndexOf("gameHeaderBanner__title\">") > -1)
+                        {
+                            int ipos1 = s.IndexOf("gameHeaderBanner__title\">");
+                            int ilen1 = "gameHeaderBanner__title\">".Length;
+                            if (ipos1 > -1)
+                            {
+                                String s1 = s.Substring(ipos1 + ilen1);
+                                int ipos2 = s1.IndexOf("</span>");
+                                if (ipos2 > -1)
+                                {
+                                    _title = s1.Substring(0, ipos2).Trim();
+                                }
+                            }
+                        }
+                        if (s.IndexOf("Editeur(s) / Développeur(s)</div>") > -1)
+                        {
+                            int ipos1 = s.IndexOf("Editeur(s) / Développeur(s)</div>");
+                            int ilen1 = "Editeur(s) / Développeur(s)</div>".Length;
+                            if (ipos1 > -1)
+                            {
+                                String s1 = s.Substring(ipos1 + ilen1);
+                                int ipos2 = s1.IndexOf("</div>");
+                                if (ipos2 > -1)
+                                {
+                                    s1 = s1.Substring(0, ipos2);
+                                    String sPubs = String.Empty;
+                                    do
+                                    {
+                                        int ipos3 = s1.IndexOf("gameCharacteristicsDetailed__characValue\">");
+                                        int ilen3 = "gameCharacteristicsDetailed__characValue\">".Length;
+                                        int ipos4 = s1.IndexOf("</span>");
+                                        if((ipos3 > -1) && (ipos4 > -1))
+                                        {
+                                            if(String.IsNullOrEmpty(sPubs))
+                                            {
+                                                sPubs = s1.Substring(ipos3 + ilen3, ipos4 - ipos3 - ilen3).Trim();
+                                            }
+                                            else
+                                            {
+                                                sPubs += ", " + s1.Substring(ipos3 + ilen3, ipos4 - ipos3 - ilen3).Trim();
+                                            }
+                                            s1 = s1.Substring(ipos4 + 7);
+                                        }
+                                    } while (s1.IndexOf("gameCharacteristicsDetailed__characValue\">") > -1);
+                                    _publisher = sPubs;
+                                }
+                            }
+                        }
+                        if (s.IndexOf("<div class=\"gameCharacteristicsMain__releaseDate\">") > -1)
+                        {
+                            int ipos1 = s.IndexOf("<div class=\"gameCharacteristicsMain__releaseDate\">");
+                            int ilen1 = "<div class=\"gameCharacteristicsMain__releaseDate\">".Length;
+                            if (ipos1 > -1)
+                            {
+                                String s1 = s.Substring(ipos1 + ilen1);
+                                int ipos2 = s1.IndexOf("</div>");
+                                if (ipos2 > -1)
+                                {
+                                    String sDate = s1.Substring(0, ipos2).Trim();
+                                    try
+                                    {
+                                        String[] sDates = sDate.Split(' ');
+                                        int year = int.Parse(sDates[sDates.Length - 1]);
+                                        _year = year.ToString();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _year = "1920";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+        }
 
+        private void doScrapeIGN(String sHtmlContent)
+        {
+            _players = "1"; // no players information on ign
+            _imgUrl = String.Empty;
+            try
+            {
                 using (StringReader reader = new StringReader(sHtmlContent))
                 {
                     //
@@ -63,6 +166,94 @@ namespace pbPSCReAlpha
                     {
                         s = s.Trim();
                         s = s.Replace("&nbsp;", " ");
+                        s = s.Replace("&amp;", "&");
+                        s = s.Replace("  ", " ");
+                        if (s.IndexOf("</span></h1>") > -1)
+                        {
+                            int ipos1 = s.IndexOf("<h1 class=");
+                            int ipos2 = s.IndexOf("</span></h1>");
+                            if ((ipos1 > -1) && (ipos2 > -1) && (ipos2 > ipos1))
+                            {
+                                String s1 = s.Substring(ipos1, ipos2 - ipos1);
+                                int ipos3 = s1.IndexOf("<span>");
+                                if (ipos3 > -1)
+                                {
+                                    _title = s1.Substring(ipos3 + 6).Trim();
+                                }
+                            }
+                        }
+                        if (s.IndexOf("Publisher</span>") > -1)
+                        {
+                            int ipos1 = s.IndexOf("Publisher</span>");
+                            if(ipos1 > -1)
+                            {
+                                String s1 = s.Substring(ipos1 + 16);
+                                int ipos2 = s1.IndexOf("</div>");
+                                if(ipos2 > -1)
+                                {
+                                    String sPub = s1.Substring(0, ipos2).Trim();
+                                    _publisher = sPub;
+                                }
+                            }
+                        }
+                        if (s.IndexOf("Developer</span>") > -1)
+                        {
+                            int ipos1 = s.IndexOf("Developer</span>");
+                            if (ipos1 > -1)
+                            {
+                                String s1 = s.Substring(ipos1 + 16);
+                                int ipos2 = s1.IndexOf("</div>");
+                                if (ipos2 > -1)
+                                {
+                                    String sDev = s1.Substring(0, ipos2).Trim();
+                                    _developer = sDev;
+                                }
+                            }
+                        }
+                        if (s.IndexOf("Release Date</span>") > -1)
+                        {
+                            int ipos1 = s.IndexOf("Release Date</span>");
+                            if (ipos1 > -1)
+                            {
+                                String s1 = s.Substring(ipos1 + 19);
+                                int ipos2 = s1.IndexOf("</div>");
+                                if (ipos2 > -1)
+                                {
+                                    String sDate = s1.Substring(0, ipos2).Trim();
+                                    try
+                                    {
+                                        DateTime dt = Convert.ToDateTime(sDate);
+                                        _year = dt.Year.ToString();
+                                    }
+                                    catch(Exception ex)
+                                    {
+                                        _year = "1930";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+        }
+
+        private void doScrapeTGDB(String sHtmlContent)
+        {
+            try
+            {
+                using (StringReader reader = new StringReader(sHtmlContent))
+                {
+                    //
+                    String s = String.Empty;
+                    while ((s = reader.ReadLine()) != null)
+                    {
+                        s = s.Trim();
+                        s = s.Replace("&nbsp;", " ");
+                        s = s.Replace("&amp;", "&");
                         s = s.Replace("  ", " ");
                         if (s.IndexOf("</h1>") > -1)
                         {
@@ -145,13 +336,6 @@ namespace pbPSCReAlpha
                                 }
                             }
                         }
-                        else
-                        if (s.Contains(sImg))
-                        {
-                            int pos1 = s.IndexOf(sImg);
-                            String s1 = s.Substring(pos1 + sImg.Length, s.IndexOf("\"/>") - pos1 - sImg.Length);
-                            _imgUrl = "https://cdn.thegamesdb.net/images/thumb/boxart/front/" + s.Substring(pos1 + sImg.Length, s.IndexOf("\"/>") - pos1 - sImg.Length);
-                        }
                     }
                 }
             }
@@ -165,8 +349,6 @@ namespace pbPSCReAlpha
         {
             try
             {
-                String sImg = "<img border=\"0\" src=\"../../../images/covers/";
-
                 using (StringReader reader = new StringReader(sHtmlContent))
                 {
                     //
@@ -182,6 +364,7 @@ namespace pbPSCReAlpha
                     {
                         s = s.Trim();
                         s = s.Replace("&nbsp;", " ");
+                        s = s.Replace("&amp;", "&");
                         s = s.Replace("  ", " ");
                         if (bOfficialTitle)
                         {
@@ -330,17 +513,6 @@ namespace pbPSCReAlpha
                                     sAdd = String.Empty;
                                 }
                             }
-                        }
-                        else
-                        if (s.StartsWith(sImg))
-                        {
-                            //
-                            _imgUrl = "http://psxdatacenter.com/images/covers/" + s.Substring(sImg.Length, s.IndexOf("\" width=") - sImg.Length);
-                            /*
-                            pbCover.LoadAsync("http://psxdatacenter.com/images/covers/" + s.Substring(sImg.Length, s.IndexOf("\" width=") - sImg.Length));
-                            btSavePng.Enabled = true;
-                            btLink.Enabled = true;
-                            */
                         }
                         else
                         if (s.StartsWith("Official Title"))

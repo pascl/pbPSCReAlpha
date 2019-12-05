@@ -83,6 +83,8 @@
     <Compile Include="ClDBManager.cs" />
     <Compile Include="ClGameScraper.cs" />
     <Compile Include="ClGameStructure.cs" />
+    <Compile Include="ClIGNGame.cs" />
+    <Compile Include="ClJVcomGame.cs" />
     <Compile Include="ClPbHelper.cs" />
     <Compile Include="ClPbProgessBarLabeled.cs" />
     <Compile Include="ClPbWebClient.cs">

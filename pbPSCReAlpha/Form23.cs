@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -20,7 +21,9 @@ namespace pbPSCReAlpha
         String _folderPath;
         SimpleLogger slLogger;
         Dictionary<String, ClPS1Game> dcPs1Games;
-        Dictionary<string, ClTGDBGame> dcTgdbGames;
+        Dictionary<String, ClTGDBGame> dcTgdbGames;
+        Dictionary<String, ClIGNGame> dcIgnGames;
+        Dictionary<String, ClJVcomGame> dcJVcomGames;
         ClGameStructure newGame;
         String _currentFilePathIni;
         String _currentFilePathImg;
@@ -30,13 +33,15 @@ namespace pbPSCReAlpha
         int _lastSite = -1;
         
 
-        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, Dictionary<string, ClTGDBGame> dcClTgdbGames, ClVersionHelper cvh)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, Dictionary<string, ClTGDBGame> dcClTgdbGames, Dictionary<String, ClIGNGame> dcClIgnGames, Dictionary<String, ClJVcomGame> dcClJVcomGames, ClVersionHelper cvh)
         {
             InitializeComponent();
             _folderPath = sFolderPath;
             slLogger = sl;
             dcPs1Games = dcClPS1Games;
             dcTgdbGames = dcClTgdbGames;
+            dcIgnGames = dcClIgnGames;
+            dcJVcomGames = dcClJVcomGames;
             _versionBS = cvh;
             newGame = null;
             _currentFilePathIni = String.Empty;
@@ -53,12 +58,14 @@ namespace pbPSCReAlpha
             btPictureReload.Enabled = false;
         }
 
-        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, Dictionary<string, ClTGDBGame> dcClTgdbGames, ClVersionHelper cvh, ClGameStructure myGame)
+        public Form23(String sFolderPath, SimpleLogger sl, Dictionary<String, ClPS1Game> dcClPS1Games, Dictionary<string, ClTGDBGame> dcClTgdbGames, Dictionary<String, ClIGNGame> dcClIgnGames, Dictionary<String, ClJVcomGame> dcClJVcomGames, ClVersionHelper cvh, ClGameStructure myGame)
         {
             InitializeComponent();
             slLogger = sl;
             dcPs1Games = dcClPS1Games;
             dcTgdbGames = dcClTgdbGames;
+            dcIgnGames = dcClIgnGames;
+            dcJVcomGames = dcClJVcomGames;
             _versionBS = cvh;
             newGame = myGame;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + _versionBS.GameDataFolder;
@@ -366,6 +373,18 @@ namespace pbPSCReAlpha
             btViewPageTGDB.Enabled = false;
             btLinkTGDB.Enabled = false;
 
+            lbGeneBigDataIGN.Items.Clear();
+            lbGeneBigDataIGN.DisplayMember = "DisplayTitle";
+            tbHiddenLinkIGN.Text = "";
+            btViewPageIGN.Enabled = false;
+            btLinkIGN.Enabled = false;
+
+            lbGeneBigDataJVcom.Items.Clear();
+            lbGeneBigDataJVcom.DisplayMember = "DisplayTitle";
+            tbHiddenLinkJVcom.Text = "";
+            btViewPageJVcom.Enabled = false;
+            btLinkJVcom.Enabled = false;
+
             btScraper.Enabled = false;
             btScrapeImg.Enabled = false;
             btScrapeImgProportional.Enabled = false;
@@ -404,8 +423,285 @@ namespace pbPSCReAlpha
             }
             else
             {
-                FlexibleMessageBox.Show("Error. Gamelist not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                FlexibleMessageBox.Show("Error. Gamelist from TGDB not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+
+            dcIgnGames.Clear(); // empty ign list, need web access to do...
+            if (dcIgnGames.Count > 0)
+            {
+                foreach (KeyValuePair<string, ClIGNGame> pair in dcIgnGames)
+                {
+                    ClIGNGame c1 = pair.Value;
+                    if (c1.Title.ToUpper().Contains(s))
+                    {
+                        lbGeneBigDataIGN.Items.Add(c1);
+                    }
+                }
+            }
+            else
+            {
+                // ask ign website
+                String s1 = s.Replace(" ", "%20").Trim();
+                HttpWebRequest request = null;
+                try
+                {
+                    request = (HttpWebRequest)WebRequest.Create("https://www.ign.com/search?q=" + s1 + "&page=0&count=50&type=object&objectType=game&filter=games&");
+                    request.UserAgent = "Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion";
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        using (Stream stream = response.GetResponseStream())
+                        {
+                            using (StreamReader reader = new StreamReader(stream))
+                            {
+                                try
+                                {
+                                    //
+                                    String st = String.Empty;
+                                    String sSearchItemTitle = String.Empty;
+                                    String sSearchItemPlatform = String.Empty;
+                                    String sLink = String.Empty;
+                                    String sTitle = String.Empty;
+                                    String sPlatform = String.Empty;
+                                    int i = 0;
+                                    while ((st = reader.ReadLine()) != null)
+                                    {
+/*
+<div class="search-item-title">
+<a href="https://www.ign.com/games/dr-mario-and-puzzle-league/gba-763012">
+<em>Dr</em>. <em>Mario</em> &amp; <em>Puzzle</em> League      </a>
+</div>
+*/
+/*
+<div class="search-item-sub-title">
+by Nintendo for <a href="http://www.ign.com/games/super-mario-wii-u/wii-u-112718">Wii U</a>    </div>
+*/
+                                        st = st.Trim();
+                                        st = st.Replace("&nbsp;", " ");
+                                        st = st.Replace("&amp;", "&");
+                                        st = st.Replace("<em>", "");
+                                        st = st.Replace("</em>", "");
+                                        st = st.Replace("  ", " ");
+                                        if (st.IndexOf("<div class=\"search-item-title\">") > -1)
+                                        {
+                                            sSearchItemTitle = " " + st.Substring(st.IndexOf("<div class=\"search-item-title\">") + "<div class=\"search-item-title\">".Length);
+                                        }
+                                        else
+                                        if (!String.IsNullOrEmpty(sSearchItemTitle))
+                                        {
+                                            sSearchItemTitle += st;
+                                            if (st.IndexOf("</div>") > -1)
+                                            {
+                                                int ipos0 = sSearchItemTitle.IndexOf("href=\"https://www.ign.com/");
+                                                int ipos1 = sSearchItemTitle.IndexOf("\">");
+                                                int ipos2 = sSearchItemTitle.IndexOf("</a>");
+                                                if ((ipos0 > -1) && (ipos1 > -1) && (ipos2 > -1))
+                                                {
+                                                    sLink = sSearchItemTitle.Substring(ipos0 + 26, ipos1 - ipos0 - 26);
+                                                    sTitle = sSearchItemTitle.Substring(ipos1 + 2, ipos2 - ipos1 - 2).Trim();
+                                                    /*
+                                                    // not here, not the platform yet
+                                                    dcIgnGames.Add(i.ToString(), new ClIGNGame(sTitle, sLink, "toto"));
+                                                    i++;*/
+                                                }
+                                                sSearchItemTitle = String.Empty;
+                                            }
+                                        }
+                                        else
+                                        if (st.IndexOf("<div class=\"search-item-sub-title\">") > -1)
+                                        {
+                                            sSearchItemPlatform = " " + st.Substring(st.IndexOf("<div class=\"search-item-sub-title\">") + "<div class=\"search-item-sub-title\">".Length);
+                                        }
+                                        else
+                                        if (!String.IsNullOrEmpty(sSearchItemPlatform))
+                                        {
+                                            sSearchItemPlatform += st;
+                                            if (st.IndexOf("</div>") > -1)
+                                            {
+                                                String sPlatforms = String.Empty;
+                                                do
+                                                {
+                                                    int ipos1 = sSearchItemPlatform.IndexOf("\">");
+                                                    int ipos2 = sSearchItemPlatform.IndexOf("</a>");
+                                                    if ((ipos1 > -1) && (ipos2 > -1))
+                                                    {
+                                                        if (String.IsNullOrEmpty(sPlatforms))
+                                                        {
+                                                            String sTmp = sSearchItemPlatform.Substring(ipos1 + 2, ipos2 - ipos1 - 2).Trim();
+                                                            if (!String.IsNullOrEmpty(sTmp))
+                                                            {
+                                                                sPlatforms = sTmp;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            String sTmp = sSearchItemPlatform.Substring(ipos1 + 2, ipos2 - ipos1 - 2).Trim();
+                                                            if (!String.IsNullOrEmpty(sTmp))
+                                                            {
+                                                                sPlatforms += ", " + sTmp;
+                                                            }
+                                                        }
+                                                        sSearchItemPlatform = sSearchItemPlatform.Substring(ipos2 + 4);
+                                                    }
+                                                } while (sSearchItemPlatform.IndexOf("\">") > -1);
+                                                if (!String.IsNullOrEmpty(sPlatforms))
+                                                {
+                                                    sPlatform = sPlatforms;
+                                                    dcIgnGames.Add(i.ToString(), new ClIGNGame(sTitle, sLink, sPlatform));
+                                                    i++;
+                                                }
+                                                sSearchItemPlatform = String.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    //
+                                }
+
+                                try
+                                {
+                                    if (dcIgnGames.Count > 0)
+                                    {
+                                        foreach (KeyValuePair<string, ClIGNGame> pair in dcIgnGames)
+                                        {
+                                            ClIGNGame c1 = pair.Value;
+                                            lbGeneBigDataIGN.Items.Add(c1);
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //
+                }
+                // if xml is used...
+                //FlexibleMessageBox.Show("Error. Gamelist from IGN not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
+            dcJVcomGames.Clear(); // empty jvcom list, need web access to do...
+            if (dcJVcomGames.Count > 0)
+            {
+                foreach (KeyValuePair<string, ClJVcomGame> pair in dcJVcomGames)
+                {
+                    ClJVcomGame c1 = pair.Value;
+                    if (c1.Title.ToUpper().Contains(s))
+                    {
+                        lbGeneBigDataJVcom.Items.Add(c1);
+                    }
+                }
+            }
+            else
+            {
+                // ask ign website
+                String s1 = s.Replace(" ", "%20").Trim();
+                HttpWebRequest request = null;
+                try
+                {
+                    request = (HttpWebRequest)WebRequest.Create("http://www.jeuxvideo.com/recherche.php?m=9&q=" + s1);
+                    request.UserAgent = "Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion";
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        using (Stream stream = response.GetResponseStream())
+                        {
+                            using (StreamReader reader = new StreamReader(stream))
+                            {
+                                try
+                                {
+                                    //
+                                    String st = String.Empty;
+                                    String sSearchItemTitle = String.Empty;
+                                    String sSearchItemPlatform = String.Empty;
+                                    String sLink = String.Empty;
+                                    String sTitle = String.Empty;
+                                    String sPlatform = String.Empty;
+                                    int i = 0;
+                                    while ((st = reader.ReadLine()) != null)
+                                    {
+                                        /*
+<article class="recherche-aphabetique-item">
+<a href="/jeux/jeu-60879/" title="Super Mario World : Super Mario Advance 2 - WiiU, 3DS, Wii, GBA, SNES - 1992" class="xXx lien-jv">Super Mario World : Super Mario Advance 2</a><!--
+--><span class="recherche-aphabetique-item-machine">WiiU, 3DS, Wii, GBA, SNES</span>
+</article>
+                                        */
+                                        st = st.Trim();
+                                        st = st.Replace("&nbsp;", " ");
+                                        st = st.Replace("&amp;", "&");
+                                        st = st.Replace("<em>", "");
+                                        st = st.Replace("</em>", "");
+                                        st = st.Replace("  ", " ");
+                                        if (st.IndexOf("<article class=\"recherche-aphabetique-item\">") > -1)
+                                        {
+                                            sSearchItemTitle = " " + st.Substring(st.IndexOf("<article class=\"recherche-aphabetique-item\">") + "<article class=\"recherche-aphabetique-item\">".Length);
+                                        }
+                                        else
+                                        if (!String.IsNullOrEmpty(sSearchItemTitle))
+                                        {
+                                            sSearchItemTitle += st;
+                                            if (st.IndexOf("</article>") > -1)
+                                            {
+                                                int ipos0 = sSearchItemTitle.IndexOf("<span class=\"JvCare ");
+                                                int ilen0 = "<span class=\"JvCare ".Length;
+                                                int ipos1 = sSearchItemTitle.IndexOf(" lien-jv\"");
+                                                int ipos2 = sSearchItemTitle.IndexOf("\">");
+                                                int ilen2 = "\">".Length;
+                                                int ipos3 = sSearchItemTitle.IndexOf("</span>");
+                                                int ipos4 = sSearchItemTitle.IndexOf("<span class=\"recherche-aphabetique-item-machine\">");
+                                                int ilen4 = "<span class=\"recherche-aphabetique-item-machine\">".Length;
+                                                int ipos5 = sSearchItemTitle.IndexOf("</span></article>");
+                                                if ((ipos0 > -1) && (ipos1 > -1) && (ipos2 > -1) && (ipos3 > -1) && (ipos4 > -1) && (ipos5 > -1))
+                                                {
+                                                    String sLinkEncoded = sSearchItemTitle.Substring(ipos0 + ilen0, ipos1 - ipos0 - ilen0);
+                                                    sLink = ClJVcomGame.decodeJVCom(sLinkEncoded);
+                                                    sTitle = sSearchItemTitle.Substring(ipos2 + ilen2, ipos3 - ipos2 - ilen2).Trim();
+                                                    sPlatform = sSearchItemTitle.Substring(ipos4 + ilen4, ipos5 - ipos4 - ilen4).Trim(); ;
+                                                    dcJVcomGames.Add(i.ToString(), new ClJVcomGame(sTitle, sLink, sPlatform));
+                                                    i++;
+                                                }
+                                                sSearchItemTitle = String.Empty;
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    //
+                                }
+
+                                try
+                                {
+                                    if (dcJVcomGames.Count > 0)
+                                    {
+                                        foreach (KeyValuePair<string, ClJVcomGame> pair in dcJVcomGames)
+                                        {
+                                            ClJVcomGame c1 = pair.Value;
+                                            lbGeneBigDataJVcom.Items.Add(c1);
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //
+                }
+                // if xml is used...
+                //FlexibleMessageBox.Show("Error. Gamelist from JV.com not loaded.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
             if (null != slLogger)
                 slLogger.Trace("<< Search Game Click");
         }
@@ -586,16 +882,27 @@ namespace pbPSCReAlpha
 
         private void wbViewer_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            string oldDoc = wbViewer.DocumentText;
+            //if ((wbViewer.Url.ToString().Contains("ign.com")) && (oldDoc.Contains(".js")))
+            if (oldDoc.Contains(".js"))
+            {
+                // force no js... else a cookie confirmation can be shown, impossible to validate
+                // after that, messy display of the page on "modern" sites
+                // anyways, it uses an old IE to display pages
+                string newDoc = oldDoc.Replace(".js", ".nojs");
+                wbViewer.Document.Write(newDoc);
+            }
+
             HtmlDocument htmlDocument = wbViewer.Document;
             HtmlElementCollection htmlElementCollection = htmlDocument.Images;
             this.pbTmp.Image = (Image)(new Bitmap(1, 1));
             _docHtmlStr = wbViewer.DocumentText.ToString();
+            
             foreach (HtmlElement htmlElement in htmlElementCollection)
             {
                 string imgUrl = htmlElement.GetAttribute("src");
                 if (imgUrl.StartsWith("http://psxdatacenter.com/images/covers/"))
                 {
-                    btScraper.Enabled = true;
                     this.pbTmp.WaitOnLoad = false;
                     this.pbTmp.ImageLocation = imgUrl;
                     wbViewer.AllowNavigation = false;
@@ -604,13 +911,29 @@ namespace pbPSCReAlpha
                 else
                 if (imgUrl.StartsWith("https://cdn.thegamesdb.net/images/thumb/boxart/front/"))
                 {
-                    btScraper.Enabled = true;
+                    this.pbTmp.WaitOnLoad = false;
+                    this.pbTmp.ImageLocation = imgUrl;
+                    wbViewer.AllowNavigation = false;
+                    break;
+                }
+                else
+                if (imgUrl.EndsWith("?width=188"))
+                {
+                    this.pbTmp.WaitOnLoad = false;
+                    this.pbTmp.ImageLocation = imgUrl.Replace("?width=188", "");
+                    wbViewer.AllowNavigation = false;
+                    break;
+                }
+                else
+                if ((htmlElement.GetAttribute("className").Contains("coverImage")) && (imgUrl.Contains("jeuxvideo.com")))
+                {
                     this.pbTmp.WaitOnLoad = false;
                     this.pbTmp.ImageLocation = imgUrl;
                     wbViewer.AllowNavigation = false;
                     break;
                 }
             }
+            btScraper.Enabled = true;
         }
 
         private void btScraper_Click(object sender, EventArgs e)
@@ -636,7 +959,7 @@ namespace pbPSCReAlpha
             }
             catch (Exception ex)
             {
-                nuGeneYear.Value = (decimal)1995;
+                nuGeneYear.Value = (decimal)1919;
             }
             if (null != slLogger)
                 slLogger.Trace("<< Scrape webpage Click");
@@ -1169,6 +1492,164 @@ namespace pbPSCReAlpha
             Thread.Sleep(_sleepTime);
             wbViewer.Navigate("about:blank"); // reset page with sleep in order to prevent from crash ??? bad workaround but works... TBD
             Thread.Sleep(_sleepTime);
+        }
+
+        private void btLinkIGN_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Game Link Click");
+
+            String sLink = tbHiddenLinkIGN.Text.Trim();
+            if (!String.IsNullOrEmpty(sLink))
+            {
+                System.Diagnostics.Process.Start("https://www.ign.com/" + sLink);
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Game Link Click");
+        }
+
+        private void btViewPageIGN_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> View webpage Click");
+            if (lbGeneBigDataIGN.SelectedIndex > -1)
+            {
+                try
+                {
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
+                    wbViewer.Navigate("about:blank");
+                    Thread.Sleep(_sleepTime);
+                    btScraper.Enabled = false;
+                    btScrapeImg.Enabled = false;
+                    btScrapeImgProportional.Enabled = false;
+                    ClIGNGame ignGame = (ClIGNGame)(lbGeneBigDataIGN.Items[lbGeneBigDataIGN.SelectedIndex]);
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
+                    wbViewer.Navigate("https://www.ign.com/" + ignGame.Link.Trim());
+                    Thread.Sleep(_sleepTime);
+                    _lastSite = 3;
+                }
+                catch (Exception ex)
+                {
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
+                }
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< View webpage Click");
+        }
+
+        private void lbGeneBigDataIGN_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Game Selection changed in search results");
+            if (lbGeneBigDataIGN.SelectedIndex > -1)
+            {
+                ClIGNGame ignGame = (ClIGNGame)(lbGeneBigDataIGN.Items[lbGeneBigDataIGN.SelectedIndex]);
+                String sTitle = ignGame.Title.Trim();
+                int ipos = sTitle.LastIndexOf("- [");
+                if (ipos > -1)
+                {
+                    sTitle = sTitle.Substring(0, ipos).Trim();
+                }
+                tbGeneTitle.Text = sTitle.Trim();
+                tbGeneDiscs.Text = Regex.Replace(sTitle.Trim(), @"[^a-zA-Z0-9_\-\s\.]", "");
+                tbHiddenLinkIGN.Text = ignGame.Link.Trim();
+                btLinkIGN.Enabled = true;
+                btViewPageIGN.Enabled = true;
+            }
+            else
+            {
+                btLinkIGN.Enabled = false;
+                btViewPageIGN.Enabled = false;
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Game Selection changed in search results");
+        }
+
+        private void lbGeneBigDataIGN_DoubleClick(object sender, EventArgs e)
+        {
+            btViewPageIGN_Click(sender, e);
+        }
+
+        private void btLinkJVcom_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Game Link Click");
+
+            String sLink = tbHiddenLinkJVcom.Text.Trim();
+            if (!String.IsNullOrEmpty(sLink))
+            {
+                System.Diagnostics.Process.Start("http://www.jeuxvideo.com" + sLink);
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Game Link Click");
+        }
+
+        private void btViewPageJVcom_Click(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> View webpage Click");
+            if (lbGeneBigDataJVcom.SelectedIndex > -1)
+            {
+                try
+                {
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
+                    wbViewer.Navigate("about:blank");
+                    Thread.Sleep(_sleepTime);
+                    btScraper.Enabled = false;
+                    btScrapeImg.Enabled = false;
+                    btScrapeImgProportional.Enabled = false;
+                    ClJVcomGame jvcomGame = (ClJVcomGame)(lbGeneBigDataJVcom.Items[lbGeneBigDataJVcom.SelectedIndex]);
+                    wbViewer.AllowNavigation = true;
+                    Thread.Sleep(_sleepTime);
+                    wbViewer.Navigate("https://www.jeuxvideo.com" + jvcomGame.Link.Trim());
+                    Thread.Sleep(_sleepTime);
+                    _lastSite = 4;
+                }
+                catch (Exception ex)
+                {
+                    if (null != slLogger)
+                        slLogger.Fatal(ex.Message);
+                }
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< View webpage Click");
+        }
+
+        private void lbGeneBigDataJVcom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (null != slLogger)
+                slLogger.Trace(">> Game Selection changed in search results");
+            if (lbGeneBigDataJVcom.SelectedIndex > -1)
+            {
+                ClJVcomGame jvcomGame = (ClJVcomGame)(lbGeneBigDataJVcom.Items[lbGeneBigDataJVcom.SelectedIndex]);
+                String sTitle = jvcomGame.Title.Trim();
+                int ipos = sTitle.LastIndexOf("- [");
+                if (ipos > -1)
+                {
+                    sTitle = sTitle.Substring(0, ipos).Trim();
+                }
+                tbGeneTitle.Text = sTitle.Trim();
+                tbGeneDiscs.Text = Regex.Replace(sTitle.Trim(), @"[^a-zA-Z0-9_\-\s\.]", "");
+                tbHiddenLinkJVcom.Text = jvcomGame.Link.Trim();
+                btLinkJVcom.Enabled = true;
+                btViewPageJVcom.Enabled = true;
+            }
+            else
+            {
+                btLinkJVcom.Enabled = false;
+                btViewPageJVcom.Enabled = false;
+            }
+            if (null != slLogger)
+                slLogger.Trace("<< Game Selection changed in search results");
+        }
+
+        private void lbGeneBigDataJVcom_DoubleClick(object sender, EventArgs e)
+        {
+            btViewPageJVcom_Click(sender, e);
         }
     }
 }
