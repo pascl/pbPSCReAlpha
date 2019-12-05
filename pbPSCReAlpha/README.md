@@ -271,4 +271,8 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 * launch_folder.sh - **NEW 1.6** for launch.sh template form
 * launch_retroarch.sh - **NEW 1.6** for launch.sh template form
 * tgdbgames.xml - **NEW 1.6** the game list for TGDB research
+<<<<<<< HEAD
 * tgdbplatforms.xml - **NEW 1.6** the game platforms for TGDB research
+=======
+* tgdbplatforms.xml - **NEW 1.6** the game platforms for TGDB research
+>>>>>>> 1ad1641640addb721733f003c07f4b5f2e14ab5c
