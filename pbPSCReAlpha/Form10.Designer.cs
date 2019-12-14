@@ -306,7 +306,10 @@
             this.Controls.Add(this.btGenerate);
             this.Controls.Add(this.btAddTo);
             this.Controls.Add(this.btBack);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form10";
             this.Text = "Folder Manager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form10_FormClosing);
