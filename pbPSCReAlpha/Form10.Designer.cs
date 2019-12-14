@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form10));
             this.btBack = new System.Windows.Forms.Button();
             this.lbGameList = new System.Windows.Forms.ListBox();
@@ -50,10 +51,20 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ofdBrowsePicture = new System.Windows.Forms.OpenFileDialog();
             this.btGenerate = new System.Windows.Forms.Button();
+            this.lbCountInFolder = new System.Windows.Forms.Label();
+            this.cmsFolders = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsmiSplitMain = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiSplit2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiSplit3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiSplit4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pasteCopiedGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gbSelectedFolder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).BeginInit();
             this.gbFolders.SuspendLayout();
             this.gbGameList.SuspendLayout();
+            this.cmsFolders.SuspendLayout();
             this.SuspendLayout();
             // 
             // btBack
@@ -79,6 +90,7 @@
             // 
             // tvFolders
             // 
+            this.tvFolders.ContextMenuStrip = this.cmsFolders;
             this.tvFolders.FullRowSelect = true;
             this.tvFolders.Location = new System.Drawing.Point(6, 19);
             this.tvFolders.Name = "tvFolders";
@@ -119,6 +131,7 @@
             // 
             // gbSelectedFolder
             // 
+            this.gbSelectedFolder.Controls.Add(this.lbCountInFolder);
             this.gbSelectedFolder.Controls.Add(this.cbKeepRatioWhenBrowsing);
             this.gbSelectedFolder.Controls.Add(this.btRemoveSelectedGame);
             this.gbSelectedFolder.Controls.Add(this.btBrowseImage);
@@ -291,6 +304,81 @@
             this.btGenerate.UseVisualStyleBackColor = true;
             this.btGenerate.Click += new System.EventHandler(this.btGenerate_Click);
             // 
+            // lbCountInFolder
+            // 
+            this.lbCountInFolder.Location = new System.Drawing.Point(44, 379);
+            this.lbCountInFolder.Name = "lbCountInFolder";
+            this.lbCountInFolder.Size = new System.Drawing.Size(100, 18);
+            this.lbCountInFolder.TabIndex = 18;
+            this.lbCountInFolder.Text = "(-)";
+            this.lbCountInFolder.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // cmsFolders
+            // 
+            this.cmsFolders.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyGamesToolStripMenuItem,
+            this.pasteCopiedGamesToolStripMenuItem,
+            this.tsmiSplitMain,
+            this.duplicateToolStripMenuItem});
+            this.cmsFolders.Name = "cmsFolders";
+            this.cmsFolders.Size = new System.Drawing.Size(181, 114);
+            this.cmsFolders.Opening += new System.ComponentModel.CancelEventHandler(this.cmsFolders_Opening);
+            // 
+            // tsmiSplitMain
+            // 
+            this.tsmiSplitMain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiSplit2,
+            this.tsmiSplit3,
+            this.tsmiSplit4});
+            this.tsmiSplitMain.Name = "tsmiSplitMain";
+            this.tsmiSplitMain.Size = new System.Drawing.Size(180, 22);
+            this.tsmiSplitMain.Text = "Split";
+            // 
+            // tsmiSplit2
+            // 
+            this.tsmiSplit2.Enabled = false;
+            this.tsmiSplit2.Name = "tsmiSplit2";
+            this.tsmiSplit2.Size = new System.Drawing.Size(180, 22);
+            this.tsmiSplit2.Text = "Split by 2";
+            this.tsmiSplit2.Click += new System.EventHandler(this.tsmiSplit2_Click);
+            // 
+            // tsmiSplit3
+            // 
+            this.tsmiSplit3.Enabled = false;
+            this.tsmiSplit3.Name = "tsmiSplit3";
+            this.tsmiSplit3.Size = new System.Drawing.Size(180, 22);
+            this.tsmiSplit3.Text = "Split by 3";
+            this.tsmiSplit3.Click += new System.EventHandler(this.tsmiSplit3_Click);
+            // 
+            // tsmiSplit4
+            // 
+            this.tsmiSplit4.Enabled = false;
+            this.tsmiSplit4.Name = "tsmiSplit4";
+            this.tsmiSplit4.Size = new System.Drawing.Size(180, 22);
+            this.tsmiSplit4.Text = "Split by 5";
+            this.tsmiSplit4.Click += new System.EventHandler(this.tsmiSplit4_Click);
+            // 
+            // duplicateToolStripMenuItem
+            // 
+            this.duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
+            this.duplicateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.duplicateToolStripMenuItem.Text = "Duplicate";
+            this.duplicateToolStripMenuItem.Click += new System.EventHandler(this.duplicateToolStripMenuItem_Click);
+            // 
+            // copyGamesToolStripMenuItem
+            // 
+            this.copyGamesToolStripMenuItem.Name = "copyGamesToolStripMenuItem";
+            this.copyGamesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyGamesToolStripMenuItem.Text = "Copy Games";
+            this.copyGamesToolStripMenuItem.Click += new System.EventHandler(this.copyGamesToolStripMenuItem_Click);
+            // 
+            // pasteCopiedGamesToolStripMenuItem
+            // 
+            this.pasteCopiedGamesToolStripMenuItem.Name = "pasteCopiedGamesToolStripMenuItem";
+            this.pasteCopiedGamesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pasteCopiedGamesToolStripMenuItem.Text = "Paste Games";
+            this.pasteCopiedGamesToolStripMenuItem.Click += new System.EventHandler(this.pasteCopiedGamesToolStripMenuItem_Click);
+            // 
             // Form10
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,6 +406,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbCurrentFolder)).EndInit();
             this.gbFolders.ResumeLayout(false);
             this.gbGameList.ResumeLayout(false);
+            this.cmsFolders.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -346,5 +435,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.OpenFileDialog ofdBrowsePicture;
         private System.Windows.Forms.CheckBox cbKeepRatioWhenBrowsing;
+        private System.Windows.Forms.Label lbCountInFolder;
+        private System.Windows.Forms.ContextMenuStrip cmsFolders;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSplitMain;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSplit2;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSplit3;
+        private System.Windows.Forms.ToolStripMenuItem tsmiSplit4;
+        private System.Windows.Forms.ToolStripMenuItem duplicateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyGamesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteCopiedGamesToolStripMenuItem;
     }
 }

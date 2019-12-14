@@ -23,6 +23,7 @@ namespace pbPSCReAlpha
         ClVersionHelper m_cvh;
         Dictionary<TreeNode,ClGameStructureWithPicture> m_lcgs_folder;
         List<ClUIFolder> m_luiFolders;
+        List<ClGameStructure> m_copiedClgs;
 
         class ClGameStructureWithPicture
         {
@@ -111,6 +112,7 @@ namespace pbPSCReAlpha
                     }
                 }
             }
+            m_copiedClgs = null;
             refreshComboBoxFolders();
         }
 
@@ -166,6 +168,7 @@ namespace pbPSCReAlpha
                 slLogger.Fatal(ex.Message);
                 FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+            lbCountInFolder.Text = "(" + lbCurrentGames.Items.Count.ToString() + ")";
             slLogger.Trace("<< Add games in folder Click");
         }
 
@@ -467,6 +470,7 @@ namespace pbPSCReAlpha
                 slLogger.Fatal(ex.Message);
                 FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+            lbCountInFolder.Text = "(" + lbCurrentGames.Items.Count.ToString() + ")";
         }
 
         private void tvFolders_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -798,6 +802,7 @@ namespace pbPSCReAlpha
                     slLogger.Fatal(ex.Message);
                     FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
+                lbCountInFolder.Text = "(" + lbCurrentGames.Items.Count.ToString() + ")";
                 slLogger.Trace("<< Remove selected games");
             }
         }
@@ -993,6 +998,240 @@ namespace pbPSCReAlpha
                 }
             }
             Thread.Sleep(200);
+        }
+
+        private void splitBy(int iBy, int iCount, TreeNode tn)
+        {
+            int iCountBy = iCount / iBy;
+            for (int j = 0; j < (iBy-1); j++)
+            {
+                int iNew = tvFolders.Nodes.Count + 1;
+                tvFolders.Nodes.Add(tn.Text + " -" + (1 + j).ToString());
+
+                int iStart = (j + 1) * iCountBy;
+                int iEnd = (j + 2) * iCountBy;
+                if(j == (iBy - 2))
+                {
+                    iEnd = iCount;
+                }
+                List<ClGameStructure> local_lcgs = new List<ClGameStructure>();
+                for (int i = iStart; i < iEnd; i++)
+                {
+                    local_lcgs.Add(m_lcgs_folder[tn].GameStruct[i]);
+                }
+                Bitmap bm = null;
+                if (m_lcgs_folder[tn].PictureBitmap != null)
+                    bm = new Bitmap(m_lcgs_folder[tn].PictureBitmap);
+                m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new ClGameStructureWithPicture(m_lcgs_folder[tn].PicturePath, bm, local_lcgs));
+            }
+            m_lcgs_folder[tn].GameStruct.RemoveRange(iCountBy, iCount - iCountBy);
+        }
+
+        private void tsmiSplit2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    if (lbCurrentGames.Items.Count > 1)
+                    {
+                        TreeNode tn = tvFolders.SelectedNode;
+                        if (m_lcgs_folder.ContainsKey(tn))
+                        {
+                            int iCurrentCount = m_lcgs_folder[tn].GameStruct.Count;
+                            if (iCurrentCount == lbCurrentGames.Items.Count)
+                            {
+                                splitBy(2, iCurrentCount, tn);
+
+                                tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
+                                tbCurrentFolder.Focus();
+                                refreshComboBoxFolders();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+                FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void tsmiSplit3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    if (lbCurrentGames.Items.Count > 2)
+                    {
+                        TreeNode tn = tvFolders.SelectedNode;
+                        if (m_lcgs_folder.ContainsKey(tn))
+                        {
+                            int iCurrentCount = m_lcgs_folder[tn].GameStruct.Count;
+                            if (iCurrentCount == lbCurrentGames.Items.Count)
+                            {
+                                splitBy(3, iCurrentCount, tn);
+                                
+                                tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
+                                tbCurrentFolder.Focus();
+                                refreshComboBoxFolders();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+                FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void tsmiSplit4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    if (lbCurrentGames.Items.Count > 4)
+                    {
+                        TreeNode tn = tvFolders.SelectedNode;
+                        if (m_lcgs_folder.ContainsKey(tn))
+                        {
+                            int iCurrentCount = m_lcgs_folder[tn].GameStruct.Count;
+                            if (iCurrentCount == lbCurrentGames.Items.Count)
+                            {
+                                splitBy(5, iCurrentCount, tn);
+
+                                tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
+                                tbCurrentFolder.Focus();
+                                refreshComboBoxFolders();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+                FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void cmsFolders_Opening(object sender, CancelEventArgs e)
+        {
+            copyGamesToolStripMenuItem.Enabled = false;
+            pasteCopiedGamesToolStripMenuItem.Enabled = false;
+            duplicateToolStripMenuItem.Enabled = false;
+            tsmiSplit2.Enabled = false;
+            tsmiSplit3.Enabled = false;
+            tsmiSplit4.Enabled = false;
+            if (tvFolders.SelectedNode != null)
+            {
+                duplicateToolStripMenuItem.Enabled = true;
+                copyGamesToolStripMenuItem.Enabled = true;
+                if (lbCurrentGames.Items.Count > 1)
+                {
+                    tsmiSplit2.Enabled = true;
+                }
+                if (lbCurrentGames.Items.Count > 2)
+                {
+                    tsmiSplit3.Enabled = true;
+                }
+                if (lbCurrentGames.Items.Count > 4)
+                {
+                    tsmiSplit4.Enabled = true;
+                }
+                if(m_copiedClgs != null)
+                {
+                    pasteCopiedGamesToolStripMenuItem.Enabled = true;
+                }
+            }
+        }
+
+        private void duplicateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    if (lbCurrentGames.Items.Count > 4)
+                    {
+                        TreeNode tn = tvFolders.SelectedNode;
+                        if (m_lcgs_folder.ContainsKey(tn))
+                        {
+                            int iCurrentCount = m_lcgs_folder[tn].GameStruct.Count;
+                            if (iCurrentCount == lbCurrentGames.Items.Count)
+                            {
+                                int iNew = tvFolders.Nodes.Count + 1;
+                                tvFolders.Nodes.Add(tn.Text + " -Copy");
+                                Bitmap bm = null;
+                                if (m_lcgs_folder[tn].PictureBitmap != null)
+                                    bm = new Bitmap(m_lcgs_folder[tn].PictureBitmap);
+                                m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new ClGameStructureWithPicture(m_lcgs_folder[tn].PicturePath, bm, new List<ClGameStructure>(m_lcgs_folder[tn].GameStruct)));
+
+                                tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
+                                tbCurrentFolder.Focus();
+                                refreshComboBoxFolders();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+                FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void copyGamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    TreeNode tn = tvFolders.SelectedNode;
+                    if (m_lcgs_folder.ContainsKey(tn))
+                    {
+                        m_copiedClgs = new List<ClGameStructure>(m_lcgs_folder[tn].GameStruct);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+                FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void pasteCopiedGamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (tvFolders.SelectedNode != null)
+                {
+                    if (m_copiedClgs != null)
+                    {
+                        TreeNode tn = tvFolders.SelectedNode;
+                        if (m_lcgs_folder.ContainsKey(tn))
+                        {
+                            m_lcgs_folder[tn].GameStruct.AddRange(m_copiedClgs);
+                            m_copiedClgs = null;
+                            tvFolders.SelectedNode = null;
+                            tvFolders.SelectedNode = tn;
+                            refreshComboBoxFolders();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                slLogger.Fatal(ex.Message);
+                FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
     }
 }
