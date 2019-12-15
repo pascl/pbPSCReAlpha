@@ -1233,5 +1233,48 @@ namespace pbPSCReAlpha
                 FlexibleMessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+
+        private void btAutoAdd_Click(object sender, EventArgs e)
+        {
+            if (m_lcgs.Count > 0)
+            {
+                int iCountBefore = tvFolders.Nodes.Count;
+                List<String> lsFolderCreated = new List<string>();
+                foreach (ClGameStructure cgs in m_lcgs)
+                {
+                    if(String.IsNullOrEmpty(cgs.InfoLauncher))
+                    {
+                        if(lsFolderCreated.IndexOf("Misc") == -1)
+                        {
+                            // not created yet
+                            tvFolders.Nodes.Add("Misc");
+                            lsFolderCreated.Add("Misc");
+                            m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new ClGameStructureWithPicture(String.Empty, null, new List<ClGameStructure>()));
+                        }
+                        if (m_lcgs_folder.ContainsKey(tvFolders.Nodes[iCountBefore + lsFolderCreated.IndexOf("Misc")]))
+                        {
+                            m_lcgs_folder[tvFolders.Nodes[iCountBefore + lsFolderCreated.IndexOf("Misc")]].GameStruct.Add(cgs);
+                        }
+                    }
+                    else
+                    {
+                        if (lsFolderCreated.IndexOf(cgs.InfoLauncher) == -1)
+                        {
+                            // not created yet
+                            tvFolders.Nodes.Add(cgs.InfoLauncher);
+                            lsFolderCreated.Add(cgs.InfoLauncher);
+                            m_lcgs_folder.Add(tvFolders.Nodes[tvFolders.Nodes.Count - 1], new ClGameStructureWithPicture(String.Empty, null, new List<ClGameStructure>()));
+                        }
+                        if (m_lcgs_folder.ContainsKey(tvFolders.Nodes[iCountBefore + lsFolderCreated.IndexOf(cgs.InfoLauncher)]))
+                        {
+                            m_lcgs_folder[tvFolders.Nodes[iCountBefore + lsFolderCreated.IndexOf(cgs.InfoLauncher)]].GameStruct.Add(cgs);
+                        }
+                    }
+                }
+                tvFolders.SelectedNode = tvFolders.Nodes[tvFolders.Nodes.Count - 1];
+                tbCurrentFolder.Focus();
+                refreshComboBoxFolders();
+            }
+        }
     }
 }
