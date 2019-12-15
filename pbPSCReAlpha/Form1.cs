@@ -386,6 +386,7 @@ namespace pbPSCReAlpha
                 bool bBadDiscsName = false;
                 bool bLaunchShPresent = false;
                 bool bBypassByShellScript = false;
+                String sPathLaunch = String.Empty;
                 UInt16 uiGameIni = 0;
                 int iNbDiscs = 0;
                 int iNbCue = 0;
@@ -495,6 +496,7 @@ namespace pbPSCReAlpha
                     else
                     if (fi.Name.ToLower() == "launch.sh")
                     {
+                        sPathLaunch = fi.FullName;
                         bLaunchShPresent = true;
                     }
                     else
@@ -778,6 +780,7 @@ namespace pbPSCReAlpha
                     cgs.setIniAutoBleemInfo(sAutomation, sHighres, sImagetype, sMemcard);
                 }
                 cgs.setFilesList(sFiles);
+                cgs.searchSystem(sPathLaunch);
                 cgs.setPicture(bmPictureString, (Image)(new Bitmap(bmPicture)));
                 bmPicture.Dispose();
                 cgs.setSize(lSizeFolder);
@@ -1066,6 +1069,11 @@ namespace pbPSCReAlpha
             slLogger.Trace("<< Refresh gamelist Click");
         }
 
+        private String AddSymbols(String s)
+        {
+            return s.Replace("&", "&&");
+        }
+
         private void lbGames_SelectedIndexChanged(object sender, EventArgs e)
         {
             //slLogger.Trace(">> Game Selection changed in gamelist");
@@ -1075,13 +1083,14 @@ namespace pbPSCReAlpha
                 lbFolderSize.Visible = true;
                 lbFolderSizeLabel.Visible = true;
                 ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
-                lbExploreTitle.Text = cgs.Title;
+                lbExploreTitle.Text = AddSymbols(cgs.Title);
                 lbExploreDiscs.Text = cgs.Discs;
                 lbExplorePlayers.Text = cgs.Players;
-                lbExplorePublisher.Text = cgs.Publisher;
+                lbExplorePublisher.Text = AddSymbols(cgs.Publisher);
                 lbExploreYear.Text = cgs.Year;
-                lbExploreAlphaTitle.Text = cgs.Alphatitle;
+                lbExploreAlphaTitle.Text = AddSymbols(cgs.Alphatitle);
                 lbFolderSize.Text = ClPbHelper.FormatBytes(cgs.FolderSize);
+                lbFoundSystem.Text = ((String.IsNullOrEmpty(cgs.InfoLauncher)) ? "-" : cgs.InfoLauncher);
                 gbAutoRename.Visible = true;
                 try
                 {

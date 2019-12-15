@@ -139,6 +139,7 @@
             this.btSwitchToInternal = new System.Windows.Forms.Button();
             this.lbInternalFreeSpace = new System.Windows.Forms.Label();
             this.lbNbInternalGames = new System.Windows.Forms.Label();
+            this.lbFoundSystem = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -492,6 +493,7 @@
             // 
             // gbExploreDetails
             // 
+            this.gbExploreDetails.Controls.Add(this.lbFoundSystem);
             this.gbExploreDetails.Controls.Add(this.lbFolderSizeLabel);
             this.gbExploreDetails.Controls.Add(this.lbFolderSize);
             this.gbExploreDetails.Controls.Add(this.tbErrString);
@@ -1429,6 +1431,16 @@
             this.lbNbInternalGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbNbInternalGames.Visible = false;
             // 
+            // lbFoundSystem
+            // 
+            this.lbFoundSystem.AutoSize = true;
+            this.lbFoundSystem.Location = new System.Drawing.Point(163, 156);
+            this.lbFoundSystem.Name = "lbFoundSystem";
+            this.lbFoundSystem.Size = new System.Drawing.Size(10, 13);
+            this.lbFoundSystem.TabIndex = 20;
+            this.lbFoundSystem.Text = "-";
+            this.lbFoundSystem.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1583,6 +1595,7 @@
         private System.Windows.Forms.Label lbNbInternalGames;
         private System.Windows.Forms.ToolStripMenuItem tsmiBSv120;
         private System.Windows.Forms.Button btAddEditLaunchSh;
+        private System.Windows.Forms.Label lbFoundSystem;
     }
 }
 

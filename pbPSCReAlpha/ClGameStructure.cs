@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -59,6 +60,7 @@ namespace pbPSCReAlpha
         private long _size;
         private int _bleemSyncVersion;
         private bool _bypassLaunchScript;
+        private String _infoLauncher;
 
 
         public ClGameStructure(String folderIndex, bool nanFolder, bool iniMissing, bool pcsxCfgMissing, bool pngMissing, bool pngMisMatch, 
@@ -196,6 +198,8 @@ namespace pbPSCReAlpha
             _iniIncomplete = gameIniIncomplete;
             _pngMultiple = multiPictures;
 
+            _infoLauncher = String.Empty;
+
             _bleemSyncVersion = iBleemSyncVersion;
 
             _errorString = new List<String>();
@@ -244,6 +248,8 @@ namespace pbPSCReAlpha
             _gameDataMissing = gameDataMissing;
             _title = "ZZZZ" + folderIndex;
             _iniMissing = true;
+
+            _infoLauncher = String.Empty;
             _errorString = new List<String>();
             if (_nanFolder)
             {
@@ -268,6 +274,46 @@ namespace pbPSCReAlpha
             _year = year;
             _players = players;
             _alphatitle = alphatitle;
+        }
+
+        public void searchSystem(String sFilePath)
+        {
+            _infoLauncher = String.Empty;
+            if(_bypassLaunchScript == true)
+            {
+                using (StreamReader sr = new StreamReader(sFilePath))
+                {
+                    String s = sr.ReadToEnd();
+                    if (s.Contains("psc_drastic"))
+                    {
+                        _infoLauncher = "drastic_core";
+                    }
+                    else
+                    if (s.Contains("selected_folder"))
+                    {
+                        _infoLauncher = "folder_item";
+                    }
+                    else
+                    if (s.Contains("retroarch/cores/"))
+                    {
+                        int ipos = s.IndexOf("retroarch/cores/");
+                        int ilen = "retroarch/cores/".Length;
+                        if (ipos > -1)
+                        {
+                            String s1 = s.Substring(ipos + ilen);
+                            int ipos2 = s1.IndexOf("\"");
+                            if(ipos2 > -1)
+                            {
+                                _infoLauncher = s1.Substring(0, ipos2);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // nothing
+                    }
+                }
+            }
         }
 
         public void setIniAutoBleemInfo(String sAutomation, String sHighres, String sImagetype, String sMemcard)
@@ -425,6 +471,6 @@ namespace pbPSCReAlpha
 
         public bool GeneralError { get => ((_bypassLaunchScript == true) && (_bleemSyncVersion != Constant.iBLEEMSYNC_V120)) || PbpErrors || ChdErrors || CueErrors || BinErrors || SbiErrors || PngErrors || IniErrors || FileErrors; }
         public bool GeneralWarning { get => (_bypassLaunchScript == false) && (BadDiscsName || (((_bleemSyncVersion == Constant.iBLEEMSYNC_V100) || (_bleemSyncVersion == Constant.iBLEEMSYNC_V120)) && (!_cfgMissing))); }
-        
+        public string InfoLauncher { get => _infoLauncher; set => _infoLauncher = value; }
     }
 }
