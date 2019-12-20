@@ -35,17 +35,28 @@ namespace pbPSCReAlpha
             newGame = myGame;
             _versionBS = cvh;
             _folderPath = sFolderPath + "\\" + newGame.FolderIndex + cvh.GameDataFolder;
-            _corePath = sFolderPath;
-            if (_corePath.EndsWith("\\"))
+            String retroPath = sFolderPath;
+            
+            if (retroPath.EndsWith("\\"))
             {
-                _corePath = _corePath.Substring(0, sFolderPath.Length - 1);
+                retroPath = retroPath.Substring(0, sFolderPath.Length - 1);
             }
-            int iUp = _corePath.LastIndexOf("\\");
+            int iUp = retroPath.LastIndexOf("\\");
             if (iUp > 0)
             {
-                _corePath = _corePath.Substring(0, iUp);
+                retroPath = retroPath.Substring(0, iUp);
             }
-            _corePath = _corePath + "\\bleemsync\\opt\\retroarch\\.config\\retroarch\\cores";
+            retroPath = retroPath + cvh.RetroarchCfgFolder;
+
+            _corePath = retroPath + "\\cores";
+
+            String sConfigPathUSB = new DirectoryInfo(retroPath).FullName;
+            int ipos = sConfigPathUSB.IndexOf(":\\");
+            if(ipos > -1)
+            {
+                sConfigPathUSB = sConfigPathUSB.Substring(ipos + 2);
+            }
+            sConfigPathUSB = "/media/" + sConfigPathUSB.Replace("\\", "/");
 
             FileInfo[] inDirfileList = new DirectoryInfo(Application.StartupPath).GetFiles("launch*.sh", SearchOption.TopDirectoryOnly);
             cbLaunchScriptChoice.Items.Clear();
@@ -62,6 +73,20 @@ namespace pbPSCReAlpha
                         if (fi.Name == "launch_retroarch.sh")
                         {
                             iIndexRA = cbLaunchScriptChoice.Items.Count;
+                            if (!sScriptFiles[i].Contains(sConfigPathUSB))
+                            {
+                                String s12 = "/media/bleemsync/opt/retroarch/.config/retroarch";
+                                String s13 = "/media/bleemsync/opt/retroarch/config/retroarch";
+                                if((sScriptFiles[i].Contains(s13)) && (cvh.Versionstring=="BleemSync v1.2.0"))
+                                {
+                                    sScriptFiles[i] = sScriptFiles[i].Replace(s13, sConfigPathUSB);
+                                }
+                                else
+                                if ((sScriptFiles[i].Contains(s12)) && (cvh.Versionstring == "BleemSync v1.3.0"))
+                                {
+                                    sScriptFiles[i] = sScriptFiles[i].Replace(s12, sConfigPathUSB);
+                                }
+                            }
                         }
                         cbLaunchScriptChoice.Items.Add(fi.Name);
                     }

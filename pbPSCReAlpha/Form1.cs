@@ -117,12 +117,13 @@ namespace pbPSCReAlpha
             String sFolderPath = Properties.Settings.Default.sFolderPath;
             tbFolderPath.Text = sFolderPath;
             bleemsyncVersions = new ClVersionHelper[Constant.iCountVersions];
-            bleemsyncVersions[Constant.iBLEEMSYNC_V041] = new ClVersionHelper("BleemSync v0.4.1", "\\GameData", String.Empty, "\\..\\System\\Databases", String.Empty);
-            bleemsyncVersions[Constant.iBLEEMSYNC_V100] = new ClVersionHelper("BleemSync v1.0.0/1.1.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG");
-            bleemsyncVersions[Constant.iAUTOBLEEM_V06] = new ClVersionHelper("AutoBleem v0.6.0", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem");
-            bleemsyncVersions[Constant.iBLEEMSYNC_V120] = new ClVersionHelper("BleemSync v1.2.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG");
+            bleemsyncVersions[Constant.iBLEEMSYNC_V041] = new ClVersionHelper("BleemSync v0.4.1", "\\GameData", String.Empty, "\\..\\System\\Databases", String.Empty, String.Empty);
+            bleemsyncVersions[Constant.iBLEEMSYNC_V100] = new ClVersionHelper("BleemSync v1.0.0/1.1.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG", String.Empty);
+            bleemsyncVersions[Constant.iAUTOBLEEM_V06] = new ClVersionHelper("AutoBleem v0.6.0", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem", String.Empty);
+            bleemsyncVersions[Constant.iBLEEMSYNC_V120] = new ClVersionHelper("BleemSync v1.2.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG", "\\..\\bleemsync\\opt\\retroarch\\.config\\retroarch");
+            //bleemsyncVersions[Constant.iBLEEMSYNC_V130] = new ClVersionHelper("BleemSync v1.3.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG", "\\..\\bleemsync\\opt\\retroarch\\config\\retroarch");
 
-            internalVersion = new ClVersionHelper("internal", "", String.Empty, "\\databases", String.Empty);
+            internalVersion = new ClVersionHelper("internal", "", String.Empty, "\\databases", String.Empty, String.Empty);
 
             iBleemsyncVersion = Properties.Settings.Default.iVersionBleemSync;
             if(iBleemsyncVersion > bleemsyncVersions.Length)
