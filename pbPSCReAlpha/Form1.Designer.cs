@@ -56,6 +56,7 @@
             this.btCrowseGamesFolder = new System.Windows.Forms.Button();
             this.tbFolderPath = new System.Windows.Forms.TextBox();
             this.gbExploreDetails = new System.Windows.Forms.GroupBox();
+            this.lbFoundSystem = new System.Windows.Forms.Label();
             this.lbFolderSizeLabel = new System.Windows.Forms.Label();
             this.lbFolderSize = new System.Windows.Forms.Label();
             this.tbErrString = new System.Windows.Forms.TextBox();
@@ -139,7 +140,8 @@
             this.btSwitchToInternal = new System.Windows.Forms.Button();
             this.lbInternalFreeSpace = new System.Windows.Forms.Label();
             this.lbNbInternalGames = new System.Windows.Forms.Label();
-            this.lbFoundSystem = new System.Windows.Forms.Label();
+            this.tsmiABv080 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -518,6 +520,16 @@
             this.gbExploreDetails.TabStop = false;
             this.gbExploreDetails.Text = "Details";
             // 
+            // lbFoundSystem
+            // 
+            this.lbFoundSystem.AutoSize = true;
+            this.lbFoundSystem.Location = new System.Drawing.Point(163, 156);
+            this.lbFoundSystem.Name = "lbFoundSystem";
+            this.lbFoundSystem.Size = new System.Drawing.Size(10, 13);
+            this.lbFoundSystem.TabIndex = 20;
+            this.lbFoundSystem.Text = "-";
+            this.lbFoundSystem.Visible = false;
+            // 
             // lbFolderSizeLabel
             // 
             this.lbFolderSizeLabel.AutoSize = true;
@@ -767,7 +779,7 @@
             this.btReadBS100Database.Name = "btReadBS100Database";
             this.btReadBS100Database.Size = new System.Drawing.Size(218, 117);
             this.btReadBS100Database.TabIndex = 3;
-            this.btReadBS100Database.Text = "Read a BS1.0.0 database";
+            this.btReadBS100Database.Text = "Read a BS1.x database";
             this.btReadBS100Database.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btReadBS100Database.UseVisualStyleBackColor = true;
             this.btReadBS100Database.Click += new System.EventHandler(this.btReadBS100Database_Click);
@@ -779,7 +791,7 @@
             this.btReadAB060Database.Name = "btReadAB060Database";
             this.btReadAB060Database.Size = new System.Drawing.Size(218, 117);
             this.btReadAB060Database.TabIndex = 5;
-            this.btReadAB060Database.Text = "Read a AB0.6.0 database";
+            this.btReadAB060Database.Text = "Read a AB0.x database";
             this.btReadAB060Database.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btReadAB060Database.UseVisualStyleBackColor = true;
             this.btReadAB060Database.Click += new System.EventHandler(this.btReadAB060Database_Click);
@@ -806,7 +818,7 @@
             this.btUpdateFoldersBS100toAB060.Name = "btUpdateFoldersBS100toAB060";
             this.btUpdateFoldersBS100toAB060.Size = new System.Drawing.Size(218, 117);
             this.btUpdateFoldersBS100toAB060.TabIndex = 8;
-            this.btUpdateFoldersBS100toAB060.Text = "BS1.0.0 to AB0.6.0 folders";
+            this.btUpdateFoldersBS100toAB060.Text = "BS1.x to AB0.x folders";
             this.btUpdateFoldersBS100toAB060.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS100toAB060.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS100toAB060.Click += new System.EventHandler(this.btUpdateFoldersBS100toAB060_Click);
@@ -818,7 +830,7 @@
             this.btUpdateFoldersBS041toAB060.Name = "btUpdateFoldersBS041toAB060";
             this.btUpdateFoldersBS041toAB060.Size = new System.Drawing.Size(218, 117);
             this.btUpdateFoldersBS041toAB060.TabIndex = 7;
-            this.btUpdateFoldersBS041toAB060.Text = "BS0.4.1 to AB0.6.0 folders";
+            this.btUpdateFoldersBS041toAB060.Text = "BS0.4.1 to AB0.x folders";
             this.btUpdateFoldersBS041toAB060.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS041toAB060.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS041toAB060.Click += new System.EventHandler(this.btUpdateFoldersBS041toAB060_Click);
@@ -830,7 +842,7 @@
             this.btUpdateFoldersAB060toBS100.Name = "btUpdateFoldersAB060toBS100";
             this.btUpdateFoldersAB060toBS100.Size = new System.Drawing.Size(218, 117);
             this.btUpdateFoldersAB060toBS100.TabIndex = 6;
-            this.btUpdateFoldersAB060toBS100.Text = "AB0.6.0 to BS1.0.0 folders";
+            this.btUpdateFoldersAB060toBS100.Text = "AB0.x to BS1.x folders";
             this.btUpdateFoldersAB060toBS100.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersAB060toBS100.UseVisualStyleBackColor = true;
             this.btUpdateFoldersAB060toBS100.Click += new System.EventHandler(this.btUpdateFoldersAB060toBS100_Click);
@@ -842,7 +854,7 @@
             this.btUpdateFoldersAB060toBS041.Name = "btUpdateFoldersAB060toBS041";
             this.btUpdateFoldersAB060toBS041.Size = new System.Drawing.Size(218, 117);
             this.btUpdateFoldersAB060toBS041.TabIndex = 4;
-            this.btUpdateFoldersAB060toBS041.Text = "AB0.6.0 to BS0.4.1 folders";
+            this.btUpdateFoldersAB060toBS041.Text = "AB0.x to BS0.4.1 folders";
             this.btUpdateFoldersAB060toBS041.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersAB060toBS041.UseVisualStyleBackColor = true;
             this.btUpdateFoldersAB060toBS041.Click += new System.EventHandler(this.btUpdateFoldersAB060toBS041_Click);
@@ -854,7 +866,7 @@
             this.btUpdateFoldersBS041toBS100.Name = "btUpdateFoldersBS041toBS100";
             this.btUpdateFoldersBS041toBS100.Size = new System.Drawing.Size(218, 117);
             this.btUpdateFoldersBS041toBS100.TabIndex = 1;
-            this.btUpdateFoldersBS041toBS100.Text = "BS0.4.1 to BS1.0.0 folders";
+            this.btUpdateFoldersBS041toBS100.Text = "BS0.4.1 to BS1.x folders";
             this.btUpdateFoldersBS041toBS100.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS041toBS100.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS041toBS100.Click += new System.EventHandler(this.btUpgradeFolders_Click);
@@ -866,7 +878,7 @@
             this.btUpdateFoldersBS100toBS041.Name = "btUpdateFoldersBS100toBS041";
             this.btUpdateFoldersBS100toBS041.Size = new System.Drawing.Size(218, 117);
             this.btUpdateFoldersBS100toBS041.TabIndex = 0;
-            this.btUpdateFoldersBS100toBS041.Text = "BS1.0.0 to BS0.4.1 folders";
+            this.btUpdateFoldersBS100toBS041.Text = "BS1.x to BS0.4.1 folders";
             this.btUpdateFoldersBS100toBS041.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS100toBS041.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS100toBS041.Click += new System.EventHandler(this.btDowngradeFolders_Click);
@@ -1348,8 +1360,10 @@
             this.tsmiBSVersionItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiBSv041,
             this.tsmiBSv100,
+            this.tsmiBSv120,
+            this.toolStripSeparator1,
             this.tsmiABv060,
-            this.tsmiBSv120});
+            this.tsmiABv080});
             this.tsmiBSVersionItem.Name = "tsmiBSVersionItem";
             this.tsmiBSVersionItem.Size = new System.Drawing.Size(93, 20);
             this.tsmiBSVersionItem.Text = "BS/AB Version";
@@ -1358,7 +1372,7 @@
             // 
             this.tsmiBSv041.CheckOnClick = true;
             this.tsmiBSv041.Name = "tsmiBSv041";
-            this.tsmiBSv041.Size = new System.Drawing.Size(166, 22);
+            this.tsmiBSv041.Size = new System.Drawing.Size(180, 22);
             this.tsmiBSv041.Text = "BleemSync v0.4.1";
             this.tsmiBSv041.CheckedChanged += new System.EventHandler(this.tsmiBSv041_CheckedChanged);
             this.tsmiBSv041.Click += new System.EventHandler(this.tsmiBSv041_Click);
@@ -1367,7 +1381,7 @@
             // 
             this.tsmiBSv100.CheckOnClick = true;
             this.tsmiBSv100.Name = "tsmiBSv100";
-            this.tsmiBSv100.Size = new System.Drawing.Size(166, 22);
+            this.tsmiBSv100.Size = new System.Drawing.Size(180, 22);
             this.tsmiBSv100.Text = "BleemSync v1.0.0";
             this.tsmiBSv100.CheckedChanged += new System.EventHandler(this.tsmiBSv100_CheckedChanged);
             this.tsmiBSv100.Click += new System.EventHandler(this.tsmiBSv100_Click);
@@ -1376,7 +1390,7 @@
             // 
             this.tsmiABv060.CheckOnClick = true;
             this.tsmiABv060.Name = "tsmiABv060";
-            this.tsmiABv060.Size = new System.Drawing.Size(166, 22);
+            this.tsmiABv060.Size = new System.Drawing.Size(180, 22);
             this.tsmiABv060.Text = "AutoBleem v0.6.0";
             this.tsmiABv060.CheckedChanged += new System.EventHandler(this.tsmiABv060_CheckedChanged);
             this.tsmiABv060.Click += new System.EventHandler(this.tsmiABv060_Click);
@@ -1384,7 +1398,7 @@
             // tsmiBSv120
             // 
             this.tsmiBSv120.Name = "tsmiBSv120";
-            this.tsmiBSv120.Size = new System.Drawing.Size(166, 22);
+            this.tsmiBSv120.Size = new System.Drawing.Size(180, 22);
             this.tsmiBSv120.Text = "BleemSync v1.2.0";
             this.tsmiBSv120.CheckedChanged += new System.EventHandler(this.tsmiBSv120_CheckedChanged);
             this.tsmiBSv120.Click += new System.EventHandler(this.tsmiBSv120_Click);
@@ -1431,15 +1445,18 @@
             this.lbNbInternalGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbNbInternalGames.Visible = false;
             // 
-            // lbFoundSystem
+            // tsmiABv080
             // 
-            this.lbFoundSystem.AutoSize = true;
-            this.lbFoundSystem.Location = new System.Drawing.Point(163, 156);
-            this.lbFoundSystem.Name = "lbFoundSystem";
-            this.lbFoundSystem.Size = new System.Drawing.Size(10, 13);
-            this.lbFoundSystem.TabIndex = 20;
-            this.lbFoundSystem.Text = "-";
-            this.lbFoundSystem.Visible = false;
+            this.tsmiABv080.Name = "tsmiABv080";
+            this.tsmiABv080.Size = new System.Drawing.Size(180, 22);
+            this.tsmiABv080.Text = "AutoBleem v0.8.x";
+            this.tsmiABv080.CheckedChanged += new System.EventHandler(this.tsmiABv080_CheckedChanged);
+            this.tsmiABv080.Click += new System.EventHandler(this.tsmiABv080_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // Form1
             // 
@@ -1596,6 +1613,8 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiBSv120;
         private System.Windows.Forms.Button btAddEditLaunchSh;
         private System.Windows.Forms.Label lbFoundSystem;
+        private System.Windows.Forms.ToolStripMenuItem tsmiABv080;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

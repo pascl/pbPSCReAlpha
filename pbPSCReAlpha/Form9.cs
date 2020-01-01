@@ -208,10 +208,10 @@ namespace pbPSCReAlpha
                                 // create the second db file
                                 ClDBManager.BleemSyncUI_AddDB(m_lcgs, m_sFolderPath, m_cvh, slLogger, m_bsversion);
                             }
-                            if (Constant.iAUTOBLEEM_V06 == m_bsversion)
+                            if ((Constant.iAUTOBLEEM_V06 == m_bsversion) || (Constant.iAUTOBLEEM_V08 == m_bsversion))
                             {
                                 // create the files for autobleem in order to prevent a scan at start
-                                ClDBManager.AutoBleem_CreateFiles(m_lcgs, m_sFolderPath, m_cvh, slLogger);
+                                ClDBManager.AutoBleem_CreateFiles(m_lcgs, m_sFolderPath, m_cvh, slLogger, m_bsversion);
                             }
                         }
                     }

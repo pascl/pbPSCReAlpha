@@ -121,6 +121,7 @@ namespace pbPSCReAlpha
             bleemsyncVersions[Constant.iBLEEMSYNC_V100] = new ClVersionHelper("BleemSync v1.0.0/1.1.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG", String.Empty);
             bleemsyncVersions[Constant.iAUTOBLEEM_V06] = new ClVersionHelper("AutoBleem v0.6.0", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem", String.Empty);
             bleemsyncVersions[Constant.iBLEEMSYNC_V120] = new ClVersionHelper("BleemSync v1.2.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG", "\\..\\bleemsync\\opt\\retroarch\\.config\\retroarch");
+            bleemsyncVersions[Constant.iAUTOBLEEM_V08] = new ClVersionHelper("AutoBleem v0.8.x", "", "\\!SaveStates", "\\..\\System\\Databases", "\\..\\Autobleem\\bin\\autobleem", String.Empty);
             //bleemsyncVersions[Constant.iBLEEMSYNC_V130] = new ClVersionHelper("BleemSync v1.3.0", "", String.Empty, "\\..\\bleemsync\\etc\\bleemsync\\SYS\\databases", "\\..\\bleemsync\\etc\\bleemsync\\CFG", "\\..\\bleemsync\\opt\\retroarch\\config\\retroarch");
 
             internalVersion = new ClVersionHelper("internal", "", String.Empty, "\\databases", String.Empty, String.Empty);
@@ -143,6 +144,9 @@ namespace pbPSCReAlpha
                     break;
                 case Constant.iBLEEMSYNC_V120:
                     tsmiBSv120.Checked = true;
+                    break;
+                case Constant.iAUTOBLEEM_V08:
+                    tsmiABv080.Checked = true;
                     break;
             }
 
@@ -621,7 +625,7 @@ namespace pbPSCReAlpha
                     }
                     if (!bBypassByShellScript)
                     {
-                        if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bPbpPresent))
+                        if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08)) && (bPbpPresent))
                         {
                             if (iNbPbp == iNbDiscs)
                             {
@@ -647,7 +651,7 @@ namespace pbPSCReAlpha
                             }
                         }
                         else
-                        if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)) && (bChdPresent))
+                        if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V100) || (iBleemsyncVersion == Constant.iBLEEMSYNC_V120) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08)) && (bChdPresent))
                         {
                             if (iNbChd == iNbDiscs)
                             {
@@ -1304,7 +1308,7 @@ namespace pbPSCReAlpha
                         btEditCue.Enabled = true;
                         btEditCue.Visible = true;
                     }
-                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V041) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iSTRUCT_INTERNAL)) && (cgs.CfgMissing))
+                    if (((iBleemsyncVersion == Constant.iBLEEMSYNC_V041) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08) || (iBleemsyncVersion == Constant.iSTRUCT_INTERNAL)) && (cgs.CfgMissing))
                     {
                         btAddPcsxCfg.Enabled = true;
                         btAddPcsxCfg.Visible = true;
@@ -1475,7 +1479,7 @@ namespace pbPSCReAlpha
             String sDate = dt.Year.ToString() + "_" + dt.Month.ToString() + "_" + dt.Day.ToString() + "_" + dt.Hour.ToString() + "_" + dt.Minute.ToString() + "_" + dt.Second.ToString();
 
             String sFolderSavePath = String.Empty; // empty if in the same directory
-            if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
+            if ((iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08))
             {
                 sFolderSavePath = sFolderPath + currentUsedVersion.SaveFolder;
             }
@@ -1505,7 +1509,7 @@ namespace pbPSCReAlpha
                                 String sModif = sDate + "_" + s;
                                 int iRes = 0;
                                 bool bParsed = false;
-                                if (iBleemsyncVersion != Constant.iAUTOBLEEM_V06)
+                                if ((iBleemsyncVersion != Constant.iAUTOBLEEM_V06) && (iBleemsyncVersion != Constant.iAUTOBLEEM_V08))
                                 {
                                     bParsed = int.TryParse(dcGames[s].FolderIndex, out iRes);
                                     if(bParsed)
@@ -1568,7 +1572,7 @@ namespace pbPSCReAlpha
                         }
                         
                         int iNewIndex = 1;
-                        if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
+                        if ((iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08))
                         {
                             iNewIndex = 1 + Constant.iSTART_AUTOBLEEM; // was 21, now 31, just to be sure being out of internal games possible (limit 25)
                         }
@@ -1678,7 +1682,7 @@ namespace pbPSCReAlpha
                                     String sModif = sDate + "_" + c1.FolderIndex;
                                     int iRes = 0;
                                     bool bParsed = false;
-                                    if (iBleemsyncVersion != Constant.iAUTOBLEEM_V06)
+                                    if ((iBleemsyncVersion != Constant.iAUTOBLEEM_V06) && (iBleemsyncVersion != Constant.iAUTOBLEEM_V08))
                                     {
                                         bParsed = int.TryParse(c1.FolderIndex, out iRes);
                                         if (bParsed)
@@ -1885,6 +1889,10 @@ namespace pbPSCReAlpha
                 {
                     iTmpBSVersion = Constant.iBLEEMSYNC_V120;
                 }
+                else if (tsmiABv080.Checked)
+                {
+                    iTmpBSVersion = Constant.iAUTOBLEEM_V08;
+                }
                 Properties.Settings.Default.iVersionBleemSync = iTmpBSVersion;
             }
             else
@@ -1933,7 +1941,7 @@ namespace pbPSCReAlpha
                     {
                         int iCount = lsFolders.Count;
                         int iNext = 1 + iCount;
-                        if(iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
+                        if((iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08))
                         {
                             iNext += Constant.iSTART_AUTOBLEEM; // not to care about 1-20 folders in savestates // move to 30 finally after 1.4
                         }
@@ -1946,11 +1954,11 @@ namespace pbPSCReAlpha
                         {
                             Directory.CreateDirectory(sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder);
                         }
-                        if ((iBleemsyncVersion == Constant.iBLEEMSYNC_V041) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iSTRUCT_INTERNAL))
+                        if ((iBleemsyncVersion == Constant.iBLEEMSYNC_V041) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08) || (iBleemsyncVersion == Constant.iSTRUCT_INTERNAL))
                         {
                             File.Copy(Application.StartupPath + "\\" + "pcsx.cfg", sFolderPath + "\\" + iNext.ToString() + currentUsedVersion.GameDataFolder + "\\" + "pcsx.cfg");
                         }
-                        if(iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
+                        if((iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08))
                         {
                             if (!Directory.Exists(sFolderPath + currentUsedVersion.SaveFolder))
                             {
@@ -3485,7 +3493,7 @@ namespace pbPSCReAlpha
                             sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
                         }
                         String sFolderSavePath = String.Empty; // empty if in the same directory
-                        if (iBleemsyncVersion == Constant.iAUTOBLEEM_V06)
+                        if ((iBleemsyncVersion == Constant.iAUTOBLEEM_V06) || (iBleemsyncVersion == Constant.iAUTOBLEEM_V08))
                         {
                             sFolderSavePath = sFolderPath + currentUsedVersion.SaveFolder;
                         }
@@ -3733,6 +3741,9 @@ namespace pbPSCReAlpha
                             stm = "SELECT * FROM MENU_ENTRIES ORDER BY GAME_ID ASC";
                             break;
                         case Constant.iAUTOBLEEM_V06:
+                            stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
+                            break;
+                        case Constant.iAUTOBLEEM_V08:
                             stm = "SELECT * FROM GAME ORDER BY GAME_ID ASC";
                             break;
                         default:
@@ -4382,6 +4393,7 @@ namespace pbPSCReAlpha
             tsmiBSv100.Checked = !(bIsChecked);
             tsmiABv060.Checked = !(bIsChecked);
             tsmiBSv120.Checked = !(bIsChecked);
+            tsmiABv080.Checked = !(bIsChecked);
             if (bIsChecked)
             {
                 iBleemsyncVersion = Constant.iBLEEMSYNC_V041;
@@ -4403,6 +4415,7 @@ namespace pbPSCReAlpha
             tsmiBSv041.Checked = !(bIsChecked);
             tsmiABv060.Checked = !(bIsChecked);
             tsmiBSv120.Checked = !(bIsChecked);
+            tsmiABv080.Checked = !(bIsChecked);
             if (bIsChecked)
             {
                 iBleemsyncVersion = Constant.iBLEEMSYNC_V100;
@@ -4423,6 +4436,7 @@ namespace pbPSCReAlpha
             tsmiBSv041.Checked = !(bIsChecked);
             tsmiBSv100.Checked = !(bIsChecked);
             tsmiBSv120.Checked = !(bIsChecked);
+            tsmiABv080.Checked = !(bIsChecked);
             if (bIsChecked)
             {
                 iBleemsyncVersion = Constant.iAUTOBLEEM_V06;
@@ -5241,6 +5255,10 @@ namespace pbPSCReAlpha
                 {
                     iBleemsyncVersion = Constant.iAUTOBLEEM_V06;
                 }
+                else if (tsmiABv080.Checked)
+                {
+                    iBleemsyncVersion = Constant.iAUTOBLEEM_V08;
+                }
                 currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
                 tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
 
@@ -5286,6 +5304,7 @@ namespace pbPSCReAlpha
             tsmiBSv041.Checked = !(bIsChecked);
             tsmiABv060.Checked = !(bIsChecked);
             tsmiBSv100.Checked = !(bIsChecked);
+            tsmiABv080.Checked = !(bIsChecked);
             if (bIsChecked)
             {
                 iBleemsyncVersion = Constant.iBLEEMSYNC_V120;
@@ -5314,6 +5333,31 @@ namespace pbPSCReAlpha
         private void tbFolderPath_Enter(object sender, EventArgs e)
         {
             sBeforePath = tbFolderPath.Text;
+        }
+
+        private void tsmiABv080_Click(object sender, EventArgs e)
+        {
+            if (tsmiABv080.Checked == false)
+            {
+                tsmiABv080.Checked = true;
+            }
+            bool bIsChecked = tsmiABv080.Checked;
+            tsmiBSv041.Checked = !(bIsChecked);
+            tsmiABv060.Checked = !(bIsChecked);
+            tsmiBSv100.Checked = !(bIsChecked);
+            tsmiBSv120.Checked = !(bIsChecked);
+            if (bIsChecked)
+            {
+                iBleemsyncVersion = Constant.iAUTOBLEEM_V08;
+            }
+            currentUsedVersion = bleemsyncVersions[iBleemsyncVersion];
+            tsmiBSVersionItem.Text = "Currently use " + currentUsedVersion.Versionstring;
+            refreshAndAskDBRead();
+        }
+
+        private void tsmiABv080_CheckedChanged(object sender, EventArgs e)
+        {
+            //
         }
     }
 }

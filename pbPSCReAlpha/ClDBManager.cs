@@ -218,6 +218,7 @@ namespace pbPSCReAlpha
                         s.Parameters.Add("@p8", System.Data.DbType.Int32).Value = _position;
                         break;
                     case Constant.iAUTOBLEEM_V06:
+                    case Constant.iAUTOBLEEM_V08:
                         s = new SQLiteCommand("INSERT INTO GAME"
                             + " (GAME_ID, GAME_TITLE_STRING, PUBLISHER_NAME, RELEASE_YEAR, PLAYERS, RATING_IMAGE, GAME_MANUAL_QR_IMAGE, LINK_GAME_ID, PATH, SSPATH, MEMCARD)"
                             + " VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10)", conn);
@@ -409,6 +410,69 @@ namespace pbPSCReAlpha
             public int Id { get => _id; set => _id = value; }
             public string Name { get => _name; set => _name = value; }
         }
+        
+        public class ClSubdirGamesToDisplayOnRowTable
+        {
+            // AB 0.8
+            /*CREATE TABLE SUBDIR_GAMES_TO_DISPLAY_ON_ROW ( SUBDIR_ROW_INDEX integer, GAME_ID integer )*/
+            private int _game_id;
+            private int _subdir_row_id;
+
+            public int Subdir_row_id { get => _subdir_row_id; set => _subdir_row_id = value; }
+            public int Game_id { get => _game_id; set => _game_id = value; }
+
+            public ClSubdirGamesToDisplayOnRowTable(int iGameId)
+            {
+                _subdir_row_id = 0;
+                _game_id = iGameId;
+            }
+
+            public SQLiteCommand generateInsertCommand(SQLiteConnection conn)
+            {
+                SQLiteCommand s = new SQLiteCommand("INSERT INTO SUBDIR_GAMES_TO_DISPLAY_ON_ROW"
+                    + " (SUBDIR_ROW_INDEX, GAME_ID)"
+                    + " VALUES (@p1, @p2)", conn);
+                s.Parameters.Add("@p1", System.Data.DbType.Int32).Value = _subdir_row_id;
+                s.Parameters.Add("@p2", System.Data.DbType.Int32).Value = _game_id;
+                return s;
+            }
+        }
+
+        public class ClSubdirRowsTable
+        {
+            // AB 0.8
+            /*CREATE TABLE SUBDIR_ROWS ( SUBDIR_ROW_INDEX integer NOT NULL UNIQUE, SUBDIR_ROW_NAME text, INDENT_LEVEL integer, NUM_GAMES integer, PRIMARY KEY ( SUBDIR_ROW_INDEX ) )*/
+            private int _subdir_row_id;
+            private String _subdir_row_name;
+            private int _indent_level;
+            private int _num_games;
+
+            public int Subdir_row_id { get => _subdir_row_id; set => _subdir_row_id = value; }
+            public string Subdir_row_name { get => _subdir_row_name; set => _subdir_row_name = value; }
+            public int Indent_level { get => _indent_level; set => _indent_level = value; }
+            public int Num_games { get => _num_games; set => _num_games = value; }
+
+            public ClSubdirRowsTable(int iSubdirRowId, String sSubdirRowName, int iIndentLevel, int iNumGames)
+            {
+                _subdir_row_id = iSubdirRowId;
+                _subdir_row_name = sSubdirRowName;
+                _indent_level = iIndentLevel;
+                _num_games = iNumGames;
+            }
+
+            public SQLiteCommand generateInsertCommand(SQLiteConnection conn)
+            {
+                SQLiteCommand s = new SQLiteCommand("INSERT INTO SUBDIR_ROWS"
+                    + " (SUBDIR_ROW_INDEX, SUBDIR_ROW_NAME, INDENT_LEVEL, NUM_GAMES)"
+                    + " VALUES (@p1, @p2, @p3, @p4)", conn);
+                s.Parameters.Add("@p1", System.Data.DbType.Int32).Value = _subdir_row_id;
+                s.Parameters.Add("@p2", System.Data.DbType.String).Value = _subdir_row_name;
+                s.Parameters.Add("@p3", System.Data.DbType.Int32).Value = _indent_level;
+                s.Parameters.Add("@p4", System.Data.DbType.Int32).Value = _num_games;
+                return s;
+            }
+        }
+
 
         private bool _bDone;
 
@@ -478,7 +542,7 @@ namespace pbPSCReAlpha
             return lFoldersFromDB;
         }
 
-        public static bool AutoBleem_CreateFiles(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl)
+        public static bool AutoBleem_CreateFiles(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl, int bs_version)
         {
             bool bDone = false;
             try
@@ -487,30 +551,42 @@ namespace pbPSCReAlpha
                 //String sFilename = sFolderBase + cvh.DbFolder + "\\" + "BleemSync.db";
                 String sFilename1 = sFolderPath + cvh.CfgFolder + "\\" + "autobleem.prev";
                 String sFilename2 = sFolderPath + cvh.CfgFolder + "\\" + "autobleem.list";
+
+                // autobleem 0.8
+                String sFilename3 = sFolderPath + cvh.CfgFolder + "\\" + "duplicateGames.txt";
+                String sFilename4 = sFolderPath + cvh.CfgFolder + "\\" + "gameHierarchy_afterScanAndRemovingDuplicates.txt";
+                String sFilename5 = sFolderPath + cvh.CfgFolder + "\\" + "gameHierarchy_beforeScan.txt";
+                String sFilename6 = sFolderPath + cvh.CfgFolder + "\\" + "gamesThatFailedVerifyCheck.txt";
+
                 if (!Directory.Exists(sFolderPath + cvh.CfgFolder))
                 {
                     Directory.CreateDirectory(sFolderPath + cvh.CfgFolder);
                 }
-                if (File.Exists(sFilename1))
+                CreateBakFile(sFilename1);
+                CreateBakFile(sFilename2);
+                if (bs_version == Constant.iAUTOBLEEM_V08)
                 {
-                    if (File.Exists(sFilename1 + ".bak"))
+                    CreateBakFile(sFilename3);
+                    CreateBakFile(sFilename4);
+                    CreateBakFile(sFilename5);
+                    CreateBakFile(sFilename6);
+                    try
                     {
-                        File.Delete(sFilename1 + ".bak");
-                        Thread.Sleep(100);
+                        using (StreamWriter sw = new StreamWriter(sFilename3))
+                        {
+                            sw.WriteLine("");
+                        }
+                        using (StreamWriter sw = new StreamWriter(sFilename6))
+                        {
+                            sw.WriteLine("");
+                        }
                     }
-                    File.Move(sFilename1, sFilename1 + ".bak");
-                    Thread.Sleep(100);
-                }
-                if (File.Exists(sFilename2))
-                {
-                    if (File.Exists(sFilename2 + ".bak"))
+                    catch (Exception ex)
                     {
-                        File.Delete(sFilename2 + ".bak");
-                        Thread.Sleep(100);
+                        sl.Fatal(ex.Message);
                     }
-                    File.Move(sFilename2, sFilename2 + ".bak");
-                    Thread.Sleep(100);
                 }
+
                 List<String> lsFolders = new List<string>();
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
                 foreach (DirectoryInfo di in dirList)
@@ -540,7 +616,14 @@ namespace pbPSCReAlpha
                         {
                             foreach (String s in lsFolders)
                             {
-                                sw.Write(s + "\n"); // writeline puts \r\n
+                                if (bs_version == Constant.iAUTOBLEEM_V08)
+                                {
+                                    sw.Write("/media/Games/" + s + "\n"); // writeline puts \r\n
+                                }
+                                else
+                                {
+                                    sw.Write(s + "\n"); // writeline puts \r\n
+                                }
                             }
                         }
                         using (StreamWriter sw = new StreamWriter(sFilename2))
@@ -550,6 +633,56 @@ namespace pbPSCReAlpha
                             {
                                 sw.Write(i.ToString() + ",/media/Games/" + s + ",/media/Games/!SaveStates/" + s + "\n"); // writeline puts \r\n
                                 i++;
+                            }
+                        }
+                        if (bs_version == Constant.iAUTOBLEEM_V08)
+                        {
+/*Games in each row
+0: Games (4 games)
+      31
+      32
+      33
+      34
+
+
+Games to display in each row
+0: Games (4 games)
+      31
+      32
+      33
+      34
+*/
+                            using (StreamWriter sw = new StreamWriter(sFilename4))
+                            {
+                                sw.Write("Games in each row" + "\n");
+                                sw.Write("0: Games (" + lsFolders.Count + " games)" + "\n");
+                                foreach (String s in lsFolders)
+                                {
+                                    sw.Write("      " + s + "\n"); // writeline puts \r\n
+                                }
+                                sw.Write("\n\n");
+                                sw.Write("Games to display in each row" + "\n");
+                                sw.Write("0: Games (" + lsFolders.Count + " games)" + "\n");
+                                foreach (String s in lsFolders)
+                                {
+                                    sw.Write("      " + s + "\n"); // writeline puts \r\n
+                                }
+                            }
+                            using (StreamWriter sw = new StreamWriter(sFilename5))
+                            {
+                                sw.Write("Games in each row" + "\n");
+                                sw.Write("0: Games(" + lsFolders.Count + " games)" + "\n");
+                                foreach (String s in lsFolders)
+                                {
+                                    sw.Write("      " + s + "\n"); // writeline puts \r\n
+                                }
+                                sw.Write("\n\n");
+                                sw.Write("Games to display in each row" + "\n");
+                                sw.Write("0: Games(" + lsFolders.Count + " games)" + "\n");
+                                foreach (String s in lsFolders)
+                                {
+                                    sw.Write("      " + s + "\n"); // writeline puts \r\n
+                                }
                             }
                         }
                     }
@@ -589,6 +722,20 @@ namespace pbPSCReAlpha
                 GC.WaitForPendingFinalizers();
             }
             return bDone;
+        }
+
+        private static void CreateBakFile(string sFilename)
+        {
+            if (File.Exists(sFilename))
+            {
+                if (File.Exists(sFilename + ".bak"))
+                {
+                    File.Delete(sFilename + ".bak");
+                    Thread.Sleep(100);
+                }
+                File.Move(sFilename, sFilename + ".bak");
+                Thread.Sleep(100);
+            }
         }
 
         public static bool BleemSyncUI_AddDB(List<ClGameStructure> lcgs, String sFolderPath, ClVersionHelper cvh, SimpleLogger sl, int bs_version, List<ClUIFolder> lFolders)
@@ -868,6 +1015,23 @@ namespace pbPSCReAlpha
                             cmd = new SQLiteCommand(sql, sqlconn);
                             cmd.ExecuteNonQuery();
                             break;
+                        case Constant.iAUTOBLEEM_V08: // ab0.8.5
+                            sql = "CREATE TABLE DISC ( [GAME_ID] integer, [DISC_NUMBER] integer, [BASENAME] text, UNIQUE ([GAME_ID], [DISC_NUMBER]) )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE GAME ( GAME_ID integer NOT NULL UNIQUE, GAME_TITLE_STRING text, PUBLISHER_NAME text, RELEASE_YEAR integer, PLAYERS integer, RATING_IMAGE text, GAME_MANUAL_QR_IMAGE text, LINK_GAME_ID integer, PATH text null, SSPATH text null, MEMCARD text null, PRIMARY KEY ( GAME_ID ) )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE LANGUAGE_SPECIFIC ( [DEFAULT_VALUE] text, [LANGUAGE_ID] integer, [VALUE] text, UNIQUE ([DEFAULT_VALUE], [LANGUAGE_ID]) )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE SUBDIR_GAMES_TO_DISPLAY_ON_ROW ( SUBDIR_ROW_INDEX integer, GAME_ID integer )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            sql = "CREATE TABLE SUBDIR_ROWS ( SUBDIR_ROW_INDEX integer NOT NULL UNIQUE, SUBDIR_ROW_NAME text, INDENT_LEVEL integer, NUM_GAMES integer, PRIMARY KEY ( SUBDIR_ROW_INDEX ) )";
+                            cmd = new SQLiteCommand(sql, sqlconn);
+                            cmd.ExecuteNonQuery();
+                            break;
                     }
                     tran.Commit();
                     b = true;
@@ -893,6 +1057,12 @@ namespace pbPSCReAlpha
                     int iGame = start;
                     if (lcgs.Count > 0)
                     {
+                        if (bleemsyncVersion == Constant.iAUTOBLEEM_V08)
+                        {
+                            ClSubdirRowsTable csrt = new ClSubdirRowsTable(0, "Games", 0, lcgs.Count);
+                            cmd = csrt.generateInsertCommand(sqlconn);
+                            cmd.ExecuteNonQuery();
+                        }
                         foreach (ClGameStructure cgs in lcgs)
                         {
                             int iG1 = 1+iGame;
@@ -917,6 +1087,12 @@ namespace pbPSCReAlpha
                                 cmd = cdt.generateInsertCommand(sqlconn);
                                 cmd.ExecuteNonQuery();
                                 iDisc++;
+                            }
+                            if(bleemsyncVersion == Constant.iAUTOBLEEM_V08)
+                            {
+                                ClSubdirGamesToDisplayOnRowTable csgtor = new ClSubdirGamesToDisplayOnRowTable(iGame);
+                                cmd = csgtor.generateInsertCommand(sqlconn);
+                                cmd.ExecuteNonQuery();
                             }
                         }
                     }
@@ -989,10 +1165,10 @@ namespace pbPSCReAlpha
                         // create the second db file
                         _bDone = BleemSyncUI_AddDB(lcgs, sFolderPath, cvh, sl, bleemsyncVersion, lFolders);
                     }
-                    if (Constant.iAUTOBLEEM_V06 == bleemsyncVersion)
+                    if ((Constant.iAUTOBLEEM_V06 == bleemsyncVersion) || (Constant.iAUTOBLEEM_V08 == bleemsyncVersion))
                     {
                         // create the files for autobleem in order to prevent a scan at start
-                        _bDone = AutoBleem_CreateFiles(lcgs, sFolderPath, cvh, sl);
+                        _bDone = AutoBleem_CreateFiles(lcgs, sFolderPath, cvh, sl, bleemsyncVersion);
                     }
                 }
             }
