@@ -637,21 +637,6 @@ namespace pbPSCReAlpha
                         }
                         if (bs_version == Constant.iAUTOBLEEM_V08)
                         {
-/*Games in each row
-0: Games (4 games)
-      31
-      32
-      33
-      34
-
-
-Games to display in each row
-0: Games (4 games)
-      31
-      32
-      33
-      34
-*/
                             using (StreamWriter sw = new StreamWriter(sFilename4))
                             {
                                 sw.Write("Games in each row" + "\n");
