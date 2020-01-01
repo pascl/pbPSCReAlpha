@@ -5359,5 +5359,70 @@ namespace pbPSCReAlpha
         {
             //
         }
+
+        private void btUpdateFoldersAB08xtoAB0x_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Update AB0.8+ folders to AB0.7- Click");
+            String sFolderPath = tbFolderPath.Text;
+            if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to remove categories of AB0.8+ (and have a previous AB0.7- structure) ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                ClVersionHelper srcVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V08];
+                int iMaxCategory = 8;
+                bool bNoChange = true;
+                int iIter = 0;
+                do
+                {
+                    DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+                    iIter++;
+                    bNoChange = true;
+                    foreach (DirectoryInfo di in dirList)
+                    {
+                        try
+                        {
+                            slLogger.Debug("** Directory: " + di.FullName);
+                            String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                            if (sFolderIndex.StartsWith("\\"))
+                            {
+                                sFolderIndex = sFolderIndex.Substring(1);
+                            }
+                            String[] s2 = sFolderIndex.Split('\\');
+                            sFolderIndex = s2[0];
+                            if ((sFolderIndex != "!SaveStates") && (sFolderIndex != "!MemCards") && (sFolderIndex != "databases"))
+                            {
+                                FileInfo[] fiSub = di.GetFiles();
+                                DirectoryInfo[] diSub = di.GetDirectories();
+                                if ((fiSub.Length == 0) && (diSub.Length > 0))
+                                {
+                                    bNoChange = false;
+                                    // no files but folders
+                                    // so move folders then this folder has to be removed
+                                    foreach (DirectoryInfo diSubOne in diSub)
+                                    {
+                                        String sSource = diSubOne.FullName;
+                                        String sDestination = sFolderPath + "\\" + diSubOne.Name;
+                                        while (Directory.Exists(sDestination))
+                                        {
+                                            sDestination = sDestination + "_1";
+                                        }
+                                        if (!Directory.Exists(sDestination))
+                                        {
+                                            Directory.Move(sSource, sDestination);
+                                        }
+                                    }
+                                    Directory.Delete(di.FullName);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            slLogger.Fatal(ex.Message);
+                        }
+                    } // foreach
+                } while ((iIter < iMaxCategory) && (bNoChange == false));
+                refreshGameListFolders();
+                bNeedRecreateDB = true;
+            }
+            slLogger.Trace("<< Update AB0.8+ folders to AB0.7- Click");
+        }
     }
 }

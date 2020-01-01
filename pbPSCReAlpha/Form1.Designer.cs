@@ -142,6 +142,15 @@
             this.lbNbInternalGames = new System.Windows.Forms.Label();
             this.tsmiABv080 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.btUpdateFoldersAB08xtoAB0x = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -798,6 +807,15 @@
             // 
             // gbTransform
             // 
+            this.gbTransform.Controls.Add(this.label21);
+            this.gbTransform.Controls.Add(this.label20);
+            this.gbTransform.Controls.Add(this.label19);
+            this.gbTransform.Controls.Add(this.btUpdateFoldersAB08xtoAB0x);
+            this.gbTransform.Controls.Add(this.label18);
+            this.gbTransform.Controls.Add(this.label17);
+            this.gbTransform.Controls.Add(this.label16);
+            this.gbTransform.Controls.Add(this.label15);
+            this.gbTransform.Controls.Add(this.label8);
             this.gbTransform.Controls.Add(this.btUpdateFoldersBS100toAB060);
             this.gbTransform.Controls.Add(this.btUpdateFoldersBS041toAB060);
             this.gbTransform.Controls.Add(this.btUpdateFoldersAB060toBS100);
@@ -813,73 +831,61 @@
             // 
             // btUpdateFoldersBS100toAB060
             // 
-            this.btUpdateFoldersBS100toAB060.Image = global::pbPSCReAlpha.Properties.Resources.brg_arrow_up_double;
-            this.btUpdateFoldersBS100toAB060.Location = new System.Drawing.Point(456, 142);
+            this.btUpdateFoldersBS100toAB060.Location = new System.Drawing.Point(456, 125);
             this.btUpdateFoldersBS100toAB060.Name = "btUpdateFoldersBS100toAB060";
-            this.btUpdateFoldersBS100toAB060.Size = new System.Drawing.Size(218, 117);
+            this.btUpdateFoldersBS100toAB060.Size = new System.Drawing.Size(218, 32);
             this.btUpdateFoldersBS100toAB060.TabIndex = 8;
             this.btUpdateFoldersBS100toAB060.Text = "BS1.x to AB0.x folders";
-            this.btUpdateFoldersBS100toAB060.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS100toAB060.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS100toAB060.Click += new System.EventHandler(this.btUpdateFoldersBS100toAB060_Click);
             // 
             // btUpdateFoldersBS041toAB060
             // 
-            this.btUpdateFoldersBS041toAB060.Image = global::pbPSCReAlpha.Properties.Resources.rbg_arrow_up_double;
-            this.btUpdateFoldersBS041toAB060.Location = new System.Drawing.Point(456, 19);
+            this.btUpdateFoldersBS041toAB060.Location = new System.Drawing.Point(456, 47);
             this.btUpdateFoldersBS041toAB060.Name = "btUpdateFoldersBS041toAB060";
-            this.btUpdateFoldersBS041toAB060.Size = new System.Drawing.Size(218, 117);
+            this.btUpdateFoldersBS041toAB060.Size = new System.Drawing.Size(218, 32);
             this.btUpdateFoldersBS041toAB060.TabIndex = 7;
             this.btUpdateFoldersBS041toAB060.Text = "BS0.4.1 to AB0.x folders";
-            this.btUpdateFoldersBS041toAB060.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS041toAB060.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS041toAB060.Click += new System.EventHandler(this.btUpdateFoldersBS041toAB060_Click);
             // 
             // btUpdateFoldersAB060toBS100
             // 
-            this.btUpdateFoldersAB060toBS100.Image = global::pbPSCReAlpha.Properties.Resources.bgr_arrow_up_double;
-            this.btUpdateFoldersAB060toBS100.Location = new System.Drawing.Point(232, 266);
+            this.btUpdateFoldersAB060toBS100.Location = new System.Drawing.Point(456, 298);
             this.btUpdateFoldersAB060toBS100.Name = "btUpdateFoldersAB060toBS100";
-            this.btUpdateFoldersAB060toBS100.Size = new System.Drawing.Size(218, 117);
+            this.btUpdateFoldersAB060toBS100.Size = new System.Drawing.Size(218, 32);
             this.btUpdateFoldersAB060toBS100.TabIndex = 6;
-            this.btUpdateFoldersAB060toBS100.Text = "AB0.x to BS1.x folders";
-            this.btUpdateFoldersAB060toBS100.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btUpdateFoldersAB060toBS100.Text = "AB0.7- to BS1.x folders";
             this.btUpdateFoldersAB060toBS100.UseVisualStyleBackColor = true;
             this.btUpdateFoldersAB060toBS100.Click += new System.EventHandler(this.btUpdateFoldersAB060toBS100_Click);
             // 
             // btUpdateFoldersAB060toBS041
             // 
-            this.btUpdateFoldersAB060toBS041.Image = global::pbPSCReAlpha.Properties.Resources.grb_arrow_up_double;
-            this.btUpdateFoldersAB060toBS041.Location = new System.Drawing.Point(6, 266);
+            this.btUpdateFoldersAB060toBS041.Location = new System.Drawing.Point(456, 260);
             this.btUpdateFoldersAB060toBS041.Name = "btUpdateFoldersAB060toBS041";
-            this.btUpdateFoldersAB060toBS041.Size = new System.Drawing.Size(218, 117);
+            this.btUpdateFoldersAB060toBS041.Size = new System.Drawing.Size(218, 32);
             this.btUpdateFoldersAB060toBS041.TabIndex = 4;
-            this.btUpdateFoldersAB060toBS041.Text = "AB0.x to BS0.4.1 folders";
-            this.btUpdateFoldersAB060toBS041.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btUpdateFoldersAB060toBS041.Text = "AB0.7- to BS0.4.1 folders";
             this.btUpdateFoldersAB060toBS041.UseVisualStyleBackColor = true;
             this.btUpdateFoldersAB060toBS041.Click += new System.EventHandler(this.btUpdateFoldersAB060toBS041_Click);
             // 
             // btUpdateFoldersBS041toBS100
             // 
-            this.btUpdateFoldersBS041toBS100.Image = global::pbPSCReAlpha.Properties.Resources.gbr_arrow_up_double;
-            this.btUpdateFoldersBS041toBS100.Location = new System.Drawing.Point(232, 19);
+            this.btUpdateFoldersBS041toBS100.Location = new System.Drawing.Point(456, 9);
             this.btUpdateFoldersBS041toBS100.Name = "btUpdateFoldersBS041toBS100";
-            this.btUpdateFoldersBS041toBS100.Size = new System.Drawing.Size(218, 117);
+            this.btUpdateFoldersBS041toBS100.Size = new System.Drawing.Size(218, 32);
             this.btUpdateFoldersBS041toBS100.TabIndex = 1;
             this.btUpdateFoldersBS041toBS100.Text = "BS0.4.1 to BS1.x folders";
-            this.btUpdateFoldersBS041toBS100.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS041toBS100.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS041toBS100.Click += new System.EventHandler(this.btUpgradeFolders_Click);
             // 
             // btUpdateFoldersBS100toBS041
             // 
-            this.btUpdateFoldersBS100toBS041.Image = global::pbPSCReAlpha.Properties.Resources.arrow_up_double;
-            this.btUpdateFoldersBS100toBS041.Location = new System.Drawing.Point(6, 142);
+            this.btUpdateFoldersBS100toBS041.Location = new System.Drawing.Point(456, 87);
             this.btUpdateFoldersBS100toBS041.Name = "btUpdateFoldersBS100toBS041";
-            this.btUpdateFoldersBS100toBS041.Size = new System.Drawing.Size(218, 117);
+            this.btUpdateFoldersBS100toBS041.Size = new System.Drawing.Size(218, 32);
             this.btUpdateFoldersBS100toBS041.TabIndex = 0;
             this.btUpdateFoldersBS100toBS041.Text = "BS1.x to BS0.4.1 folders";
-            this.btUpdateFoldersBS100toBS041.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btUpdateFoldersBS100toBS041.UseVisualStyleBackColor = true;
             this.btUpdateFoldersBS100toBS041.Click += new System.EventHandler(this.btDowngradeFolders_Click);
             // 
@@ -1458,6 +1464,95 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 19);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(437, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "You have a BleemSync0.4.1 folder structure and you want a BleemSync1.x folder str" +
+    "ucture:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 57);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(435, 13);
+            this.label15.TabIndex = 10;
+            this.label15.Text = "You have a BleemSync0.4.1 folder structure and you want a AutoBleem0.x folder str" +
+    "ucture:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 97);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(437, 13);
+            this.label16.TabIndex = 11;
+            this.label16.Text = "You have a BleemSync1.x folder structure and you want a BleemSync0.4.1 folder str" +
+    "ucture:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 135);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(425, 13);
+            this.label17.TabIndex = 12;
+            this.label17.Text = "You have a BleemSync1.x folder structure and you want a AutoBleem0.x folder struc" +
+    "ture:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 211);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(403, 13);
+            this.label18.TabIndex = 13;
+            this.label18.Text = "You have a AutoBleem0.8 (or +) folder structure and you want to remove categories" +
+    ":";
+            // 
+            // btUpdateFoldersAB08xtoAB0x
+            // 
+            this.btUpdateFoldersAB08xtoAB0x.Location = new System.Drawing.Point(456, 201);
+            this.btUpdateFoldersAB08xtoAB0x.Name = "btUpdateFoldersAB08xtoAB0x";
+            this.btUpdateFoldersAB08xtoAB0x.Size = new System.Drawing.Size(218, 32);
+            this.btUpdateFoldersAB08xtoAB0x.TabIndex = 14;
+            this.btUpdateFoldersAB08xtoAB0x.Text = "AB0.8+ to AB0.7- folders";
+            this.btUpdateFoldersAB08xtoAB0x.UseVisualStyleBackColor = true;
+            this.btUpdateFoldersAB08xtoAB0x.Click += new System.EventHandler(this.btUpdateFoldersAB08xtoAB0x_Click);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(6, 270);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(439, 13);
+            this.label19.TabIndex = 15;
+            this.label19.Text = "You have a AutoBleem0.7- folder structure and you want a BleemSync0.4.1 folder st" +
+    "ructure:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 308);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(429, 13);
+            this.label20.TabIndex = 16;
+            this.label20.Text = "You have a AutoBleem0.7- folder structure and you want a BleemSync1.x folder stru" +
+    "cture:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 224);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(230, 13);
+            this.label21.TabIndex = 17;
+            this.label21.Text = "( = go back to a AutoBleem0.7- folder structure)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1486,6 +1581,7 @@
             this.tabTransform.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.gbTransform.ResumeLayout(false);
+            this.gbTransform.PerformLayout();
             this.tabConfig.ResumeLayout(false);
             this.tabConfig.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -1615,6 +1711,15 @@
         private System.Windows.Forms.Label lbFoundSystem;
         private System.Windows.Forms.ToolStripMenuItem tsmiABv080;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Button btUpdateFoldersAB08xtoAB0x;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label8;
     }
 }
 
