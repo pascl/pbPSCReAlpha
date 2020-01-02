@@ -83,6 +83,15 @@
             this.btReadBS100Database = new System.Windows.Forms.Button();
             this.btReadAB060Database = new System.Windows.Forms.Button();
             this.gbTransform = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.btUpdateFoldersAB08xtoAB0x = new System.Windows.Forms.Button();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.btUpdateFoldersBS100toAB060 = new System.Windows.Forms.Button();
             this.btUpdateFoldersBS041toAB060 = new System.Windows.Forms.Button();
             this.btUpdateFoldersAB060toBS100 = new System.Windows.Forms.Button();
@@ -134,23 +143,14 @@
             this.tsmiBSVersionItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv041 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv100 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiABv060 = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBSv120 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiABv060 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiABv080 = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadDatabaseFile = new System.Windows.Forms.OpenFileDialog();
             this.btSwitchToInternal = new System.Windows.Forms.Button();
             this.lbInternalFreeSpace = new System.Windows.Forms.Label();
             this.lbNbInternalGames = new System.Windows.Forms.Label();
-            this.tsmiABv080 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.btUpdateFoldersAB08xtoAB0x = new System.Windows.Forms.Button();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -829,6 +829,95 @@
             this.gbTransform.TabStop = false;
             this.gbTransform.Text = "Folder modifications";
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 224);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(230, 13);
+            this.label21.TabIndex = 17;
+            this.label21.Text = "( = go back to a AutoBleem0.7- folder structure)";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 308);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(429, 13);
+            this.label20.TabIndex = 16;
+            this.label20.Text = "You have a AutoBleem0.7- folder structure and you want a BleemSync1.x folder stru" +
+    "cture:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(6, 270);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(439, 13);
+            this.label19.TabIndex = 15;
+            this.label19.Text = "You have a AutoBleem0.7- folder structure and you want a BleemSync0.4.1 folder st" +
+    "ructure:";
+            // 
+            // btUpdateFoldersAB08xtoAB0x
+            // 
+            this.btUpdateFoldersAB08xtoAB0x.Location = new System.Drawing.Point(456, 201);
+            this.btUpdateFoldersAB08xtoAB0x.Name = "btUpdateFoldersAB08xtoAB0x";
+            this.btUpdateFoldersAB08xtoAB0x.Size = new System.Drawing.Size(218, 32);
+            this.btUpdateFoldersAB08xtoAB0x.TabIndex = 14;
+            this.btUpdateFoldersAB08xtoAB0x.Text = "AB0.8+ to AB0.7- folders";
+            this.btUpdateFoldersAB08xtoAB0x.UseVisualStyleBackColor = true;
+            this.btUpdateFoldersAB08xtoAB0x.Click += new System.EventHandler(this.btUpdateFoldersAB08xtoAB0x_Click);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 211);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(403, 13);
+            this.label18.TabIndex = 13;
+            this.label18.Text = "You have a AutoBleem0.8 (or +) folder structure and you want to remove categories" +
+    ":";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 135);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(425, 13);
+            this.label17.TabIndex = 12;
+            this.label17.Text = "You have a BleemSync1.x folder structure and you want a AutoBleem0.x folder struc" +
+    "ture:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 97);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(437, 13);
+            this.label16.TabIndex = 11;
+            this.label16.Text = "You have a BleemSync1.x folder structure and you want a BleemSync0.4.1 folder str" +
+    "ucture:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 57);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(435, 13);
+            this.label15.TabIndex = 10;
+            this.label15.Text = "You have a BleemSync0.4.1 folder structure and you want a AutoBleem0.x folder str" +
+    "ucture:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 19);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(437, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "You have a BleemSync0.4.1 folder structure and you want a BleemSync1.x folder str" +
+    "ucture:";
+            // 
             // btUpdateFoldersBS100toAB060
             // 
             this.btUpdateFoldersBS100toAB060.Location = new System.Drawing.Point(456, 125);
@@ -971,6 +1060,7 @@
             // 
             // btIniFileCopy
             // 
+            this.btIniFileCopy.Enabled = false;
             this.btIniFileCopy.Location = new System.Drawing.Point(8, 523);
             this.btIniFileCopy.Name = "btIniFileCopy";
             this.btIniFileCopy.Size = new System.Drawing.Size(150, 46);
@@ -1378,7 +1468,7 @@
             // 
             this.tsmiBSv041.CheckOnClick = true;
             this.tsmiBSv041.Name = "tsmiBSv041";
-            this.tsmiBSv041.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBSv041.Size = new System.Drawing.Size(166, 22);
             this.tsmiBSv041.Text = "BleemSync v0.4.1";
             this.tsmiBSv041.CheckedChanged += new System.EventHandler(this.tsmiBSv041_CheckedChanged);
             this.tsmiBSv041.Click += new System.EventHandler(this.tsmiBSv041_Click);
@@ -1387,27 +1477,40 @@
             // 
             this.tsmiBSv100.CheckOnClick = true;
             this.tsmiBSv100.Name = "tsmiBSv100";
-            this.tsmiBSv100.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBSv100.Size = new System.Drawing.Size(166, 22);
             this.tsmiBSv100.Text = "BleemSync v1.0.0";
             this.tsmiBSv100.CheckedChanged += new System.EventHandler(this.tsmiBSv100_CheckedChanged);
             this.tsmiBSv100.Click += new System.EventHandler(this.tsmiBSv100_Click);
+            // 
+            // tsmiBSv120
+            // 
+            this.tsmiBSv120.Name = "tsmiBSv120";
+            this.tsmiBSv120.Size = new System.Drawing.Size(166, 22);
+            this.tsmiBSv120.Text = "BleemSync v1.2.0";
+            this.tsmiBSv120.CheckedChanged += new System.EventHandler(this.tsmiBSv120_CheckedChanged);
+            this.tsmiBSv120.Click += new System.EventHandler(this.tsmiBSv120_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(163, 6);
             // 
             // tsmiABv060
             // 
             this.tsmiABv060.CheckOnClick = true;
             this.tsmiABv060.Name = "tsmiABv060";
-            this.tsmiABv060.Size = new System.Drawing.Size(180, 22);
+            this.tsmiABv060.Size = new System.Drawing.Size(166, 22);
             this.tsmiABv060.Text = "AutoBleem v0.6.0";
             this.tsmiABv060.CheckedChanged += new System.EventHandler(this.tsmiABv060_CheckedChanged);
             this.tsmiABv060.Click += new System.EventHandler(this.tsmiABv060_Click);
             // 
-            // tsmiBSv120
+            // tsmiABv080
             // 
-            this.tsmiBSv120.Name = "tsmiBSv120";
-            this.tsmiBSv120.Size = new System.Drawing.Size(180, 22);
-            this.tsmiBSv120.Text = "BleemSync v1.2.0";
-            this.tsmiBSv120.CheckedChanged += new System.EventHandler(this.tsmiBSv120_CheckedChanged);
-            this.tsmiBSv120.Click += new System.EventHandler(this.tsmiBSv120_Click);
+            this.tsmiABv080.Name = "tsmiABv080";
+            this.tsmiABv080.Size = new System.Drawing.Size(166, 22);
+            this.tsmiABv080.Text = "AutoBleem v0.8.x";
+            this.tsmiABv080.CheckedChanged += new System.EventHandler(this.tsmiABv080_CheckedChanged);
+            this.tsmiABv080.Click += new System.EventHandler(this.tsmiABv080_Click);
             // 
             // ofdLoadDatabaseFile
             // 
@@ -1450,108 +1553,6 @@
             this.lbNbInternalGames.Text = "--";
             this.lbNbInternalGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbNbInternalGames.Visible = false;
-            // 
-            // tsmiABv080
-            // 
-            this.tsmiABv080.Name = "tsmiABv080";
-            this.tsmiABv080.Size = new System.Drawing.Size(180, 22);
-            this.tsmiABv080.Text = "AutoBleem v0.8.x";
-            this.tsmiABv080.CheckedChanged += new System.EventHandler(this.tsmiABv080_CheckedChanged);
-            this.tsmiABv080.Click += new System.EventHandler(this.tsmiABv080_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 19);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(437, 13);
-            this.label8.TabIndex = 9;
-            this.label8.Text = "You have a BleemSync0.4.1 folder structure and you want a BleemSync1.x folder str" +
-    "ucture:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(6, 57);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(435, 13);
-            this.label15.TabIndex = 10;
-            this.label15.Text = "You have a BleemSync0.4.1 folder structure and you want a AutoBleem0.x folder str" +
-    "ucture:";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(6, 97);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(437, 13);
-            this.label16.TabIndex = 11;
-            this.label16.Text = "You have a BleemSync1.x folder structure and you want a BleemSync0.4.1 folder str" +
-    "ucture:";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 135);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(425, 13);
-            this.label17.TabIndex = 12;
-            this.label17.Text = "You have a BleemSync1.x folder structure and you want a AutoBleem0.x folder struc" +
-    "ture:";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 211);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(403, 13);
-            this.label18.TabIndex = 13;
-            this.label18.Text = "You have a AutoBleem0.8 (or +) folder structure and you want to remove categories" +
-    ":";
-            // 
-            // btUpdateFoldersAB08xtoAB0x
-            // 
-            this.btUpdateFoldersAB08xtoAB0x.Location = new System.Drawing.Point(456, 201);
-            this.btUpdateFoldersAB08xtoAB0x.Name = "btUpdateFoldersAB08xtoAB0x";
-            this.btUpdateFoldersAB08xtoAB0x.Size = new System.Drawing.Size(218, 32);
-            this.btUpdateFoldersAB08xtoAB0x.TabIndex = 14;
-            this.btUpdateFoldersAB08xtoAB0x.Text = "AB0.8+ to AB0.7- folders";
-            this.btUpdateFoldersAB08xtoAB0x.UseVisualStyleBackColor = true;
-            this.btUpdateFoldersAB08xtoAB0x.Click += new System.EventHandler(this.btUpdateFoldersAB08xtoAB0x_Click);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(6, 270);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(439, 13);
-            this.label19.TabIndex = 15;
-            this.label19.Text = "You have a AutoBleem0.7- folder structure and you want a BleemSync0.4.1 folder st" +
-    "ructure:";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 308);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(429, 13);
-            this.label20.TabIndex = 16;
-            this.label20.Text = "You have a AutoBleem0.7- folder structure and you want a BleemSync1.x folder stru" +
-    "cture:";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 224);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(230, 13);
-            this.label21.TabIndex = 17;
-            this.label21.Text = "( = go back to a AutoBleem0.7- folder structure)";
             // 
             // Form1
             // 
