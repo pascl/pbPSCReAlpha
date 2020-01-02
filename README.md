@@ -4,20 +4,24 @@ A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *
 
 Download Link: https://github.com/pascl/pbPSCReAlpha/releases
 
-Last version: 1.61
+Last version: 1.7
 
-![Preview](https://i.imgur.com/o2wNqJl.png)
+![Preview](https://i.imgur.com/niV9G9w.png)
 
-**NEW 1.4**
-* CHD files are managed.
-* With some launchers, you can replace internal games
-
-**NEW 1.5**
-* BleemSync1.2 is managed (reset your folders in this version)
+**NEW 1.7**
+* AutoBleem0.8 is managed (categories not supported)
+* Folder manager and launchers for non-PS1 games are only supported for BleemSync1.2
 
 **NEW 1.6**
 * Folders and non-PS1 games are managed with BleemSync1.2
 * Folders were previously possible by modding some files in BleemSync1.1. With BleemSync1.2, there is not any file modifications to do.
+
+**NEW 1.5**
+* BleemSync1.2 is managed (reset your folders in this version)
+
+**NEW 1.4**
+* CHD files are managed.
+* With some launchers, you can replace internal games
 
 
 ## General
@@ -110,9 +114,14 @@ In case it is still locked somewhere, try to rename the locked folder in an expl
 * **NEW 1.3** You have now 2 options to re-generate the database:
    * click on the button as in the previous versions. You will be warned if all is ok or not after a few seconds.
      * **NEW 1.6** if you have selected BleemSync1.2, the folder manager will appear before recreating the database. You can now create folders on the left-side, select one, then choose games in the "all games list" and click the double-arrow to have them in the folder.
-![Preview](https://i.imgur.com/7ocRrKV.png)
-	 
-   * * [**NEW 1.6** deprecated with BleemSync1.2] if you have a drive with a **modded BleemSync1.1**] with the **Shift key** pressed, click on the button to go to the advanced options.
+![Preview](https://i.imgur.com/jwBbIgL.png)
+     * **NEW 1.7** The Auto button should create as many folders than systems auotmatically. And you can right-click on a folder in the folder list to execute some actions:
+	   * ![Preview](https://i.imgur.com/y1MeAOG.png)
+	     * Copy and paste games can copy the entire gameset from a folder to another one.
+		 * Split by 2/3/5 can split the games in a folder into 2/3/5 folders.
+		 * Duplicate can create a new folder with the same gameset.
+
+   * [deprecated with BleemSync1.2] if you have a drive with a **modded BleemSync1.1**] with the **Shift key** pressed, click on the button to go to the advanced options.
      * You can choose different options to generate several DB files in order to be used in different folders.
 	 * An empty DB file is generated too, if you don't want any ps1 games in a folder.
      * Going to this advanced form if you have another version, or a not-modified BleemSync 1.1 version, only the first option will do something useful for you.
@@ -172,7 +181,7 @@ This file becomes not necessary when you use BlemSync1.0.0. So the button will n
 
 ### Add launch.sh file **NEW 1.6**
 ![Preview](https://i.imgur.com/WSk8DUZ.png)
-The button permits to add and/or edit a launch.sh file.
+The button permits to add and/or edit a launch.sh file (for BleemSync1.2 only).
 
 You can write directly to edit the file content. On the left-side, you have the list of the files which are present in the folder. You can select one and click on copy filename (or double-click in the list) to have it in the clipboard.
 
@@ -207,10 +216,11 @@ Open Windows explorer directly in this folder.
 
 
 ## Tranformer Tab
-![Preview](https://i.imgur.com/9yd7e2t.png)
-1. The folder structures are different between BleemSync0.4.1, BleemSync1.0.0/1.1.0 and AutoBleem0.6.0.
-2. You can read the database files regional.db. If you want to read a database in the same version you are using, the default directory is supposed to be the right one.
-3. If you are using BleemSync1.0/1.1 and BleemSyncUI, you need to read the BS1.0.0/1.1.0 database to (re-)create Game.ini files. If a Game.ini is present and different, the next window will appear to choose a file or merge data.
+![Preview](https://i.imgur.com/QlnD1cl.png)
+1. The folder structures are different between BleemSync0.4.1, BleemSync1.x, AutoBleem0.6 and AutoBleem0.8.
+2. **NEW 1.7** If you use AutoBleem0.8.x, you have to remove the categories first, by the matching button. Then, you can transform the structure to BleemSync.
+3. You can read the database files regional.db. If you want to read a database in the same version you are using, the default directory is supposed to be the right one.
+4. If you are using BleemSync1.x and BleemSyncUI, you need to read the BS1.x database to (re-)create Game.ini files. If a Game.ini is present and different, the next window will appear to choose a file or merge data.
 ![Preview](https://i.imgur.com/ZpjKCoL.png)
 
 ## Configuration Tab
@@ -219,7 +229,7 @@ Open Windows explorer directly in this folder.
 * You can select the sorting options used during sorting operation (Sort button in Explorer tab).
 
 ### Copy bleemsync_cfg.INI file
-A file is included with the executable. This button will copy this file to your drive (path in the first tab) if you are currently using BS1.0.0.
+**NEW 1.7** **The button is disabled.** A file is included with the executable. This button will copy this file to your drive (path in the first tab) if you are currently using BS1.0.0.
 
 ### Check bin
 ![Preview](https://i.imgur.com/vWicRIu.png)
@@ -271,8 +281,4 @@ This window can directly be opened by adding parameter "-m" in a shortcut (in th
 * launch_folder.sh - **NEW 1.6** for launch.sh template form
 * launch_retroarch.sh - **NEW 1.6** for launch.sh template form
 * tgdbgames.xml - **NEW 1.6** the game list for TGDB research
-<<<<<<< HEAD
 * tgdbplatforms.xml - **NEW 1.6** the game platforms for TGDB research
-=======
-* tgdbplatforms.xml - **NEW 1.6** the game platforms for TGDB research
->>>>>>> 1ad1641640addb721733f003c07f4b5f2e14ab5c
