@@ -151,6 +151,8 @@
             this.btSwitchToInternal = new System.Windows.Forms.Button();
             this.lbInternalFreeSpace = new System.Windows.Forms.Label();
             this.lbNbInternalGames = new System.Windows.Forms.Label();
+            this.btUpgradeLaunchForCompressedCores = new System.Windows.Forms.Button();
+            this.label22 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -980,6 +982,8 @@
             // 
             // tabConfig
             // 
+            this.tabConfig.Controls.Add(this.label22);
+            this.tabConfig.Controls.Add(this.btUpgradeLaunchForCompressedCores);
             this.tabConfig.Controls.Add(this.lbCurrentSortOption4);
             this.tabConfig.Controls.Add(this.lbCurrentSortOption3);
             this.tabConfig.Controls.Add(this.lbCurrentSortOption2);
@@ -1125,7 +1129,7 @@
             this.groupBox1.Controls.Add(this.cbSimultaneousCopiedFiles);
             this.groupBox1.Location = new System.Drawing.Point(8, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(444, 386);
+            this.groupBox1.Size = new System.Drawing.Size(444, 258);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
@@ -1283,7 +1287,7 @@
             // 
             // btValidateCfg
             // 
-            this.btValidateCfg.Location = new System.Drawing.Point(362, 357);
+            this.btValidateCfg.Location = new System.Drawing.Point(362, 213);
             this.btValidateCfg.Name = "btValidateCfg";
             this.btValidateCfg.Size = new System.Drawing.Size(75, 23);
             this.btValidateCfg.TabIndex = 2;
@@ -1554,6 +1558,26 @@
             this.lbNbInternalGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbNbInternalGames.Visible = false;
             // 
+            // btUpgradeLaunchForCompressedCores
+            // 
+            this.btUpgradeLaunchForCompressedCores.Location = new System.Drawing.Point(8, 291);
+            this.btUpgradeLaunchForCompressedCores.Name = "btUpgradeLaunchForCompressedCores";
+            this.btUpgradeLaunchForCompressedCores.Size = new System.Drawing.Size(150, 46);
+            this.btUpgradeLaunchForCompressedCores.TabIndex = 19;
+            this.btUpgradeLaunchForCompressedCores.Text = "Upgrade launch.sh";
+            this.btUpgradeLaunchForCompressedCores.UseVisualStyleBackColor = true;
+            this.btUpgradeLaunchForCompressedCores.Click += new System.EventHandler(this.btUpgradeLaunchForCompressedCores_Click);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(170, 308);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(523, 13);
+            this.label22.TabIndex = 20;
+            this.label22.Text = "Upgrade launch.sh in your games subfolders to open compressed RA cores without ma" +
+    "nual edits on your PSC";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1721,6 +1745,8 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button btUpgradeLaunchForCompressedCores;
     }
 }
 

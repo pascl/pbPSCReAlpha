@@ -5424,5 +5424,62 @@ namespace pbPSCReAlpha
             }
             slLogger.Trace("<< Update AB0.8+ folders to AB0.7- Click");
         }
+
+        private void btUpgradeLaunchForCompressedCores_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Update launch.sh for compressed cores Click");
+            /*
+            transform:
+                echo 2 > /data/power/disable
+                mkdir -p "/tmp/ra_cache"
+            to:
+                echo 2 > /data/power/disable
+                source "/var/volatile/bleemsync.cfg"
+                PATH="$PATH:$bleemsync_path/bin"
+                mkdir -p "/tmp/ra_cache"
+             
+            */
+            String sFolderPath = tbFolderPath.Text;
+            FileInfo[] fiLaunchfileList = new DirectoryInfo(sFolderPath).GetFiles("launch.sh", SearchOption.AllDirectories);
+            int iDone = 0;
+            int iFound = 0;
+            int iSkipped = 0;
+            foreach( FileInfo fi in fiLaunchfileList)
+            {
+                iFound++;
+                String s = String.Empty;
+                using (StreamReader sr = new StreamReader(fi.FullName))
+                {
+                    s = sr.ReadToEnd();
+                }
+                if(!String.IsNullOrEmpty(s))
+                {
+                    int ipos = s.IndexOf("echo 2 > /data/power/disable\nmkdir -p \"/tmp/ra_cache\"");
+                    if(ipos > -1)
+                    {
+                        iDone++;
+                        s = s.Insert(ipos+28, "\nsource \"/var/volatile/bleemsync.cfg\"\nPATH=\"$PATH:$bleemsync_path/bin\"");
+                        using (StreamWriter sw = new StreamWriter(fi.FullName))
+                        {
+                            sw.Write(s);
+                        }
+                    }
+                    else
+                    {
+                        iSkipped++;
+                    }
+                }
+                else
+                {
+                    iSkipped++;
+                }
+            }
+            String sRes = "Launch.sh Result:\n\n";
+            sRes += "Found: " + iFound.ToString() + "\n";
+            sRes += "Edited: " + iDone.ToString() + "\n";
+            sRes += "Skipped: " + iSkipped.ToString();
+            FlexibleMessageBox.Show(sRes, "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            slLogger.Trace("<< Update launch.sh for compressed cores Click");
+        }
     }
 }
