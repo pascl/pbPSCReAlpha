@@ -4284,6 +4284,10 @@ namespace pbPSCReAlpha
                 {
                     ClGameStructure cgs = (ClGameStructure)(lbGames.Items[lbGames.SelectedIndex]);
                     String sFolderPath = tbFolderPath.Text;
+                    if (sFolderPath.EndsWith("\\"))
+                    {
+                        sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+                    }
                     String sPath = sFolderPath + "\\" + cgs.FolderIndex + "\\";
                     if ((!cgs.GeneralError) && ((cgs.Discs.Split(',')).Length > 1))
                     {
@@ -4833,6 +4837,10 @@ namespace pbPSCReAlpha
             // create gamedata folder and move savedata
             slLogger.Trace(">> Update AB0.6.0 folders to BS0.4.1 Click");
             String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want upgrade your folders from AB0.6.0 to BS0.4.1 ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
@@ -5364,6 +5372,10 @@ namespace pbPSCReAlpha
         {
             slLogger.Trace(">> Update AB0.8+ folders to AB0.7- Click");
             String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
             if (DialogResult.Yes == FlexibleMessageBox.Show("Do you really want to remove categories of AB0.8+ (and have a previous AB0.7- structure) ?", "Moving...", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 ClVersionHelper srcVersion = bleemsyncVersions[Constant.iAUTOBLEEM_V08];
@@ -5440,6 +5452,10 @@ namespace pbPSCReAlpha
              
             */
             String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
             FileInfo[] fiLaunchfileList = new DirectoryInfo(sFolderPath).GetFiles("launch.sh", SearchOption.AllDirectories);
             int iDone = 0;
             int iFound = 0;
@@ -5480,6 +5496,82 @@ namespace pbPSCReAlpha
             sRes += "Skipped: " + iSkipped.ToString();
             FlexibleMessageBox.Show(sRes, "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
             slLogger.Trace("<< Update launch.sh for compressed cores Click");
+        }
+
+        private void btForceNumberedFolders_Click(object sender, EventArgs e)
+        {
+            slLogger.Trace(">> Update named folders to numbered folders Click");
+            bool bSavesFolderNeedEdit = false;
+            String sFolderPath = tbFolderPath.Text;
+            if (sFolderPath.EndsWith("\\"))
+            {
+                sFolderPath = sFolderPath.Substring(0, sFolderPath.Length - 1);
+            }
+            String sFolderSavePath = sFolderPath + "\\!SaveStates"; // if AB structure, savestates need move too
+            if (Directory.Exists(sFolderSavePath))
+            {
+                bSavesFolderNeedEdit = true;
+            }
+            int index = Constant.iSTART_AUTOBLEEM;
+            int iFound = 0;
+            int iDone = 0;
+            int iSkipped = 0;
+            DirectoryInfo[] dirList = new DirectoryInfo(sFolderPath).GetDirectories("*", SearchOption.TopDirectoryOnly);
+            foreach (DirectoryInfo di in dirList)
+            {
+                slLogger.Debug("** Directory: " + di.FullName);
+                String sFolderIndex = di.FullName.Substring(sFolderPath.Length);
+                if (sFolderIndex.StartsWith("\\"))
+                {
+                    sFolderIndex = sFolderIndex.Substring(1);
+                }
+                String[] s2 = sFolderIndex.Split('\\');
+                sFolderIndex = s2[0];
+                if ((sFolderIndex != "!SaveStates") && (sFolderIndex != "!MemCards")) //  && (sFolderIndex != "databases")
+                {
+                    iFound++;
+                    int iRes = 0;
+                    if(int.TryParse(sFolderIndex, out iRes))
+                    {
+                        // no need, already numbered
+                        iSkipped++;
+                    }
+                    else
+                    {
+                        while(Directory.Exists(sFolderPath + "\\" + index.ToString()))
+                        {
+                            index++;
+                        }
+                        Directory.Move(di.FullName, sFolderPath + "\\" + index.ToString());
+                        if (bSavesFolderNeedEdit)
+                        {
+                            if (Directory.Exists(sFolderSavePath + "\\" + sFolderIndex))
+                            {
+                                if (!Directory.Exists(sFolderSavePath + "\\" + index.ToString()))
+                                {
+                                    Directory.Move(sFolderSavePath + "\\" + sFolderIndex, sFolderSavePath + "\\" + index.ToString());
+                                }
+                                else
+                                {
+                                    int j = 0;
+                                    while(Directory.Exists(sFolderSavePath + "\\" + index.ToString() + "_" + j.ToString()))
+                                    {
+                                        j++;
+                                    }
+                                    Directory.Move(sFolderSavePath + "\\" + sFolderIndex, sFolderSavePath + "\\" + index.ToString() + "_" + j.ToString());
+                                }
+                            }
+                        }
+                        iDone++;
+                    }
+                }
+            }
+            String sRes = "Named to numbered folders Result:\n\n";
+            sRes += "Found: " + iFound.ToString() + "\n";
+            sRes += "Renamed: " + iDone.ToString() + "\n";
+            sRes += "Skipped: " + iSkipped.ToString();
+            FlexibleMessageBox.Show(sRes, "Job done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            slLogger.Trace("<< Update named folders to numbered folders Click");
         }
     }
 }

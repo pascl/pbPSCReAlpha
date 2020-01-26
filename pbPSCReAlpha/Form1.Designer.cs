@@ -99,6 +99,8 @@
             this.btUpdateFoldersBS041toBS100 = new System.Windows.Forms.Button();
             this.btUpdateFoldersBS100toBS041 = new System.Windows.Forms.Button();
             this.tabConfig = new System.Windows.Forms.TabPage();
+            this.label22 = new System.Windows.Forms.Label();
+            this.btUpgradeLaunchForCompressedCores = new System.Windows.Forms.Button();
             this.lbCurrentSortOption4 = new System.Windows.Forms.Label();
             this.lbCurrentSortOption3 = new System.Windows.Forms.Label();
             this.lbCurrentSortOption2 = new System.Windows.Forms.Label();
@@ -151,8 +153,8 @@
             this.btSwitchToInternal = new System.Windows.Forms.Button();
             this.lbInternalFreeSpace = new System.Windows.Forms.Label();
             this.lbNbInternalGames = new System.Windows.Forms.Label();
-            this.btUpgradeLaunchForCompressedCores = new System.Windows.Forms.Button();
-            this.label22 = new System.Windows.Forms.Label();
+            this.btForceNumberedFolders = new System.Windows.Forms.Button();
+            this.label23 = new System.Windows.Forms.Label();
             this.tabControlAll.SuspendLayout();
             this.tabExplorer.SuspendLayout();
             this.gbExploreEdit.SuspendLayout();
@@ -809,6 +811,8 @@
             // 
             // gbTransform
             // 
+            this.gbTransform.Controls.Add(this.label23);
+            this.gbTransform.Controls.Add(this.btForceNumberedFolders);
             this.gbTransform.Controls.Add(this.label21);
             this.gbTransform.Controls.Add(this.label20);
             this.gbTransform.Controls.Add(this.label19);
@@ -1005,6 +1009,26 @@
             this.tabConfig.TabIndex = 6;
             this.tabConfig.Text = "Configuration";
             this.tabConfig.UseVisualStyleBackColor = true;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(170, 308);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(523, 13);
+            this.label22.TabIndex = 20;
+            this.label22.Text = "Upgrade launch.sh in your games subfolders to open compressed RA cores without ma" +
+    "nual edits on your PSC";
+            // 
+            // btUpgradeLaunchForCompressedCores
+            // 
+            this.btUpgradeLaunchForCompressedCores.Location = new System.Drawing.Point(8, 291);
+            this.btUpgradeLaunchForCompressedCores.Name = "btUpgradeLaunchForCompressedCores";
+            this.btUpgradeLaunchForCompressedCores.Size = new System.Drawing.Size(150, 46);
+            this.btUpgradeLaunchForCompressedCores.TabIndex = 19;
+            this.btUpgradeLaunchForCompressedCores.Text = "Upgrade launch.sh";
+            this.btUpgradeLaunchForCompressedCores.UseVisualStyleBackColor = true;
+            this.btUpgradeLaunchForCompressedCores.Click += new System.EventHandler(this.btUpgradeLaunchForCompressedCores_Click);
             // 
             // lbCurrentSortOption4
             // 
@@ -1558,25 +1582,25 @@
             this.lbNbInternalGames.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lbNbInternalGames.Visible = false;
             // 
-            // btUpgradeLaunchForCompressedCores
+            // btForceNumberedFolders
             // 
-            this.btUpgradeLaunchForCompressedCores.Location = new System.Drawing.Point(8, 291);
-            this.btUpgradeLaunchForCompressedCores.Name = "btUpgradeLaunchForCompressedCores";
-            this.btUpgradeLaunchForCompressedCores.Size = new System.Drawing.Size(150, 46);
-            this.btUpgradeLaunchForCompressedCores.TabIndex = 19;
-            this.btUpgradeLaunchForCompressedCores.Text = "Upgrade launch.sh";
-            this.btUpgradeLaunchForCompressedCores.UseVisualStyleBackColor = true;
-            this.btUpgradeLaunchForCompressedCores.Click += new System.EventHandler(this.btUpgradeLaunchForCompressedCores_Click);
+            this.btForceNumberedFolders.Location = new System.Drawing.Point(456, 351);
+            this.btForceNumberedFolders.Name = "btForceNumberedFolders";
+            this.btForceNumberedFolders.Size = new System.Drawing.Size(218, 32);
+            this.btForceNumberedFolders.TabIndex = 18;
+            this.btForceNumberedFolders.Text = "Named folders to Numbered folders";
+            this.btForceNumberedFolders.UseVisualStyleBackColor = true;
+            this.btForceNumberedFolders.Click += new System.EventHandler(this.btForceNumberedFolders_Click);
             // 
-            // label22
+            // label23
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(170, 308);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(523, 13);
-            this.label22.TabIndex = 20;
-            this.label22.Text = "Upgrade launch.sh in your games subfolders to open compressed RA cores without ma" +
-    "nual edits on your PSC";
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(6, 361);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(424, 13);
+            this.label23.TabIndex = 19;
+            this.label23.Text = "You have a folder structure with named folders and you want numbered folders stru" +
+    "cture:";
             // 
             // Form1
             // 
@@ -1747,6 +1771,8 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Button btUpgradeLaunchForCompressedCores;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button btForceNumberedFolders;
     }
 }
 
