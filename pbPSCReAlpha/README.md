@@ -4,9 +4,14 @@ A little software to use with *PSC*lassic in order to view, edit and *Re*-sort *
 
 Download Link: https://github.com/pascl/pbPSCReAlpha/releases
 
-Last version: 1.7
+Last version: 1.71
 
 ![Preview](https://i.imgur.com/niV9G9w.png)
+
+**NEW 1.71**
+* Launch.sh template for Retroarch is modified, in order to get rid of 'compressed cores' problem.
+* A button in Config tab to upgrade all launch.sh files (2 lines added according to the new template).
+* Aadded a button in Tranformer tab to convert named folders to numbered folders.
 
 **NEW 1.7**
 * AutoBleem0.8 is managed (categories not supported)

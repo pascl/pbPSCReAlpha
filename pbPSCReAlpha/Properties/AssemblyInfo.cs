@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("pbPSCReAlpha")]
-[assembly: AssemblyCopyright("Copyright ©  2018 2019")]
+[assembly: AssemblyCopyright("Copyright ©  2018 2019 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Vous pouvez spécifier toutes les valeurs ou indiquer les numéros de build et de révision par défaut
 // en utilisant '*', comme indiqué ci-dessous :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.7.0.56")]
-[assembly: AssemblyFileVersion("1.7.0.56")]
+[assembly: AssemblyVersion("1.7.1.13")]
+[assembly: AssemblyFileVersion("1.7.1.13")]
